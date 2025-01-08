@@ -6,7 +6,7 @@ This is intended as the single-source-of-truth specification for the Deepgram AP
 
 ## Publishing Workflow
 
-A public version of the specifications (scrubbed of internal and sensitive data) will be automatically published when any changes in this repo.
+A public version of the specifications (scrubbed of internal and sensitive data) will be automatically published when any changes are made to our API to this repo.
 
 ## Development and Contributing
 
