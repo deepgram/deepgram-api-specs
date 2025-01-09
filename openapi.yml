@@ -1089,6 +1089,81 @@ paths:
           - $ref: ./components/responses/models/model.yml
         '400':
           $ref: '#/components/responses/projects_bad_request'
+  /v1/projects/{project_id}/self-hosted/distribution/credentials:
+    description: Returns sets of distribution credentials for the specified project
+    get:
+      externalDocs:
+        description: Get Project Self-Hosted Distribution Credentials
+        url: https://developers.deepgram.com/reference/list-credentials
+      summary: Lists sets of distribution credentials for the specified project
+      security:
+        - Authorization: []
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/credentials'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
+      post:
+        externalDocs:
+          description: Create a Project Self-Hosted Distribution Credential
+          url: https://developers.deepgram.com/reference/create-credentials
+        summary: Creates a set of distribution credentials for the specified project
+        security:
+          - Authorization: []
+        parameters:
+          - $ref: ./components/parameters/projects/project_id.yml
+          - $ref: ./components/parameters/projects/distribution_comment.yml
+          - $ref: ./components/parameters/projects/distribution_scopes.yml
+          - $ref: ./components/parameters/projects/distribution_provider.yml
+        requestBody:
+          description: The set of distribution credentials to create
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: string
+  /v1/projects/{project_id}/self-hosted/distribution/credentials/{distribution_credentials_id}:
+    description: Returns a single set of distribution credentials for the specified project
+    get:
+      externalDocs:
+        description: Get a Project Self-Hosted Distribution Credential
+        url: https://developers.deepgram.com/reference/get-credentials
+      summary: Returns a set of distribution credentials for the specified project
+      security:
+        - Authorization: []
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/distribution_credentials_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/credential'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
+    delete:
+      externalDocs:
+        description: Delete a Project Self-Hosted Distribution Credential
+        url: https://developers.deepgram.com/reference/delete-credentials
+      summary: Deletes a set of distribution credentials for the specified project
+      security:
+        - Authorization: []
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/distribution_credentials_id'
+      responses:responses:
+        '200':
+          $ref: ./components/responses/projects/credential.yml
+        '403':
+          $ref: ./components/responses/projects/authentication_failed.yml
+        '404':
+          $ref: ./components/responses/projects/project_not_found.yml
 components:
   securitySchemes:
     Authorization:
@@ -1936,6 +2011,14 @@ components:
         type: string
         format: uuid
       example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
+    distribution_credentials_id:
+      name: distribution_credentials_id
+      in: path
+      required: true
+      description: The UUID of the distribution credentials
+      schema:
+        type: string
+      example: 8b36cfd0-472f-4a21-833f-2d6343c3a2f3
   schemas:
     metadata:
       required:
@@ -2879,3 +2962,133 @@ components:
                                   type: string
                                 example:
                                   - masculine
+    credentials:
+      components:
+        responses:
+          description: List of distribution credentials
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  distribution_credentials:
+                    type: array
+                    description: Array of distribution credentials with associated member information
+                    items:
+                      type: object
+                      required:
+                        - member
+                        - distribution_credentials
+                      properties:
+                        member:
+                          type: object
+                          required:
+                            - member_id
+                            - email
+                          properties:
+                            member_id:
+                              type: string
+                              format: uuid
+                              description: Unique identifier for the member
+                              example: 3376abcd-8e5e-49d3-92d4-876d3a4f0363
+                            email:
+                              type: string
+                              format: email
+                              description: Email address of the member
+                              example: email
+                        distribution_credentials:
+                          type: object
+                          required:
+                            - distribution_credentials_id
+                            - provider
+                            - scopes
+                            - created
+                          properties:
+                            distribution_credentials_id:
+                              type: string
+                              format: uuid
+                              description: Unique identifier for the distribution credentials
+                              example: 8b36cfd0-472f-4a21-833f-2d6343c3a2f3
+                            provider:
+                              type: string
+                              description: The provider of the distribution service
+                              example: quay
+                            comment:
+                              type: string
+                              description: Optional comment about the credentials
+                              example: My Self-Hosted Distribution Credentials
+                            scopes:
+                              type: array
+                              description: List of permission scopes for the credentials
+                              items:
+                                type: string
+                              example:
+                                - self-hosted:product:api
+                                - self-hosted:product:engine
+                            created:
+                              type: string
+                              format: date-time
+                              description: Timestamp when the credentials were created
+                              example: '2023-06-28T15:36:59.609841Z'
+    credential:
+      components:
+        responses:
+          description: Single distribution credential
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - member
+                  - distribution_credentials
+                properties:
+                  member:
+                    type: object
+                    required:
+                      - member_id
+                      - email
+                    properties:
+                      member_id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier for the member
+                        example: c7b9b131-73f3-11d9-8665-0b00d2e44b83
+                      email:
+                        type: string
+                        format: email
+                        description: Email address of the member
+                        example: email
+                  distribution_credentials:
+                    type: object
+                    required:
+                      - distribution_credentials_id
+                      - provider
+                      - scopes
+                      - created
+                    properties:
+                      distribution_credentials_id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier for the distribution credentials
+                        example: 82c32c10-53b2-4d23-993f-864b3d44502a
+                      provider:
+                        type: string
+                        description: The provider of the distribution service
+                        example: quay
+                      comment:
+                        type: string
+                        description: Optional comment about the credentials
+                        example: My Self-Hosted Distribution Credentials
+                      scopes:
+                        type: array
+                        description: List of permission scopes for the credentials
+                        items:
+                          type: string
+                        example:
+                          - self-hosted:product:api
+                          - self-hosted:product:engine
+                      created:
+                        type: string
+                        format: date-time
+                        description: Timestamp when the credentials were created
+                        example: '2023-06-28T15:36:59.609841Z'
