@@ -8,6 +8,13 @@ This is intended as the single-source-of-truth specification for the Deepgram AP
 
 A public version of the specifications (scrubbed of internal and sensitive data) will be automatically published when any changes are made to our API to this repo.
 
+## Latest Public Version
+
+Check out the [openapi.yml](openapi.yml) file for the latest public version of the REST API spec.
+
+Check out the [asyncapi.yml](asyncapi.yml) file for the latest public version of the WebSocket spec.
+
+
 ## Development and Contributing
 
 * Directly modifying these API spec files in not allowed. Any API spec change should be done in the upstream Internal API Spec repository.
