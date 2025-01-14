@@ -353,14 +353,6 @@ channels:
         location: $message.header#/Sec-Websocket-Protocol
         examples:
           - token, YOUR_DEEPGRAM_API_KEY
-      alternatives:
-        description: Number of times the audio should be run through the models
-        location: $message.payload#/alternatives
-        x-deprecated: true
-        x-internal: true
-        default: '1'
-        examples:
-          - '1'
       callback:
         description: URL to which we'll make the callback request
         location: $message.payload#/callback
