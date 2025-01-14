@@ -169,8 +169,8 @@ paths:
       parameters:
         - $ref:"./components/parameters/callback.yml"
         - $ref:"./components/parameters/callback_method.yml"
-        - $ref:"./components/parameters/custom_topics.yml"
-        - $ref:"./components/parameters/custom_topics_mode.yml"
+        - $ref:"./components/parameters/custom_topic.yml"
+        - $ref:"./components/parameters/custom_topic_mode.yml"
         - $ref:"./components/parameters/intents.yml"
         - $ref:"./components/parameters/read/language.yml"
         - $ref:"./components/parameters/sentiment.yml"
@@ -556,20 +556,20 @@ paths:
       parameters:
         - $ref: '#/components/parameters/project_id'
     responses:
-      '200': null
+      '200':
+        description: A list of API keys
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type: array
+                items:
+                  $ref: ./components/schemas/keys/keys.yml
       '403':
         $ref: ./components/responses/projects/authentication_failed.yml
       '404':
         $ref: ./components/responses/projects/project_not_found.yml
-      description: A list of API keys
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              type: array
-              items:
-                $ref: ./components/schemas/keys/keys.yml
       post:
         externalDocs:
           description: Create a Project Key
@@ -652,19 +652,19 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/key_id'
     responses:
-      '200': null
+      '200':
+        description: A specific API key
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                item:
+                  $ref: ./components/schemas/keys/key.yml
       '403':
         $ref: ./components/responses/projects/authentication_failed.yml
       '404':
         $ref: ./components/responses/projects/project_not_found.yml
-      description: A specific API key
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              item:
-                $ref: ./components/schemas/keys/key.yml
   /v1/projects/{project_id}/members:
     description: Manage your project members
     get:
@@ -1157,13 +1157,13 @@ paths:
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/distribution_credentials_id'
-      responses:responses:
+      responses:
         '200':
-          $ref: ./components/responses/projects/credential.yml
+          $ref: '#/components/responses/credential'
         '403':
-          $ref: ./components/responses/projects/authentication_failed.yml
+          $ref: '#/components/responses/authentication_failed'
         '404':
-          $ref: ./components/responses/projects/project_not_found.yml
+          $ref: '#/components/responses/project_not_found'
 components:
   securitySchemes:
     Authorization:
