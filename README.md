@@ -1,8 +1,12 @@
 [![Discord](https://dcbadge.vercel.app/api/server/xWRaCDBtW4?style=flat)](https://discord.gg/xWRaCDBtW4)
 
-# Deepgram API Specs
+# Deepgram API Specs [Beta]
 
 This is intended as the single-source-of-truth specification for the Deepgram API, being developed and maintained by the DX team. It includes the specifications of internal and external features.
+
+## Status
+
+These API specs are currently in beta release and expected to change frequently as we finalize our specfications for public consumption.
 
 ## Publishing Workflow
 
