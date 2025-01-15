@@ -48,9 +48,7 @@ paths:
     description: Use Deepgram's speech-to-text API to transcribe and analyze pre-recorded audio.
     externalDocs:
       description: Transcribe & Analyze Audio
-      urls:
-        local: https://developers.deepgram.com/reference/listen-file
-        remote: https://developers.deepgram.com/reference/listen-remote
+      url: https://developers.deepgram.com/reference/listen-file
     post:
       tags:
         - Speech to Text
@@ -133,7 +131,7 @@ paths:
                   content:
                     application/json:
                       schema:
-                        $ref: '#/components/schemas/listen/response.yml'
+                        $ref: '#/components/schemas/response'
               responses:
                 '200':
                   description: We expect a 200 to determine whether the callback was successfully received
@@ -210,15 +208,17 @@ paths:
         - Text to Speech
       summary: Transform text to speech
       operationId: speak
-      requestBody: null
-      description: Transform text to speech
-      content:
-        application/json: null
-        schema: object
-        properties:
-          text:
-            type: string
-            description: The text to transform to speech
+      requestBody:
+        description: Transform text to speech
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: The text to transform to speech
       parameters:
         - $ref:"./components/parameters/speak/batch/bit_rate.yml"
         - $ref:"./components/parameters/callback.yml"
@@ -577,45 +577,45 @@ paths:
         summary: Creates a new API key for a specific project.
         parameters:
           - $ref: ./components/parameters/projects/project_id.yml
-      requestBody:
-        description: The API key settings
-        content:
-          application/json:
-            schema: null
-            type: object
-            properties:
-              comment:
-                type: string
-                description: A comment for the API key
-              scopes:
-                type: array
-                description: The scopes for the API key
-                items:
-                  type: string
-              tags:
-                type: array
-                description: The tags for the API key
-                items:
-                  type: string
-              expiration_date:
-                type: date
-                description: The expiration date for the API key
-              time_to_live_in_seconds:
-                type: integer
-                description: The time to live in seconds for the API key
-            example:
-              comment: A comment
-              scopes: admin
-              tags: tag-1
-              expiration_date: '2024-05-01T00:00:00.000000Z'
-              time_to_live_in_seconds: '3600'
-      responses:
-        '200':
-          $ref: ./components/responses/keys/key_created.yml
-        '403':
-          $ref: ./components/responses/projects/authentication_failed.yml
-        '404':
-          $ref: ./components/responses/projects/project_not_found.yml
+        requestBody:
+          description: The API key settings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    type: string
+                    description: A comment for the API key
+                  scopes:
+                    type: array
+                    description: The scopes for the API key
+                    items:
+                      type: string
+                  tags:
+                    type: array
+                    description: The tags for the API key
+                    items:
+                      type: string
+                  expiration_date:
+                    type: date
+                    description: The expiration date for the API key
+                  time_to_live_in_seconds:
+                    type: integer
+                    description: The time to live in seconds for the API key
+                example:
+                  comment: A comment
+                  scopes: admin
+                  tags: tag-1
+                  expiration_date: '2024-05-01T00:00:00.000000Z'
+                  time_to_live_in_seconds: '3600'
+        responses:
+          '200':
+            $ref: ./components/responses/keys/key_created.yml
+          '403':
+            $ref: ./components/responses/projects/authentication_failed.yml
+          '404':
+            $ref: ./components/responses/projects/project_not_found.yml
       delete:
         externalDocs:
           description: Delete a Project Key
@@ -627,14 +627,14 @@ paths:
         responses:
           '200':
             description: API key deleted
-            content: null
-            application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: A message indicating that the API key was deleted
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                      description: A message indicating that the API key was deleted
                 example:
                   message: Successfully deleted the API key!
           '403':
@@ -680,23 +680,23 @@ paths:
               schema:
                 type: object
                 properties:
-                  members: null
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      member_id:
-                        type: string
-                        description: The unique identifier of the member
-                        scopes:
-                          type: array
-                          description: The API scopes of the member
-                        email:
+                  members:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        member_id:
                           type: string
-                          first_name:
+                          description: The unique identifier of the member
+                          scopes:
+                            type: array
+                            description: The API scopes of the member
+                          email:
                             type: string
-                          last_name:
-                            type: string
+                            first_name:
+                              type: string
+                            last_name:
+                              type: string
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
@@ -745,10 +745,10 @@ paths:
             application/json:
               schema:
                 type: object
-                properties: null
-                scopes:
-                  type: array
-                  description: The API scopes of the member
+                properties:
+                  scopes:
+                    type: array
+                    description: The API scopes of the member
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
@@ -771,23 +771,23 @@ paths:
                 scope:
                   type: string
                   description: A scope to update
-                example: admin
+              example: admin
       responses:
-        '200': null
-        description: Updated the scopes for a specific member
-        content: null
-        application/json:
-          '403':
-            $ref: ./components/responses/projects/authentication_failed.yml
-          '404':
-            $ref: ./components/responses/projects/project_not_found.yml
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: confirmation message
-            example: Successfully updated the account scopes.
+        '200':
+          description: Updated the scopes for a specific member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: confirmation message
+                example: Successfully updated the account scopes.
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/invites:
     description: Manage your project invites
     get:
@@ -807,13 +807,15 @@ paths:
                 properties:
                   invites:
                     type: array
-                    properties:
-                      email:
-                        type: string
-                        description: The email address of the invitee
-                      scope: null
-                      type: string
-                      description: The scope of the invitee
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          description: The email address of the invitee
+                        scope:
+                          type: string
+                          description: The scope of the invitee
       post:
         '400':
           $ref: ./components/responses/projects/invalid_request.yml
@@ -835,13 +837,13 @@ paths:
             application/json:
               schema:
                 type: object
-              properties: null
-              email:
-                type: string
-                description: The email address of the invitee
-              scope:
-                type: string
-                description: The scope of the invitee
+              properties:
+                email:
+                  type: string
+                  description: The email address of the invitee
+                scope:
+                  type: string
+                  description: The scope of the invitee
         responses:
           '200':
             description: The invite was successfully generated
@@ -871,9 +873,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  message: null
-                  type: string
-                  description: confirmation message
+                  message:
+                    type: string
+                    description: confirmation message
         '400':
           $ref: '#/components/responses/invalid_request'
         '401':
@@ -899,9 +901,9 @@ paths:
               schema:
                 type: object
                 properties:
-                  message: null
-                  type: string
-                  description: confirmation message
+                  message:
+                    type: string
+                    description: confirmation message
         '400':
           $ref: '#/components/responses/invalid_request'
         '401':
@@ -923,28 +925,28 @@ paths:
         - $ref: '#/components/parameters/end'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/page'
-    responses:
-      '200':
-        description: A list of requests for a specific project
-        content: null
-        application/json:
-          schema:
-            type: object
-            properties:
-              page:
-                type: int
-                description: The page number of the paginated response
-              limit:
-                type: int
-                description: The number of results per page
-              requests:
-                type: array
-                items:
-                  $ref: ./components/responses/request.yml
-      '400':
-        $ref: ./components/responses/projects/projects_bad_request.yml
-      '403':
-        $ref: ./components/responses/projects/authentication_failed.yml
+      responses:
+        '200':
+          description: A list of requests for a specific project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  page:
+                    type: int
+                    description: The page number of the paginated response
+                  limit:
+                    type: int
+                    description: The number of results per page
+                  requests:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/request'
+        '400':
+          $ref: '#/components/responses/projects_bad_request'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
   /v1/projects/{project_id}/requests/{request_id}:
     description: Manage your project requests
     get:
@@ -958,14 +960,14 @@ paths:
     responses:
       '200':
         description: A specific request for a specific project
-        content: null
-        application/json:
-          schema:
-            type: object
-            properties:
-              request:
-                type: object
-                $ref: ./components/responses/request.yml
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                request:
+                  type: object
+                  $ref: ./components/responses/request.yml
   /v1/projects/{project_id}/usage:
     description: Manage your project usage
     get:
@@ -1842,8 +1844,7 @@ components:
       schema:
         default: 0.8
         type: number
-      example:
-        - 1.2
+      example: 1.2
     version:
       name: version
       in: query
@@ -2512,9 +2513,9 @@ components:
               summary:
                 type: object
                 properties:
-                  text: null
-                  type: string
-                  example: The summary of the text submitted.
+                  text:
+                    type: string
+                    example: The summary of the text submitted.
     text_results:
       type: object
       properties:
@@ -2623,6 +2624,44 @@ components:
                   example:
                     - masculine
                     - neutral
+    request:
+      components:
+        responses:
+          request:
+            description: A single request
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    request_id:
+                      type: string
+                      description: The unique identifier of the request
+                    project_uuid:
+                      type: string
+                      description: The unique identifier of the project
+                    created:
+                      type: string
+                      format: date-time
+                      description: The date and time the request was created
+                    path:
+                      type: string
+                      description: The API path of the request
+                    api_key_id:
+                      type: string
+                      description: The unique identifier of the API key
+                    response:
+                      type: object
+                      description: The response of the request
+                    code:
+                      type: integer
+                      description: The response code of the request
+                    deployment:
+                      type: string
+                      description: The deployment type
+                    callback:
+                      type: string
+                      description: The callback URL for the request
   responses:
     bad_request:
       components:
@@ -2648,70 +2687,73 @@ components:
                   request_id: 123456-7890-1234-5678-901234
     insufficient_permissions:
       components:
-        responses: null
-        description: Insufficient permissions, Model not found
-        content:
-          application/json:
-            schema: null
-            type: object
-            properties:
-              err_code:
-                type: string
-                description: The error code
-              err_msg:
-                type: string
-                description: The error message
-              request_id:
-                type: string
-                description: The request ID
-            example:
-              err_code: INSUFFICIENT_PERMISSIONS
-              err_msg: Project does not have access to the requested model.
-              request_id: 123456-7890-1234-5678-901234
+        responses:
+          insufficient_permissions:
+            description: Insufficient permissions, Model not found
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    err_code:
+                      type: string
+                      description: The error code
+                    err_msg:
+                      type: string
+                      description: The error message
+                    request_id:
+                      type: string
+                      description: The request ID
+                  example:
+                    err_code: INSUFFICIENT_PERMISSIONS
+                    err_msg: Project does not have access to the requested model.
+                    request_id: 123456-7890-1234-5678-901234
     payload_too_large:
       components:
-        responses: null
-        description: Payload too large
-        content:
-          application/json:
-            schema: null
-            type: object
-            properties:
-              err_code:
-                type: string
-                description: The error code
-              err_msg:
-                type: string
-                description: The error message
-              request_id:
-                type: string
-                description: The request ID
-            example:
-              err_code: Payload too large
-              err_msg: Input text exceeds maximum character limit of 2000.
-              request_id: 123456-7890-1234-5678-901234
+        responses:
+          payload_too_large:
+            description: Payload too large
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    err_code:
+                      type: string
+                      description: The error code
+                    err_msg:
+                      type: string
+                      description: The error message
+                    request_id:
+                      type: string
+                      description: The request ID
+                  example:
+                    err_code: Payload too large
+                    err_msg: Input text exceeds maximum character limit of 2000.
+                    request_id: 123456-7890-1234-5678-901234
     unsupported_media_type:
       components:
-        responses: null
-        description: Unsupported media type
-        content:
-          application/json:
-            schema: null
-            type: object
-            properties:
-              err_code:
-                type: string
-                description: The error code
-              err_msg:
-                type: string
-                description: The error message
-              request_id:
-                type: string
-                description: The request ID
-            example:
-              err_code: UNSUPPORTED_MEDIA_TYPE
-              err_msg: Content-Type header is not supported. Content-Type must be either text/plain or application/json."
-              request_id: 123456-7890-1234-5678-901234
+        responses:
+          unsupported_media_type:
+            description: Unsupported media type
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    err_code:
+                      type: string
+                      description: The error code
+                    err_msg:
+                      type: string
+                      description: The error message
+                    request_id:
+                      type: string
+                      description: The request ID
+                  example:
+                    err_code: UNSUPPORTED_MEDIA_TYPE
+                    err_msg: Content-Type header is not supported. Content-Type must be either text/plain or application/json.
+                    request_id: 123456-7890-1234-5678-901234
     projects_bad_request:
       components:
         responses:
