@@ -38,10 +38,6 @@ channels:
   speak:
     address: /v1/speak
     description: Deepgram Text to Speech WebSocket
-    externalDocs:
-      description: Transform Text to Speech
-      url: >-
-        https://developers.deepgram.com/reference/transform-text-to-speech-websocket
     parameters:
       SecWebSocketProtocol:
         description: >-
@@ -135,30 +131,18 @@ channels:
                   type: string
                   enum:
                     - Flush
-                  externalDocs:
-                    description: Flush
-                    url: https://developers.deepgram.com/docs/tts-ws-flush
-                  description: Forces the generation of audio from the internal text buffer
             - type: object
               properties:
                 type:
                   type: string
                   enum:
                     - Clear
-                  externalDocs:
-                    description: Clear
-                    url: https://developers.deepgram.com/docs/tts-ws-clear
-                  description: Clear out Deepgram's internal text buffer
             - type: object
               properties:
                 type:
                   type: string
                   enum:
                     - Close
-                  externalDocs:
-                    description: Close
-                    url: https://developers.deepgram.com/docs/tts-ws-close
-                  description: Close the websocket connection
           required:
             - type
         examples:
@@ -190,17 +174,8 @@ channels:
               description: The type of control message response
               oneOf:
                 - const: flush
-                  externalDocs:
-                    description: Flush
-                    url: https://developers.deepgram.com/docs/tts-ws-flush
                 - const: clear
-                  externalDocs:
-                    description: Clear
-                    url: https://developers.deepgram.com/docs/tts-ws-clear
                 - const: close
-                  externalDocs:
-                    description: Close
-                    url: https://developers.deepgram.com/docs/tts-ws-close
             sequence_id:
               type: integer
               description: The sequence ID of the response
@@ -231,9 +206,6 @@ channels:
       errorResponse:
         contentType: application/json
         description: Error information for failed requests
-        externalDocs:
-          description: Error Response
-          url: https://developers.deepgram.com/reference/errors
         payload:
           type: object
           required:
@@ -282,10 +254,6 @@ channels:
               description: Unique identifier for the request
       closeFrame:
         summary: WebSocket Close Frame
-        externalDocs:
-          description: WebSocket Close Frame
-          url: >-
-            https://developers.deepgram.com/reference/transform-text-to-speech-websocket#errors-and-warnings
         description: >
           When Deepgram encounters an error during streaming text to speech, a
           WebSocket Close frame is sent. The frame contains a status code and
@@ -349,9 +317,6 @@ channels:
   listen:
     address: /v1/listen
     description: Deepgram Speech to Text WebSocket
-    externalDocs:
-      description: Transcribe Live Audio
-      url: https://developers.deepgram.com/reference/listen-live
     parameters:
       SecWebSocketProtocol:
         description: >-
@@ -707,9 +672,6 @@ channels:
                   type: string
                   enum:
                     - Finalize
-                  externalDocs:
-                    description: Finalize
-                    url: https://developers.deepgram.com/docs/finalize
                   description: >-
                     Used to handle specific scenarios where you need to force
                     the server to process all unprocessed audio data and
@@ -720,9 +682,6 @@ channels:
                   type: string
                   enum:
                     - CloseStream
-                  externalDocs:
-                    description: CloseStream
-                    url: https://developers.deepgram.com/docs/close-stream
                   description: Close the websocket connection
             - type: object
               properties:
@@ -730,9 +689,6 @@ channels:
                   type: string
                   enum:
                     - KeepAlive
-                  externalDocs:
-                    description: KeepAlive
-                    url: https://developers.deepgram.com/docs/keep-alive
                   description: Used to keep the websocket connection alive
           required:
             - type
@@ -825,10 +781,6 @@ channels:
             - type
           oneOf:
             - title: FinalizeResponse
-              externalDocs:
-                description: Finalize Response
-                url: >-
-                  https://developers.deepgram.com/docs/finalize#finalize-confirmation
               description: >
                 The server will process all remaining audio data and return the
                 final results. You may receive a response with the from_finalize
@@ -849,10 +801,6 @@ channels:
                     - type
                     - channel
             - title: MetadataResponse
-              externalDocs:
-                description: Streaming Metadata Response
-                url: >-
-                  https://developers.deepgram.com/reference/listen-live#response-schema
               description: >
                 Provides real-time metadata during audio streaming, including
                 audio characteristics
@@ -898,10 +846,6 @@ channels:
                     - duration
                     - channels
             - title: CloseStreamResponse
-              externalDocs:
-                description: CloseStream Response
-                url: >-
-                  https://developers.deepgram.com/docs/close-stream#closestream-confirmation
               description: >
                 Indicates that the server has closed the WebSocket connection
                 and the server will process all remaining audio data.
@@ -988,9 +932,6 @@ channels:
       errorResponse:
         contentType: application/json
         description: Error information for failed requests
-        externalDocs:
-          description: Error Response
-          url: https://developers.deepgram.com/reference/errors
         payload:
           type: object
           required:
@@ -1039,10 +980,6 @@ channels:
               description: Unique identifier for the request
       closeFrame:
         summary: WebSocket Close Frame
-        externalDocs:
-          description: WebSocket Close Frame
-          url: >-
-            https://developers.deepgram.com/reference/listen-live#errors--warnings
         description: >
           When Deepgram encounters an error during streaming speech to text, a
           WebSocket Close frame is sent. The frame contains a status code and
@@ -1084,9 +1021,6 @@ channels:
   agent:
     address: /agent
     description: Deepgram Voice Agent WebSocket
-    externalDocs:
-      description: Build a Voice Agent
-      url: https://developers.deepgram.com/reference/build-a-voice-agent
     parameters:
       SecWebSocketProtocol:
         description: >-
@@ -1099,10 +1033,6 @@ channels:
       settingsConfiguration:
         contentType: application/json
         summary: Configure the voice agent and sets the input and output audio formats
-        externalDocs:
-          description: Settings Configuration
-          url: >-
-            https://developers.deepgram.com/docs/voice-agent-settings-configuration
         payload:
           type: object
           required:
@@ -1296,9 +1226,6 @@ channels:
         summary: >-
           Send a message to give additional instructions to the Think model in
           the middle of a conversation
-        externalDocs:
-          description: Update Instructions
-          url: https://developers.deepgram.com/docs/voice-agent-update-instructions
         payload:
           type: object
           required:
@@ -1326,9 +1253,6 @@ channels:
         summary: >-
           Send a message to change the Speak model in the middle of a
           conversation
-        externalDocs:
-          description: Update Speak
-          url: https://developers.deepgram.com/docs/voice-agent-update-speak
         payload:
           type: object
           required:
@@ -1351,10 +1275,6 @@ channels:
         summary: >-
           Send a message to change the Speak model in the middle of a
           conversation
-        externalDocs:
-          description: Inject Agent Message
-          url: >-
-            https://developers.deepgram.com/docs/voice-agent-inject-agent-message
         payload:
           type: object
           required:
@@ -1377,10 +1297,6 @@ channels:
       functionCallResponse:
         contentType: application/json
         summary: Configure the voice agent and configure the function call response
-        externalDocs:
-          description: Function Call Response
-          url: >-
-            https://developers.deepgram.com/docs/voice-agent-function-call-response
         payload:
           type: object
           required:
@@ -1410,9 +1326,6 @@ channels:
       agentKeepAlive:
         contentType: application/json
         summary: Send messages ensuring uninterrupted communication for your agent
-        externalDocs:
-          description: Function Call Response
-          url: https://developers.deepgram.com/docs/agent-keep-alive
         payload:
           type: object
           required:
@@ -1430,9 +1343,6 @@ channels:
         summary: >-
           Receive a welcome message from the server to confirm the websocket has
           opened
-        externalDocs:
-          description: Welcome message
-          url: https://developers.deepgram.com/docs/voice-agent-welcome-message
         payload:
           type: object
           required:
@@ -1456,10 +1366,6 @@ channels:
         summary: >-
           Confirm the server has successfully received and applied the Settings
           Configuration message
-        externalDocs:
-          description: Settings Applied
-          url: >-
-            https://developers.deepgram.com/docs/voice-agent-setting-applied-message
         payload:
           type: object
           required:
@@ -1477,9 +1383,6 @@ channels:
         summary: >-
           Conversation Text facilitates real-time communication by relaying
           spoken statements from both the user and the assistant
-        externalDocs:
-          description: Conversation Text
-          url: https://developers.deepgram.com/docs/voice-agent-conversation-text
         payload:
           type: object
           required:
@@ -1516,10 +1419,6 @@ channels:
         summary: >-
           User Started Speaking notifies the client that the user has begun
           speaking
-        externalDocs:
-          description: User Started Speaking
-          url: >-
-            https://developers.deepgram.com/docs/voice-agent-user-started-speaking
         payload:
           type: object
           required:
@@ -1539,9 +1438,6 @@ channels:
         summary: >-
           Agent Thinking informs the client when the agent is processing
           information
-        externalDocs:
-          description: Agent Thinking
-          url: https://developers.deepgram.com/docs/voice-agent-agent-thinking
         payload:
           type: object
           required:
@@ -1564,10 +1460,6 @@ channels:
       functionCallRequest:
         contentType: application/json
         summary: Request to call a function by sending a Function Call Request message
-        externalDocs:
-          description: Function Call Request
-          url: >-
-            https://developers.deepgram.com/docs/voice-agent-function-call-request
         payload:
           type: object
           required:
@@ -1599,9 +1491,6 @@ channels:
       functionCalling:
         contentType: application/json
         summary: Provides insights into function call workflows to assist in debugging
-        externalDocs:
-          description: Function Calling
-          url: https://developers.deepgram.com/docs/voice-agent-function-calling
         payload:
           type: object
           required:
@@ -1619,10 +1508,6 @@ channels:
         summary: >-
           Get notified when the server begins streaming an agent's audio
           response for playback
-        externalDocs:
-          description: Agent Started Speaking
-          url: >-
-            https://developers.deepgram.com/docs/voice-agent-agent-started-speaking
         payload:
           type: object
           required:
@@ -1662,9 +1547,6 @@ channels:
         summary: >-
           Get signals that the server has finished sending the final audio
           segment to the client
-        externalDocs:
-          description: Agent Audio Done
-          url: https://developers.deepgram.com/docs/voice-agent-agent-audio-done
         payload:
           type: object
           required:
@@ -1682,9 +1564,6 @@ channels:
       agentErrorResponse:
         contentType: application/json
         summary: Receive an error message from the server when an error occurs
-        externalDocs:
-          description: Agent Error Response
-          url: https://developers.deepgram.com/docs/voice-agent-server-errors
         payload:
           type: object
           required:
