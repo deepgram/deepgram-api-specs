@@ -1,9 +1,10 @@
 openapi: 3.1.0
 info:
   title: Deepgram API Specification
+  version: 1.0.0
   description: |
-    Deepgram's voice AI platform provides APIs for speech-to-text, text-to-speech,  and language understanding. From medical transcription to autonomous agents, Deepgram  is the go-to choice for developers of voice AI experiences.
-    The Deepgram API allows you to interact with Deepgram programmatically. 
+    Deepgram's voice AI platform provides APIs for speech-to-text, text-to-speech, and language understanding. From medical transcription to autonomous agents, Deepgram is the go-to choice for developers of voice AI experiences.
+    The Deepgram API allows you to interact with Deepgram programmatically.
     You can use our API to: - Transcribe speech to text. - Transform text to speech. - Analyze text. - Administer your Deepgram account.
   termsOfService: https://deepgram.com/terms/
   contact:
@@ -13,46 +14,35 @@ info:
   license:
     name: Privacy Notice
     url: https://deepgram.com/privacy/
-  version: 1.0.0
 servers:
   - url: https://api.deepgram.com
     description: Deepgram Production API
 security:
-  - Authorization: []
+  - ApiKeyAuth: []
 tags:
   - name: Speech to Text
     description: Power your apps with world-class speech recognition
-    externalDocs:
-      description: Get Started with Speech to Text (Pre-recorded Audio)
-      url: https://developers.deepgram.com/docs/pre-recorded-audio
   - name: Audio Intelligence
     description: Analyze audio sources
-    externalDocs:
-      description: Get Started with Audio Intelligence (Pre-recorded Audio)
-      url: https://developers.deepgram.com/docs/audio-intelligence
   - name: Text Intelligence
     description: Analyze the content of text sources
-    externalDocs:
-      description: Get Started with Text Intelligence
-      url: https://developers.deepgram.com/docs/text-intelligence
   - name: Text to Speech
     description: Transform text to speech
-    externalDocs:
-      description: Get Started with Text to Speech
-      url: https://developers.deepgram.com/docs/text-to-speech
+  - name: Management API
+    description: Manage your projects
 externalDocs:
   description: Learn more about using Deepgram on our docs.
   url: http://developers.deepgram.com
 paths:
   /v1/listen:
-    description: Use Deepgram's speech-to-text API to transcribe and analyze pre-recorded audio.
-    externalDocs:
-      description: Transcribe & Analyze Audio
-      url: https://developers.deepgram.com/reference/listen-file
+    summary: Transcribe and analyze pre-recorded audio
+    description: Use Deepgram's speech-to-text API to transcribe and analyze pre-recorded audio
     post:
       tags:
         - Speech to Text
-      summary: Transcribe audio
+      security:
+        - ApiKeyAuth: []
+      description: Transcribe audio using Deepgram's speech-to-text API
       operationId: listen
       requestBody:
         description: Transcribe an audio file
@@ -127,24 +117,23 @@ paths:
               requestBody:
                 required: true
                 content:
-                  required: true
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/response'
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/response'
               responses:
                 '200':
                   description: We expect a 200 to determine whether the callback was successfully received
   /v1/read:
-    description: Use Deepgram's speech-to-text API to analyze the content of text sources.
-    externalDocs:
-      description: Analyze Text
-      url: https://developers.deepgram.com/reference/analyze-text
+    summary: Analyze text content
+    description: Use Deepgram's speech-to-text API to analyze the content of text sources
     post:
       tags:
         - Text Intelligence
+      security:
+        - ApiKeyAuth: []
+      operationId: TextRead
       summary: Analyze text
-      operationId: read
+      description: Analyze text content using Deepgram's text analysis API
       requestBody:
         description: Analyze a text file
         content:
@@ -159,21 +148,21 @@ paths:
                 text:
                   type: string
                   description: The plain text to analyze
-                onOf:
-                  - required:
-                      - url
-                  - required:
-                      - text
+              oneOf:
+                - required:
+                    - url
+                - required:
+                    - text
       parameters:
-        - $ref:"./components/parameters/callback.yml"
-        - $ref:"./components/parameters/callback_method.yml"
-        - $ref:"./components/parameters/custom_topic.yml"
-        - $ref:"./components/parameters/custom_topic_mode.yml"
-        - $ref:"./components/parameters/intents.yml"
-        - $ref:"./components/parameters/read/language.yml"
-        - $ref:"./components/parameters/sentiment.yml"
-        - $ref:"./components/parameters/read/summarize.yml"
-        - $ref:"./components/parameters/topics.yml"
+        - $ref: '#/components/parameters/callback'
+        - $ref: '#/components/parameters/callback_method'
+        - $ref: '#/components/parameters/custom_topic'
+        - $ref: '#/components/parameters/custom_topic_mode'
+        - $ref: '#/components/parameters/intents'
+        - $ref: '#/components/parameters/read_language'
+        - $ref: '#/components/parameters/sentiment'
+        - $ref: '#/components/parameters/read_summarize'
+        - $ref: '#/components/parameters/topics'
       responses:
         '200':
           description: Successful text analysis
@@ -187,26 +176,27 @@ paths:
         transcriptionCallback:
           '{$request.query.callback}':
             post:
+              description: Callback endpoint for text analysis results
               requestBody:
+                description: The text analysis results
                 required: true
                 content:
-                  required: true
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/text/response.yml'
-            responses:
-              '200':
-                description: We expect a 200 to determine whether the callback was successfully received
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/text_response'
+              responses:
+                '200':
+                  description: We expect a 200 to determine whether the callback was successfully received
   /v1/speak:
-    description: Use Deepgram's Aura text-to-speech API to transform text to speech.
-    externalDocs:
-      description: Transform Text to Speech
-      url: https://developers.deepgram.com/reference/text-to-speech-api
+    summary: Text to Speech transformation
+    description: Use Deepgram's Aura text-to-speech API to transform text to speech
     post:
       tags:
         - Text to Speech
+      security:
+        - ApiKeyAuth: []
       summary: Transform text to speech
+      description: Convert text into natural-sounding speech using Deepgram's TTS API
       operationId: speak
       requestBody:
         description: Transform text to speech
@@ -220,12 +210,12 @@ paths:
                   type: string
                   description: The text to transform to speech
       parameters:
-        - $ref:"./components/parameters/speak/batch/bit_rate.yml"
-        - $ref:"./components/parameters/callback.yml"
-        - $ref:"./components/parameters/speak/batch/container.yml"
-        - $ref:"./components/parameters/speak/batch/encoding.yml"
-        - $ref:"./components/parameters/speak/batch/model.yml"
-        - $ref:"./components/parameters/speak/batch/sample_rate.yml"
+        - $ref: '#/components/parameters/bit_rate'
+        - $ref: '#/components/parameters/callback'
+        - $ref: '#/components/parameters/container'
+        - $ref: '#/components/parameters/speak_encoding'
+        - $ref: '#/components/parameters/speak_model'
+        - $ref: '#/components/parameters/speak_sample_rate'
       responses:
         '200':
           description: Successful text to speech
@@ -274,28 +264,30 @@ paths:
         transcriptionCallback:
           '{$request.query.callback}':
             post:
+              description: Callback endpoint for text-to-speech results
               requestBody:
+                description: The text-to-speech processing results
                 required: true
                 content:
-                  required: true
-                  content:
-                    application/json:
-                      schema:
-                        $ref: '#/components/schemas/speak/speak_response.yml'
-            responses:
-              '200':
-                description: We expect a 200 to determine whether the callback was successfully received
+                  application/json:
+                    schema:
+                      $ref: '#/components/schemas/speak_response'
+              responses:
+                '200':
+                  description: We expect a 200 to determine whether the callback was successfully received
   /v1/projects:
+    summary: List Projects
     description: Manage your projects
     get:
-      externalDocs:
-        description: Get Projects
-        url: https://developers.deepgram.com/reference/get-projects
-      summary: Retrieves basic information about the projects associated with the API key.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjects
+      summary: List Projects
+      description: Retrieves basic information about the projects associated with the API key
       responses:
         '200':
-          '403':
-            $ref: ./components/responses/projects/authentication_failed.yml
           description: A list of projects
           content:
             application/json:
@@ -313,15 +305,22 @@ paths:
                         name:
                           type: string
                           description: The name of the project
+        '403':
+          $ref: '#/components/responses/authentication_failed'
   /v1/projects/{project_id}:
-    description: Manage your projects
+    summary: Project Details
+    description: Manage individual project details and settings
+    parameters:
+      - $ref: '#/components/parameters/project_id'
     get:
-      externalDocs:
-        description: Get a Project
-        url: https://developers.deepgram.com/reference/get-project
-      summary: Retrieves information about the specified project.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProject
+      summary: Get a Project
+      description: Retrieves information about the specified project
       parameters:
-        - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/start'
         - $ref: '#/components/parameters/end'
@@ -346,77 +345,86 @@ paths:
           $ref: '#/components/responses/authentication_failed'
         '404':
           $ref: '#/components/responses/project_not_found'
-      patch:
-        externalDocs:
-          description: Update a Project
-          url: https://developers.deepgram.com/reference/update-project
-        summary: Updates the specified project
-        parameters:
-          - $ref: ./components/parameters/projects/project_id.yml
-        requestBody:
-          description: The name of the project
+    patch:
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: updateProject
+      summary: Updates the specified project
+      description: Updates the name or other properties of an existing project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      requestBody:
+        description: The name of the project
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the project
+              example:
+                name: My Project
+      responses:
+        '200':
+          description: A project
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  name:
+                  message:
                     type: string
-                    description: The name of the project
+                    description: confirmation message
                 example:
-                  name: My Project
-        responses:
-          '200':
-            description: A project
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                      description: confirmation message
-                  example:
-                    message: Successfully updated project info.
-          '400':
-            $ref: ./components/responses/projects/projects_bad_request.yml
-          '403':
-            $ref: ./components/responses/projects/authentication_failed.yml
-          '404':
-            $ref: ./components/responses/projects/project_not_found.yml
-      delete:
-        externalDocs:
-          description: Delete a Project
-          url: https://developers.deepgram.com/reference/delete-project
-        summary: Deletes the specified project
-        parameters:
-          - $ref: ./components/parameters/projects/project_id.yml
-        responses:
-          '200':
-            description: A project
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                      description: confirmation message
-                  example:
-                    message: Successfully deleted a project.
-          '400':
-            $ref: ./components/responses/projects/projects_bad_request.yml
-          '403':
-            $ref: ./components/responses/projects/authentication_failed.yml
-          '404':
-            $ref: ./components/responses/projects/project_not_found.yml
+                  message: Successfully updated project info.
+        '400':
+          $ref: '#/components/responses/projects_bad_request'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
+    delete:
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: deleteProject
+      summary: Deletes a project
+      description: Deletes the specified project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      responses:
+        '200':
+          description: A project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: confirmation message
+                example:
+                  message: Successfully deleted a project.
+        '400':
+          $ref: '#/components/responses/projects_bad_request'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/balances:
     description: Manage your project balances
     get:
-      externalDocs:
-        description: Get Project Balances
-        url: https://developers.deepgram.com/reference/get-all-balances
-      summary: Generates a list of outstanding balances for the specified project.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProjectBalances
+      summary: Get Project Balances
+      description: Generates a list of outstanding balances for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -448,7 +456,7 @@ paths:
               example:
                 balances:
                   - balance_id: b123456-7890-1234-5678-901234
-                    amount: 250.12
+                    amount: 250
                     units: usd
                     purchase_order_id: b123456-7890-1234-5678-901234
         '400':
@@ -460,10 +468,13 @@ paths:
   /v1/projects/{project_id}/balances/{balance_id}:
     description: Manage your project balances
     get:
-      externalDocs:
-        description: Get a Project Balance
-        url: https://developers.deepgram.com/reference/get-balance
-      summary: Retrieves details about the specified balance.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProjectBalance
+      summary: Retrieves details about the specified balance
+      description: Retrieves details about the specified balance
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/balance_id'
@@ -490,7 +501,7 @@ paths:
                     description: Description or reference of the purchase
               example:
                 balance_id: b123456-7890-1234-5678-901234
-                amount: 250.12
+                amount: 250
                 units: usd
                 purchase_order_id: b123456-7890-1234-5678-901234
         '400':
@@ -499,13 +510,16 @@ paths:
           $ref: '#/components/responses/authentication_failed'
         '404':
           $ref: '#/components/responses/project_not_found'
-  /v1/projects/{project}/models:
+  /v1/projects/{project_id}/models:
     description: Manage your project models
     get:
-      externalDocs:
-        description: Get Models
-        url: https://developers.deepgram.com/reference/get-project-models
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectModels
       summary: Returns metadata on all the latest models that a specific project has access to, including non-public models.
+      description: Returns metadata on all the latest models that a specific project has access to, including non-public models.
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/include_outdated'
@@ -527,151 +541,155 @@ paths:
                       $ref: '#/components/schemas/tts_models'
         '400':
           $ref: '#/components/responses/projects_bad_request'
-  /v1/projects/{project}/models/{model_id}:
+  /v1/projects/{project_id}/models/{model_id}:
     description: Manage your project models
+    parameters:
+      - $ref: '#/components/parameters/project_id'
+      - $ref: '#/components/parameters/model_id'
     get:
-      externalDocs:
-        description: Get a Project Model
-        url: https://developers.deepgram.com/reference/get-project-model
-      summary: Returns metadata for a specific model.
-      parameters:
-        - $ref: '#/components/parameters/model_id'
-    responses:
-      '200':
-        description: A specific model
-        content:
-          application/json:
-            oneOf:
-              - $ref: ./components/schemas/models/stt_models.yml
-              - $ref: ./components/schemas/models/tts_models.yml
-      '400':
-        $ref: ./components/responses/projects/projects_bad_request.yml
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProjectModel
+      summary: Returns metadata for a specific model
+      description: Returns metadata for a specific model
+      responses:
+        '200':
+          description: A specific model
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/stt_models'
+                  - $ref: '#/components/schemas/tts_models'
+        '400':
+          $ref: '#/components/responses/projects_bad_request'
   /v1/projects/{project_id}/keys:
     description: Manage your project keys
+    parameters:
+      - $ref: '#/components/parameters/project_id'
     get:
-      externalDocs:
-        description: Get Project Keys
-        url: https://developers.deepgram.com/reference/list-keys
-      summary: Returns a list of API keys for a specific project.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectKeys
+      summary: Returns a list of API keys for a specific project
+      description: Retrieves all API keys associated with the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
-    responses:
-      '200':
-        description: A list of API keys
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                type: array
-                items:
-                  $ref: ./components/schemas/keys/keys.yml
-      '403':
-        $ref: ./components/responses/projects/authentication_failed.yml
-      '404':
-        $ref: ./components/responses/projects/project_not_found.yml
-      post:
-        externalDocs:
-          description: Create a Project Key
-          url: https://developers.deepgram.com/reference/create-key
-        summary: Creates a new API key for a specific project.
-        parameters:
-          - $ref: ./components/parameters/projects/project_id.yml
-        requestBody:
-          description: The API key settings
+      responses:
+        '200':
+          description: A list of API keys
           content:
             application/json:
               schema:
                 type: object
                 properties:
-                  comment:
-                    type: string
-                    description: A comment for the API key
-                  scopes:
+                  api_keys:
                     type: array
-                    description: The scopes for the API key
                     items:
-                      type: string
-                  tags:
-                    type: array
-                    description: The tags for the API key
-                    items:
-                      type: string
-                  expiration_date:
-                    type: date
-                    description: The expiration date for the API key
-                  time_to_live_in_seconds:
-                    type: integer
-                    description: The time to live in seconds for the API key
-                example:
-                  comment: A comment
-                  scopes: admin
-                  tags: tag-1
-                  expiration_date: '2024-05-01T00:00:00.000000Z'
-                  time_to_live_in_seconds: '3600'
-        responses:
-          '200':
-            $ref: ./components/responses/keys/key_created.yml
-          '403':
-            $ref: ./components/responses/projects/authentication_failed.yml
-          '404':
-            $ref: ./components/responses/projects/project_not_found.yml
-      delete:
-        externalDocs:
-          description: Delete a Project Key
-          url: https://developers.deepgram.com/reference/delete-key
-        summary: Deletes an API key for a specific project.
-        parameters:
-          - $ref: ./components/parameters/projects/project_id.yml
-          - $ref: ./components/parameters/projects/key_id.yml
-        responses:
-          '200':
-            description: API key deleted
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                      description: A message indicating that the API key was deleted
-                example:
-                  message: Successfully deleted the API key!
-          '403':
-            $ref: ./components/responses/projects/authentication_failed.yml
-          '404':
-            $ref: ./components/responses/projects/project_not_found.yml
-  /v1/projects/{project_id}/keys/{key_id}/keys:
-    description: Manage your project keys
-    get:
-      externalDocs:
-        description: Get a Project Key
-        url: https://developers.deepgram.com/reference/get-key
-      summary: Retrieves information about a specified API key,
+                      $ref: '#/components/schemas/keys'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
+    post:
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: createProjectKey
+      summary: Creates a new API key for a specific project
+      description: Creates a new API key with specified settings for the project
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/key_id'
-    responses:
-      '200':
-        description: A specific API key
+      requestBody:
+        description: The API key settings
+        required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                item:
-                  $ref: ./components/schemas/keys/key.yml
-      '403':
-        $ref: ./components/responses/projects/authentication_failed.yml
-      '404':
-        $ref: ./components/responses/projects/project_not_found.yml
+              $ref: '#/components/schemas/keys'
+      responses:
+        '200':
+          description: API key created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/key_created'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
+  /v1/projects/{project_id}/keys/{key_id}:
+    description: Manage your project keys
+    get:
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProjectKey
+      summary: Retrieves information about a specified API key
+      description: Retrieves information about a specified API key
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/key_id'
+      responses:
+        '200':
+          description: A specific API key
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  item:
+                    $ref: '#/components/schemas/key'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
+    delete:
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: deleteProjectKey
+      summary: Deletes an API key for a specific project
+      description: Deletes an API key for a specific project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/key_id'
+      responses:
+        '200':
+          description: API key deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message indicating that the API key was deleted
+              example:
+                message: Successfully deleted the API key!
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/members:
     description: Manage your project members
     get:
-      externalDocs:
-        description: Get Project Members
-        url: https://developers.deepgram.com/reference/get-members
-      summary: Retrieves a list of account objects for a specific project.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectMembers
+      summary: Retrieves a list of account objects for a specific project
+      description: Retrieves a list of account objects for a specific project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
       responses:
         '200':
           description: A list of account objects
@@ -690,6 +708,8 @@ paths:
                           description: The unique identifier of the member
                           scopes:
                             type: array
+                            items:
+                              type: string
                             description: The API scopes of the member
                           email:
                             type: string
@@ -704,19 +724,18 @@ paths:
   /v1/projects/{project_id}/members/{member_id}:
     description: Manage your project members
     delete:
-      externalDocs:
-        description: Remove a Project Member
-        url: https://developers.deepgram.com/reference/remove-member
-      summary: Removes the specified member from a project.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: deleteProjectMember
+      summary: Removes the specified member from a project
+      description: Removes a member from the project using their unique member ID
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/member_id'
       responses:
         '200':
-          '403':
-            $ref: ./components/responses/projects/authentication_failed.yml
-          '404':
-            $ref: ./components/responses/projects/project_not_found.yml
           description: Delete the specific member from the project
           content:
             application/json:
@@ -728,13 +747,20 @@ paths:
                     description: confirmation message
                 example:
                   message: Successfully removed account from project.
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/members/{member_id}/scopes:
     description: Manage your project members
     get:
-      externalDocs:
-        description: Get Project Member Scopes
-        url: https://developers.deepgram.com/reference/get-member-scopes
-      summary: Retrieves a list of scopes for a specific member.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectMemberScopes
+      summary: Retrieves a list of scopes for a specific member
+      description: Retrieves a list of scopes for a specific member
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/member_id'
@@ -748,16 +774,21 @@ paths:
                 properties:
                   scopes:
                     type: array
+                    items:
+                      type: string
                     description: The API scopes of the member
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
           $ref: '#/components/responses/project_not_found'
     put:
-      externalDocs:
-        description: Update a Project Member's Scopes
-        url: https://developers.deepgram.com/reference/update-scope
-      summary: Updates the scopes for a specific member.
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: updateProjectMemberScopes
+      summary: Updates the scopes for a specific member
+      description: Updates the scopes for a specific member
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/member_id'
@@ -767,11 +798,13 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - scope
               properties:
                 scope:
                   type: string
                   description: A scope to update
-              example: admin
+                  example: admin
       responses:
         '200':
           description: Updated the scopes for a specific member
@@ -783,7 +816,8 @@ paths:
                   message:
                     type: string
                     description: confirmation message
-                example: Successfully updated the account scopes.
+                example:
+                  message: Successfully updated the account scopes.
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
@@ -791,10 +825,13 @@ paths:
   /v1/projects/{project_id}/invites:
     description: Manage your project invites
     get:
-      externalDocs:
-        description: Get Project Invites
-        url: https://developers.deepgram.com/reference/list-invites
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectInvites
       summary: Generates a list of invites for a specific project
+      description: Generates a list of invites for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -816,52 +853,61 @@ paths:
                         scope:
                           type: string
                           description: The scope of the invitee
-      post:
-        '400':
-          $ref: ./components/responses/projects/invalid_request.yml
-        '401':
-          $ref: ./components/responses/projects/unauthorized.yml
-        '403':
-          $ref: ./components/responses/projects/authentication_failed.yml
-        '404':
-          $ref: ./components/responses/projects/project_not_found.yml
-        externalDocs:
-          description: Send a Project Invite
-          url: https://developers.deepgram.com/reference/send-invites
-        summary: Generates an invite for a specific project
-        parameters:
-          - $ref: ./components/parameters/projects/project_id.yml
-        requestBody:
-          description: email to invite to the project
-          content:
-            application/json:
-              schema:
-                type: object
+    post:
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: createProjectInvite
+      summary: Generates an invite for a specific project
+      description: Generates an invite for a specific project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+      requestBody:
+        description: email to invite to the project
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - scope
               properties:
                 email:
                   type: string
                   description: The email address of the invitee
-                scope:
-                  type: string
-                  description: The scope of the invitee
-        responses:
-          '200':
-            description: The invite was successfully generated
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    message:
-                      type: string
-                      description: confirmation message
+              scope:
+                type: string
+                description: The scope of the invitee
+      responses:
+        '200':
+          description: The invite was successfully generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: confirmation message
+        '400':
+          $ref: '#/components/responses/invalid_request'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/invites/{email}:
     description: Manage your project invites
     delete:
-      externalDocs:
-        description: Delete a Project Invite
-        url: https://developers.deepgram.com/reference/delete-invite
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: deleteProjectInvite
       summary: Deletes an invite for a specific project
+      description: Deletes an invite for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/email'
@@ -887,10 +933,13 @@ paths:
   /v1/projects/{project_id}/leave:
     description: Manage your project accounts
     delete:
-      externalDocs:
-        description: Leave a Project
-        url: https://developers.deepgram.com/reference/leave-project
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: deleteProjectLeave
       summary: Removes the authenticated account from the specific project
+      description: Removes the authenticated account from the specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -915,10 +964,13 @@ paths:
   /v1/projects/{project_id}/requests:
     description: Manage your project requests
     get:
-      externalDocs:
-        description: Get Project Requests
-        url: https://developers.deepgram.com/reference/get-all-requests
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectRequests
       summary: Generates a list of requests for a specific project
+      description: Generates a list of requests for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
@@ -934,10 +986,10 @@ paths:
                 type: object
                 properties:
                   page:
-                    type: int
+                    type: integer
                     description: The page number of the paginated response
                   limit:
-                    type: int
+                    type: integer
                     description: The number of results per page
                   requests:
                     type: array
@@ -950,31 +1002,37 @@ paths:
   /v1/projects/{project_id}/requests/{request_id}:
     description: Manage your project requests
     get:
-      externalDocs:
-        description: Get a Project Request
-        url: https://developers.deepgram.com/reference/get-request
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProjectRequest
       summary: Retrieves a specific request for a specific project
+      description: Retrieves a specific request for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/request_id'
-    responses:
-      '200':
-        description: A specific request for a specific project
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                request:
-                  type: object
-                  $ref: ./components/responses/request.yml
+      responses:
+        '200':
+          description: A specific request for a specific project
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  request:
+                    type: object
+                    $ref: '#/components/schemas/request'
   /v1/projects/{project_id}/usage:
     description: Manage your project usage
     get:
-      externalDocs:
-        description: Get Project Usage
-        url: https://developers.deepgram.com/reference/summarize-usage
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProjectUsage
       summary: Retrieves the usage for a specific project
+      description: Retrieves the usage for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
@@ -991,8 +1049,6 @@ paths:
         - $ref: '#/components/parameters/diarize'
         - $ref: '#/components/parameters/diarize_version'
         - $ref: '#/components/parameters/dictation'
-        - $ref: '#/components/parameters/detect_entities'
-        - $ref: '#/components/parameters/detect_language'
         - $ref: '#/components/parameters/detect_topics'
         - $ref: '#/components/parameters/encoding'
         - $ref: '#/components/parameters/extra'
@@ -1019,32 +1075,27 @@ paths:
         - $ref: '#/components/parameters/utterances'
         - $ref: '#/components/parameters/utt_split'
         - $ref: '#/components/parameters/version'
-    responses:
-      '200':
-        $ref: ./components/responses/projects/usage.yml
-      '400':
-        $ref: ./components/responses/projects/invalid_request.yml
-      '401':
-        $ref: ./components/responses/projects/unauthorized.yml
-      '403':
-        $ref: ./components/responses/projects/authentication_failed.yml
-      '404':
-        $ref: ./components/responses/projects/project_not_found.yml
+      responses:
+        '200':
+          $ref: '#/components/responses/usage'
+        '400':
+          $ref: '#/components/responses/invalid_request'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/usage/fields:
     description: Manage your project usage
     get:
-      '400':
-        $ref: ./components/responses/projects/invalid_request.yml
-      '401':
-        $ref: ./components/responses/projects/unauthorized.yml
-      '403':
-        $ref: ./components/responses/projects/authentication_failed.yml
-      '404':
-        $ref: ./components/responses/projects/project_not_found.yml
-      externalDocs:
-        description: Get Project Usage Fields
-        url: https://developers.deepgram.com/reference/get-fields
-      summary: Lists the features, models, tags, languages, and processing method used for requests in the specified project
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectUsageFields
+      summary: Lists the features, models, tags, languages, and processing method used
+      description: Lists the features, models, tags, languages, and processing method used for requests in the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
@@ -1052,13 +1103,24 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/fields'
+        '400':
+          $ref: '#/components/responses/invalid_request'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/purchases:
     description: Manage your project purchases
     get:
-      externalDocs:
-        description: Get Project Purchases
-        url: https://developers.deepgram.com/reference/get-purchases
-      summary: Returns the original purchased amount on an order transaction
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectPurchases
+      summary: Returns the original purchased amount
+      description: Returns the original purchased amount on an order transaction
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
@@ -1066,10 +1128,13 @@ paths:
   /v1/models:
     description: Manage your project models
     get:
-      externalDocs:
-        description: Get Models
-        url: https://developers.deepgram.com/reference/get-models
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listModels
       summary: Returns metadata on all the latest public models
+      description: Returns metadata on all the latest public models
       parameters:
         - $ref: '#/components/parameters/include_outdated'
       responses:
@@ -1080,26 +1145,30 @@ paths:
   /v1/models/{model_id}:
     description: Manage your project models
     get:
-      externalDocs:
-        description: Get a Model
-        url: https://developers.deepgram.com/reference/get-model
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getModel
       summary: Returns metadata for a specific model
+      description: Returns metadata for a specific model
       parameters:
-        - $ref: '#/components/parameters/model_uuid'
+        - $ref: '#/components/parameters/model_id'
       responses:
         '200':
-          - $ref: ./components/responses/models/model.yml
+          $ref: '#/components/responses/model'
         '400':
           $ref: '#/components/responses/projects_bad_request'
   /v1/projects/{project_id}/self-hosted/distribution/credentials:
     description: Returns sets of distribution credentials for the specified project
     get:
-      externalDocs:
-        description: Get Project Self-Hosted Distribution Credentials
-        url: https://developers.deepgram.com/reference/list-credentials
-      summary: Lists sets of distribution credentials for the specified project
+      tags:
+        - Management API
       security:
-        - Authorization: []
+        - ApiKeyAuth: []
+      operationId: listSelfHostedDistCreds
+      summary: Lists sets of distribution credentials for the specified project
+      description: Lists sets of distribution credentials for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
       responses:
@@ -1109,36 +1178,38 @@ paths:
           $ref: '#/components/responses/authentication_failed'
         '404':
           $ref: '#/components/responses/project_not_found'
-      post:
-        externalDocs:
-          description: Create a Project Self-Hosted Distribution Credential
-          url: https://developers.deepgram.com/reference/create-credentials
-        summary: Creates a set of distribution credentials for the specified project
-        security:
-          - Authorization: []
-        parameters:
-          - $ref: ./components/parameters/projects/project_id.yml
-          - $ref: ./components/parameters/projects/distribution_comment.yml
-          - $ref: ./components/parameters/projects/distribution_scopes.yml
-          - $ref: ./components/parameters/projects/distribution_provider.yml
-        requestBody:
-          description: The set of distribution credentials to create
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  comment:
-                    type: string
+    post:
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: createSelfHostedDistCreds
+      summary: Creates a set of distribution credentials for the specified project
+      description: Creates a set of distribution credentials for the specified project
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/distribution_comment'
+        - $ref: '#/components/parameters/distribution_scopes'
+        - $ref: '#/components/parameters/distribution_provider'
+      requestBody:
+        description: The set of distribution credentials to create
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
   /v1/projects/{project_id}/self-hosted/distribution/credentials/{distribution_credentials_id}:
     description: Returns a single set of distribution credentials for the specified project
     get:
-      externalDocs:
-        description: Get a Project Self-Hosted Distribution Credential
-        url: https://developers.deepgram.com/reference/get-credentials
-      summary: Returns a set of distribution credentials for the specified project
+      tags:
+        - Management API
       security:
-        - Authorization: []
+        - ApiKeyAuth: []
+      operationId: getSelfHostedCredentials
+      summary: Get a Project Self-Hosted Distribution Credential
+      description: Returns a set of distribution credentials for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/distribution_credentials_id'
@@ -1150,12 +1221,13 @@ paths:
         '404':
           $ref: '#/components/responses/project_not_found'
     delete:
-      externalDocs:
-        description: Delete a Project Self-Hosted Distribution Credential
-        url: https://developers.deepgram.com/reference/delete-credentials
-      summary: Deletes a set of distribution credentials for the specified project
+      tags:
+        - Management API
       security:
-        - Authorization: []
+        - ApiKeyAuth: []
+      operationId: deleteSelfHostedDistCreds
+      summary: Deletes a set of distribution credentials for the specified project
+      description: Deletes a set of distribution credentials for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/distribution_credentials_id'
@@ -1168,22 +1240,17 @@ paths:
           $ref: '#/components/responses/project_not_found'
 components:
   securitySchemes:
-    Authorization:
+    ApiKeyAuth:
       type: apiKey
       in: header
       name: Authorization
-      description: Specify the token value with the `Token ` prefix, e.g. "Token DEEPGRAM_API_KEY".
+      description: |
+        Use the `Authorization` header with the format `token <API KEY>`. Example:`Authorization token 12345abcdef`
   parameters:
     callback:
       name: callback
       in: query
       required: false
-      externalDocs:
-        description: Callback
-        urls:
-          stt: https://developers.deepgram.com/docs/callback
-          tts: https://developers.deepgram.com/docs/tts-callback
-          ttt: https://developers.deepgram.com/docs/text-intelligence-callback
       description: URL to which we'll make the callback request
       schema:
         type: string
@@ -1192,12 +1259,6 @@ components:
       name: callback_method
       in: query
       required: false
-      externalDocs:
-        description: Callback Method
-        urls:
-          stt: https://developers.deepgram.com/docs/callback#using-callback_method
-          tts: https://developers.deepgram.com/docs/tts-callback#using-callback_method
-          ttt: https://developers.deepgram.com/docs/text-intelligence-callback#using-callback_method
       description: HTTP method by which the callback request will be made
       schema:
         default: POST
@@ -1209,9 +1270,6 @@ components:
       name: custom_topic
       in: query
       required: false
-      externalDocs:
-        description: Custom Topic
-        url: https://developers.deepgram.com/docs/topic-detection
       description: Custom topics you want the model to detect within your input audio or text if present Submit up to 100
       style: form
       explode: true
@@ -1229,9 +1287,6 @@ components:
       name: custom_topic_mode
       in: query
       required: false
-      externalDocs:
-        description: Custom Topic Mode
-        url: https://developers.deepgram.com/docs/topic-detection
       description: Sets how the model will interpret strings submitted to the `custom_topic` param. When `strict`, the model will only return topics submitted using the `custom_topic` param. When `extended`, the model will return its own detected topics in addition to those submitted using the `custom_topic` param
       schema:
         default: extended
@@ -1244,9 +1299,6 @@ components:
       name: custom_intent
       in: query
       required: false
-      externalDocs:
-        description: Custom Intents
-        url: https://developers.deepgram.com/docs/intent-recognition
       description: Custom intents you want the model to detect within your input audio if present
       style: form
       explode: true
@@ -1258,16 +1310,11 @@ components:
             items:
               type: string
               maxItems: 100
-              example:
-                - unsubscribe
-                - account deletion
+              example: unsubscribe, account deletion
     custom_intent_mode:
       name: custom_intent_mode
       in: query
       required: false
-      externalDocs:
-        description: Custom Intent Mode
-        url: https://developers.deepgram.com/docs/intent-recognition
       description: Sets how the model will interpret intents submitted to the `custom_intent` param. When `strict`, the model will only return intents submitted using the `custom_intent` param. When `extended`, the model will return its own detected intents in addition those submitted using the `custom_intents` param
       schema:
         default: extended
@@ -1280,9 +1327,6 @@ components:
       name: detect_entities
       in: query
       required: false
-      externalDocs:
-        description: Detect Entities
-        url: https://developers.deepgram.com/docs/detect-entities
       description: Identifies and extracts key entities from content in submitted audio
       schema:
         default: false
@@ -1292,9 +1336,6 @@ components:
       name: detect_language
       in: query
       required: false
-      externalDocs:
-        description: Detect Language
-        url: https://developers.deepgram.com/docs/language-detection
       description: Identifies the dominant language spoken in submitted audio
       style: form
       explode: true
@@ -1306,17 +1347,12 @@ components:
           - type: array
             items:
               type: string
-              example:
-                - en
-                - fr
+              example: en, fr
     diarize_version:
       name: diarize_version
       in: query
       required: false
       description: Version of the diarization feature to use. Only used when the diarization feature is enabled (`diarize=true` is passed to the API)
-      externalDocs:
-        description: Diarization Version
-        url: https://developers.deepgram.com/docs/diarization
       default: v2
       schema:
         type: string
@@ -1325,9 +1361,6 @@ components:
       name: diarize
       in: query
       required: false
-      externalDocs:
-        description: Diarization
-        url: https://developers.deepgram.com/docs/diarization
       description: Recognize speaker changes. Each word in the transcript will be assigned a speaker number starting at 0
       schema:
         default: false
@@ -1337,9 +1370,6 @@ components:
       name: dictation
       in: query
       required: false
-      externalDocs:
-        description: Dictation
-        url: https://developers.deepgram.com/docs/dictation
       description: Identify and extract key entities from content in submitted audio
       schema:
         default: false
@@ -1349,9 +1379,6 @@ components:
       name: encoding
       in: query
       required: false
-      externalDocs:
-        description: Encoding
-        url: https://developers.deepgram.com/docs/encoding
       description: Specify the expected encoding of your submitted audio
       schema:
         type: string
@@ -1369,9 +1396,6 @@ components:
       name: extra
       in: query
       required: false
-      externalDocs:
-        description: Extra Metadata
-        url: https://developers.deepgram.com/docs/extra-metadata
       description: Arbitrary key-value pairs that are attached to the API response for usage in downstream processing
       style: form
       explode: true
@@ -1388,9 +1412,6 @@ components:
       name: filler_words
       in: query
       required: false
-      externalDocs:
-        description: Filler Words
-        url: https://developers.deepgram.com/docs/filler-words
       description: Filler Words can help transcribe interruptions in your audio, like "uh" and "um"
       schema:
         default: false
@@ -1400,22 +1421,15 @@ components:
       name: intents
       in: query
       required: false
-      externalDocs:
-        description: Intents
-        url: https://developers.deepgram.com/docs/intent-recognition
       description: Recognizes speaker intent throughout a transcript or text
       schema:
         default: false
         type: boolean
-      example:
-        - true
+      example: true
     keywords:
       name: keywords
       in: query
       required: false
-      externalDocs:
-        description: Keywords
-        url: https://developers.deepgram.com/docs/keywords
       description: Keywords can boost or suppress specialized terminology and brands
       style: form
       explode: true
@@ -1432,9 +1446,6 @@ components:
       name: language
       in: query
       required: false
-      externalDocs:
-        description: STT Language Support
-        url: https://developers.deepgram.com/docs/language
       description: The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that hints at the primary spoken language
       schema:
         default: en
@@ -1489,6 +1500,7 @@ components:
               - tr
               - uk
               - vi
+            examples: en-US
           - type: string
             title: Nova model languages
             enum:
@@ -1500,6 +1512,7 @@ components:
               - en-IN
               - es
               - es-419
+            example: en-US
           - type: string
             title: Enhanced model languages
             description: Recommended for lower word error rates than Base, high accuracy timestamps, and use cases that require keyword boosting.
@@ -1529,6 +1542,7 @@ components:
               - taq
               - tr
               - uk
+            example: en-US
           - type: string
             title: Base model languages.
             description: Recommended for large transcription volumes and high accuracy timestamps.
@@ -1562,15 +1576,11 @@ components:
               - taq
               - tr
               - uk
-      example:
-        - en
+            example: en-US
     measurements:
       name: measurements
       in: query
       required: false
-      externalDocs:
-        description: Measurements
-        url: https://developers.deepgram.com/docs/measurements
       description: Spoken measurements will be converted to their corresponding abbreviations
       schema:
         default: false
@@ -1580,9 +1590,6 @@ components:
       name: model
       in: query
       required: false
-      externalDocs:
-        description: STT Models & Languages
-        url: https://developers.deepgram.com/docs/models-languages-overview
       description: AI model used to process submitted audio
       schema:
         default: base-general
@@ -1616,17 +1623,14 @@ components:
               - conversationalai
               - voicemail
               - video
+            example: nova-2
           - type: string
             description: Custom string if you've had a model trained by Deepgram
-      example:
-        - nova-2
+            example: custom-model-123
     multichannel:
       name: multichannel
       in: query
       required: false
-      externalDocs:
-        description: Multichannel
-        url: https://developers.deepgram.com/docs/multichannel
       description: Transcribe each audio channel independently
       schema:
         default: false
@@ -1636,9 +1640,6 @@ components:
       name: numerals
       in: query
       required: false
-      externalDocs:
-        description: Numerals
-        url: https://developers.deepgram.com/docs/numerals
       description: Numerals converts numbers from written format to numerical format
       schema:
         default: false
@@ -1648,11 +1649,7 @@ components:
       name: paragraphs
       in: query
       required: false
-      externalDocs:
-        description: Paragraphs
-        url: https://developers.deepgram.com/docs/paragraphs
       description: Splits audio into paragraphs to improve transcript readability
-      x-dg-description: Paragraphs are defined as groups of words that are separated by pauses in the audio. This is done in the following ways; - When Paragraphs is enabled, the `punctuate` feature is enabled by default, and paragraphs are identified based on the transcript's punctuation - When the `diarize` feature is enabled and multiple speakers are present, paragraphs breaks are influenced by speaker changes - When the `multichannel` feature is enabled, paragraphs breaks are influenced by channel changes
       schema:
         default: false
         type: boolean
@@ -1661,22 +1658,15 @@ components:
       name: profanity_filter
       in: query
       required: false
-      externalDocs:
-        description: Profanity Filter
-        url: https://developers.deepgram.com/docs/profanity-filter
       description: Profanity Filter looks for recognized profanity and converts it to the nearest recognized non-profane word or removes it from the transcript completely
       schema:
         default: false
         type: boolean
-      example:
-        - true
+      example: true
     punctuate:
       name: punctuate
       in: query
       required: false
-      externalDocs:
-        description: Punctuation
-        url: https://developers.deepgram.com/docs/punctuation
       description: Add punctuation and capitalization to the transcript
       schema:
         default: false
@@ -1686,9 +1676,6 @@ components:
       name: redact
       in: query
       required: false
-      externalDocs:
-        description: Redaction
-        url: https://developers.deepgram.com/docs/redaction
       description: Redaction removes sensitive information from your transcripts
       style: form
       explode: true
@@ -1711,9 +1698,6 @@ components:
       name: replace
       in: query
       required: false
-      externalDocs:
-        description: Replace
-        url: https://developers.deepgram.com/docs/find-and-replace
       description: Search for terms or phrases in submitted audio and replaces them
       style: form
       explode: true
@@ -1730,9 +1714,6 @@ components:
       name: search
       in: query
       required: false
-      externalDocs:
-        description: Search
-        url: https://developers.deepgram.com/docs/search
       description: Search for terms or phrases in submitted audio
       style: form
       explode: true
@@ -1749,22 +1730,15 @@ components:
       name: sentiment
       in: query
       required: false
-      externalDocs:
-        description: Sentiment
-        url: https://developers.deepgram.com/docs/sentiment-analysis
       description: Recognizes the sentiment throughout a transcript or text
       schema:
         default: false
         type: boolean
-      example:
-        - true
+      example: true
     smart_format:
       name: smart_format
       in: query
       required: false
-      externalDocs:
-        description: Smart Format
-        url: https://developers.deepgram.com/docs/smart-format
       description: Apply formatting to transcript output. When set to true, additional formatting will be applied to transcripts to improve readability
       schema:
         default: false
@@ -1774,9 +1748,6 @@ components:
       name: summarize
       in: query
       required: false
-      externalDocs:
-        description: Summarize
-        url: https://developers.deepgram.com/docs/summarization
       description: Summarize content
       schema:
         default: false
@@ -1788,15 +1759,11 @@ components:
               - v1
           - title: Legacy
             type: boolean
-      example:
-        - v2
+      example: v2
     tag:
       name: tag
       in: query
       required: false
-      externalDocs:
-        description: Tag
-        url: https://developers.deepgram.com/docs/tagging
       description: Label your requests for the purpose of identification during usage reporting
       style: form
       explode: true
@@ -1812,22 +1779,15 @@ components:
       name: topics
       in: query
       required: false
-      externalDocs:
-        description: Topics
-        url: https://developers.deepgram.com/docs/topic-detection
       description: Detect topics throughout a transcript or text
       schema:
         default: false
         type: boolean
-      example:
-        - true
+      example: true
     utterances:
       name: utterances
       in: query
       required: false
-      externalDocs:
-        description: Utterances
-        url: https://developers.deepgram.com/docs/utterances
       description: Segments speech into meaningful semantic units
       schema:
         default: false
@@ -1837,9 +1797,6 @@ components:
       name: utt_split
       in: query
       required: false
-      externalDocs:
-        description: Utterance Split
-        url: https://developers.deepgram.com/docs/utterance-split
       description: Seconds to wait before detecting a pause between words in submitted audio
       schema:
         default: 0.8
@@ -1860,10 +1817,194 @@ components:
             description: Use the latest version of a model
             enum:
               - latest
+            example: latest
           - type: string
             description: Use a previous version of a model
-      example:
-        - latest
+            example: model-123
+    read_language:
+      name: read_language
+      in: query
+      required: false
+      description: The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that hints at the primary spoken language
+      schema:
+        type: string
+        default: en
+        enum:
+          - en
+      example: en
+    read_summarize:
+      name: read_summarize
+      in: query
+      required: false
+      externalDocs:
+        description: Summarize
+        url: https://developers.deepgram.com/docs/text-summarization
+      description: Summarize text
+      schema:
+        default: false
+        type: boolean
+      example: true
+    bit_rate:
+      name: bit_rate
+      in: query
+      required: false
+      description: The bitrate of the audio in bits per second. Choose from predefined ranges or specific values based on the encoding type.
+      default: 48000
+      schema:
+        oneOf:
+          - title: mp3(default)
+            description: Encoding - mp3(default). Supported bitrates - 32000, 48000(default) bps.
+            type: integer
+            enum:
+              - 32000
+              - 48000
+          - title: opus
+            description: Encoding - opus. Bitrate range - 4000-650000 bps.
+            type: integer
+            minimum: 4000
+            maximum: 650000
+          - title: aac
+            description: Encoding -aac. Bitrate range - 4000-192000 bps.
+            type: integer
+            minimum: 4000
+            maximum: 192000
+    container:
+      name: container
+      in: query
+      required: false
+      description: Container specifies the file format wrapper for the output audio. The available options depend on the encoding type.
+      default: wav
+      schema:
+        oneOf:
+          - title: linear16
+            description: Encoding - linear16. Supported container - wav (default), or no container.
+            type: string
+            enum:
+              - wav
+            nullable: true
+          - title: mulaw
+            description: Encoding - mulaw. Supported container - wav (default), or no container.
+            type: string
+            enum:
+              - wav
+            nullable: true
+          - title: alaw
+            description: Encoding - alaw. Supported container - wav (default), or no container.
+            type: string
+            enum:
+              - wav
+            nullable: true
+          - title: opus
+            description: Encoding - opus. Supported container - ogg (default).
+            type: string
+            enum:
+              - ogg
+    speak_encoding:
+      name: speak_encoding
+      in: query
+      required: false
+      description: Encoding allows you to specify the expected encoding of your audio output
+      default: mp3
+      schema:
+        oneOf:
+          - title: linear16
+            description: Encoding - linear16. Uncompressed, high-quality audio format often used for telephony or audio processing.
+            type: string
+            enum:
+              - linear16
+          - title: flac
+            description: Encoding - flac. Lossless audio format for high-quality compression.
+            type: string
+            enum:
+              - flac
+          - title: mulaw
+            description: Encoding - mulaw. Compressed audio format commonly used in telephony.
+            type: string
+            enum:
+              - mulaw
+          - title: alaw
+            description: Encoding - alaw. Similar to mulaw but used in international telephony.
+            type: string
+            enum:
+              - alaw
+          - title: mp3
+            description: Encoding - mp3. Popular compressed audio format for music and streaming.
+            type: string
+            enum:
+              - mp3
+          - title: opus
+            description: Encoding - opus. High-compression audio format optimized for real-time communications.
+            type: string
+            enum:
+              - opus
+          - title: aac
+            description: Encoding - aac. Advanced audio format offering better quality at smaller file sizes than mp3.
+            type: string
+            enum:
+              - aac
+      example: linear16
+    speak_model:
+      name: speak_model
+      in: query
+      required: false
+      description: AI model used to process submitted text
+      default: aura-asteria-en
+      schema:
+        type: string
+        enum:
+          - aura-asteria-en
+          - aura-luna-en
+          - aura-stella-en
+          - aura-athena-en
+          - aura-hera-en
+          - aura-orion-en
+          - aura-arcas-en
+          - aura-perseus-en
+          - aura-angus-en
+          - aura-orpheus-en
+          - aura-helios-en
+          - aura-zeus-en
+      example: aura-asteria-en
+    speak_sample_rate:
+      name: speak_sample_rate
+      in: query
+      required: false
+      description: Sample Rate specifies the sample rate for the output audio. Based on the encoding, different sample rates are supported. For some encodings, the sample rate is not configurable
+      default: 24000
+      schema:
+        oneOf:
+          - title: linear16
+            description: Encoding - linear16. Supported sample rates - 8000, 16000, 24000, 32000, 48000 Hz.
+            type: integer
+            enum:
+              - 8000
+              - 16000
+              - 24000
+              - 32000
+              - 48000
+          - title: mulaw
+            description: Encoding - mulaw. Supported sample rates - 8000, 16000 Hz.
+            type: integer
+            enum:
+              - 8000
+              - 16000
+          - title: alaw
+            description: Encoding - alaw. Supported sample rates - 8000, 16000 Hz.
+            type: integer
+            enum:
+              - 8000
+              - 16000
+          - title: mp3
+            description: Encoding - mp3. Sample rate is fixed and not configurable (22050 Hz).
+            type: integer
+            enum:
+              - 22050
+          - title: opus
+            description: Encoding - opus. Sample rate is fixed at 48000 Hz.
+            type: integer
+            enum:
+              - 48000
+      example: 24000
     project_id:
       name: project_id
       in: path
@@ -1890,7 +2031,7 @@ components:
       description: Start date of the requested date range. Formats accepted are YYYY-MM-DD, YYYY-MM-DDTHH:MM:SS, or YYYY-MM-DDTHH:MM:SS+HH:MM
       schema:
         type: string
-        format: date
+        format: date-time
       example: '2024-07-01T00:00:00'
     end:
       name: end
@@ -1899,7 +2040,7 @@ components:
       description: End date of the requested date range. Formats accepted are YYYY-MM-DD, YYYY-MM-DDTHH:MM:SS, or YYYY-MM-DDTHH:MM:SS+HH:MM
       schema:
         type: string
-      format: date
+        format: date-time
       example: '2024-07-31T00:00:00'
     page:
       name: page
@@ -1970,9 +2111,6 @@ components:
       in: query
       required: false
       description: The number of channels in the submitted audio
-      externalDocs:
-        description: Channels
-        url: https://developers.deepgram.com/docs/channels
       default: 1
       schema:
         type: integer
@@ -1982,9 +2120,6 @@ components:
       name: detect_topics
       in: query
       required: false
-      externalDocs:
-        description: Detect Topics
-        url: https://developers.deepgram.com/docs/topic-detection
       description: Identify and extract key topics
       schema:
         default: false
@@ -1994,24 +2129,53 @@ components:
       name: sample_rate
       in: query
       required: false
-      externalDocs:
-        description: Sample Rate
-        url: https://developers.deepgram.com/docs/sample-rate
       description: Sample rate of submitted audio. Required (and only read) when a value is provided for encoding
       default: 1
       schema:
         type: integer
         format: int32
       example: 8000
-    model_uuid:
-      name: model_uuid
+    distribution_comment:
+      name: comment
       in: query
-      required: true
-      description: The specific UUID of the model
+      required: false
+      description: Optional comment about the credentials
       schema:
         type: string
-        format: uuid
-      example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
+      example: My Self-Hosted Distribution Credentials
+    distribution_scopes:
+      name: scopes
+      in: query
+      required: true
+      description: List of permission scopes for the credentials
+      schema:
+        default:
+          - self-hosted:products
+        type: array
+        items:
+          type: string
+          enum:
+            - self-hosted:products
+            - self-hosted:product:api
+            - self-hosted:product:engine
+            - self-hosted:product:license-proxy
+            - self-hosted:product:dgtools
+            - self-hosted:product:billing
+            - self-hosted:product:hotpepper
+            - self-hosted:product:metrics-server
+      example:
+        - self-hosted:products
+    distribution_provider:
+      name: provider
+      in: query
+      required: true
+      description: The provider of the distribution service
+      schema:
+        default: quay
+        type: string
+        enum:
+          - quay
+      example: quay
     distribution_credentials_id:
       name: distribution_credentials_id
       in: path
@@ -2129,7 +2293,8 @@ components:
           type: array
           items:
             type: string
-            example: test
+          example:
+            - test
     channels:
       type: array
       items:
@@ -2313,68 +2478,74 @@ components:
       type: object
       description: Output whenever `topics=true` is used
       properties:
-        segments:
-          type: array
-          items:
-            - type: object
+        results:
+          type: object
+          properties:
+            topics:
+              type: object
               properties:
-                text:
-                  type: string
-                  example: And, um, I think if it signifies anything, it is, uh, to honor the the women who came before us who, um, were skilled and qualified, um, and didn't get the the same opportunities that we have today.
-                start_word:
-                  type: number
-                  example: 32
-                end_word:
-                  type: number
-                  example: 69
-                topics:
+                segments:
                   type: array
                   items:
-                    - type: object
-                      properties:
-                        topic:
-                          type: string
-                          example: Spacewalk
-                        confidence_score:
-                          type: number
-                          example: 0.91581345
-                  example:
-                    - topic: Spacewalk
-                      confidence_score: 0.91581345
-                    - topic: Women's skill and qualifications
-                      confidence_score: 0.00075203663
+                    type: object
+                    properties:
+                      text:
+                        type: string
+                        example: And, um, I think if it signifies anything, it is, uh, to honor the the women who came before us who, um, were skilled and qualified, um, and didn't get the the same opportunities that we have today.
+                      start_word:
+                        type: integer
+                        example: 32
+                      end_word:
+                        type: integer
+                        example: 69
+                      topics:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            topic:
+                              type: string
+                              example: Spacewalk
+                            confidence_score:
+                              type: number
+                              format: float
+                              example: 0.91581345
     intents:
       type: object
       description: Output whenever `intents=true` is used
       properties:
-        segments:
-          type: array
-          items:
-            - type: object
+        results:
+          type: object
+          properties:
+            intents:
+              type: object
               properties:
-                text:
-                  type: string
-                  example: And, um, I think if it signifies anything, it is, uh, to honor the the women who came before us who, um, were skilled and qualified, um, and didn't get the the same opportunities that we have today.
-                start_word:
-                  type: number
-                  example: 32
-                end_word:
-                  type: number
-                  example: 69
-                intents:
+                segments:
                   type: array
                   items:
-                    - type: object
-                      properties:
-                        intent:
-                          type: string
-                          example: Honor women and recognize women
-                        confidence_score:
-                          type: number
-                          example: 0.0037266621
-                  example:
-                    - intent: Honor women and recognize women
-                      confidence_score: 0.0037266621
+                    type: object
+                    properties:
+                      text:
+                        type: string
+                        example: If you found this valuable, you can subscribe to the show on spotify or your favorite podcast app.
+                      start_word:
+                        type: integer
+                        example: 354
+                      end_word:
+                        type: integer
+                        example: 414
+                      intents:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            intent:
+                              type: string
+                              example: Encourage podcasting
+                            confidence_score:
+                              type: number
+                              format: float
+                              example: 0.0038975573
     sentiments:
       type: object
       description: Output whenever `sentiment=true` is used
@@ -2539,6 +2710,12 @@ components:
           x-collapse: true
         results:
           $ref: '#/components/schemas/text_results'
+    speak_response:
+      description: The standard text response
+      properties:
+        results:
+          type: string
+          format: binary
     stt_models:
       type: array
       items:
@@ -2557,9 +2734,9 @@ components:
             type: array
             items:
               type: string
-              example:
-                - en
-                - en-us
+            example:
+              - en
+              - en-us
           version:
             type: string
             example: 2021-11-10.1
@@ -2593,9 +2770,9 @@ components:
             type: array
             items:
               type: string
-              example:
-                - en
-                - en-us
+            example:
+              - en
+              - en-us
           version:
             type: string
             example: 2024-07-30.0
@@ -2621,9 +2798,115 @@ components:
                 type: array
                 items:
                   type: string
-                  example:
-                    - masculine
-                    - neutral
+                example:
+                  - masculine
+    keys:
+      type: array
+      items:
+        type: object
+        properties:
+          member:
+            type: object
+            properties:
+              member_id:
+                type: string
+                example: 1000-2000-3000-4000
+              email:
+                type: string
+                example: john@test.com
+          api_key:
+            type: object
+            properties:
+              api_key_id:
+                type: string
+                example: 1234567890abcdef1234567890abcdef
+              comment:
+                type: string
+                example: A comment
+              scopes:
+                type: array
+                items:
+                  type: string
+                example:
+                  - admin
+              created:
+                type: string
+                format: date-time
+                example: '2021-01-01T00:00:00Z'
+    key_created:
+      components:
+        responses:
+          description: API key created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  api_key_id:
+                    type: string
+                    description: The unique identifier of the API key
+                  key:
+                    type: string
+                    description: The API key
+                  comment:
+                    type: string
+                    description: A comment for the API key
+                  scopes:
+                    type: array
+                    description: the scopes for the API key
+                    items:
+                      type: string
+                  tags:
+                    type: array
+                    description: the tags for the API key
+                    items:
+                      type: string
+              example:
+                api_key_id: 1234567890abcdef1234567890abcdef
+                key: 1234567890abcdef1234567890abcdef
+                comments: a comment
+                scopes:
+                  - member
+                tags:
+                  - tag-1
+                expiration_date: '2024-05-01T00:00:00.000000Z'
+    key:
+      type: object
+      properties:
+        member:
+          type: object
+          properties:
+            member_id:
+              type: string
+              example: 1000-2000-3000-4000
+            email:
+              type: string
+              example: john@test.com
+            first_name:
+              type: string
+              example: John
+            last_name:
+              type: string
+              example: Doe
+            api_key: null
+            type: object
+            properties:
+              api_key_id:
+                type: string
+                example: 1234567890abcdef1234567890abcdef
+              comment:
+                type: string
+                example: A comment
+              scopes:
+                type: array
+                items:
+                  type: string
+                example:
+                  - admin
+              created:
+                type: string
+                format: date-time
+                example: '2021-01-01T00:00:00Z'
     request:
       components:
         responses:
@@ -2754,32 +3037,6 @@ components:
                     err_code: UNSUPPORTED_MEDIA_TYPE
                     err_msg: Content-Type header is not supported. Content-Type must be either text/plain or application/json.
                     request_id: 123456-7890-1234-5678-901234
-    projects_bad_request:
-      components:
-        responses:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  category:
-                    type: string
-                    description: The error category
-                  message:
-                    type: string
-                    description: The error message
-                  details:
-                    type: string
-                    description: Additional details about the error
-                  request_id:
-                    type: string
-                    description: The request ID
-                example:
-                  category: INVALID_JSON
-                  message: Invalid JSON submitted.
-                  details: 'Json deserialize error: EOF while parsing a value at line 1 column 0'
-                  request_id: 123456-7890-1234-5678-901234
     authentication_failed:
       components:
         responses:
@@ -2806,6 +3063,32 @@ components:
                   category: UNAUTHORIZED
                   message: Authentication failed.
                   details: Check that you are using the correct credentials.
+                  request_id: 123456-7890-1234-5678-901234
+    projects_bad_request:
+      components:
+        responses:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  category:
+                    type: string
+                    description: The error category
+                  message:
+                    type: string
+                    description: The error message
+                  details:
+                    type: string
+                    description: Additional details about the error
+                  request_id:
+                    type: string
+                    description: The request ID
+                example:
+                  category: INVALID_JSON
+                  message: Invalid JSON submitted.
+                  details: 'Json deserialize error: EOF while parsing a value at line 1 column 0'
                   request_id: 123456-7890-1234-5678-901234
     project_not_found:
       components:
@@ -2851,6 +3134,74 @@ components:
               schema:
                 type: string
               example: User does not have sufficient permissions.
+    usage:
+      components:
+        responses:
+          description: Usage Summary
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  start:
+                    type: string
+                    format: date
+                    example: '2024-10-16'
+                  end:
+                    type: string
+                    format: date
+                    example: '2024-10-23'
+                  resolution:
+                    type: object
+                    properties:
+                      units:
+                        type: string
+                        example: day
+                      amount:
+                        type: integer
+                        example: 1
+                    results:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          start:
+                            type: string
+                            format: date
+                            example: '2024-10-16'
+                          end:
+                            type: string
+                            format: date
+                            example: '2024-10-16'
+                          hours:
+                            type: number
+                            format: float
+                            example: 1097.4274322222223
+                          total_hours:
+                            type: number
+                            format: float
+                            example: 1099.3888366666667
+                          requests:
+                            type: integer
+                            example: 425109
+                          tokens:
+                            type: object
+                            properties:
+                              in:
+                                type: integer
+                                example: 24770
+                              out:
+                                type: integer
+                                example: 7521
+                          tts:
+                            type: object
+                            properties:
+                              characters:
+                                type: integer
+                                example: 9004185
+                              requests:
+                                type: integer
+                                example: 231261
     fields:
       components:
         responses:
@@ -2863,11 +3214,11 @@ components:
                   tags:
                     type: array
                     description: List of tags associated with the project
-                items:
-                  type: string
-                example:
-                  - tag1
-                  - tag2
+                    items:
+                      type: string
+                    example:
+                      - tag=dev
+                      - tag=production
               models:
                 type: array
                 description: List of models available for the project.
@@ -2974,6 +3325,7 @@ components:
                               type: string
                             example:
                               - en
+                              - en-us
                           version:
                             type: string
                             example: 2024-07-30.0
@@ -3004,6 +3356,97 @@ components:
                                   type: string
                                 example:
                                   - masculine
+    model:
+      components:
+        responses:
+          '200':
+            description: A model object that can be either STT or TTS
+            content:
+              application/json:
+                schema:
+                  oneOf:
+                    - type: object
+                      properties:
+                        name:
+                          type: string
+                          example: general
+                        canonical_name:
+                          type: string
+                          example: enhanced-general
+                        architecture:
+                          type: string
+                          example: polaris
+                        languages:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                            - en
+                            - en-us
+                        version:
+                          type: string
+                          example: 2022-05-18.1
+                        uuid:
+                          type: string
+                          format: uuid
+                          example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
+                        batch:
+                          type: boolean
+                          example: true
+                        streaming:
+                          type: boolean
+                          example: true
+                        formatted_output:
+                          type: boolean
+                          example: false
+                    - type: object
+                      properties:
+                        name:
+                          type: string
+                          example: angus
+                        canonical_name:
+                          type: string
+                          example: aura-angus-en
+                        architecture:
+                          type: string
+                          example: aura
+                        languages:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                            - en
+                            - en-us
+                        version:
+                          type: string
+                          example: 2024-07-30.0
+                        uuid:
+                          type: string
+                          format: uuid
+                          example: eed36e9e-37aa-40a3-91fa-a2911e73a5da
+                        metadata:
+                          type: object
+                          properties:
+                            accent:
+                              type: string
+                              example: Irish
+                            color:
+                              type: string
+                              example: '#BA80F5'
+                            image:
+                              type: string
+                              format: uri
+                              example: https://static.deepgram.com/examples/avatars/angus.jpg
+                            sample:
+                              type: string
+                              format: uri
+                              example: https://static.deepgram.com/examples/voices/angus.wav
+                            tags:
+                              type: array
+                              items:
+                                type: string
+                              example:
+                                - masculine
     credentials:
       components:
         responses:
@@ -3037,7 +3480,7 @@ components:
                               type: string
                               format: email
                               description: Email address of the member
-                              example: email
+                              example: email@example.com
                         distribution_credentials:
                           type: object
                           required:
@@ -3099,7 +3542,7 @@ components:
                         type: string
                         format: email
                         description: Email address of the member
-                        example: email
+                        example: email@example.com
                   distribution_credentials:
                     type: object
                     required:
