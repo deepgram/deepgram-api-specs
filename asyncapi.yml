@@ -12,6 +12,13 @@ info:
 
     You can use our Websockets to: - Transcribe speech to text. - Transform text
     to speech. - Build a Voice Agent.
+  tags:
+    - name: listen
+      description: Speech to Text WebSocket API
+    - name: speak
+      description: Text to Speech WebSocket API
+    - name: agent
+      description: Voice Agent WebSocket API
   termsOfService: https://deepgram.com/terms/
   contact:
     name: Deepgram Developer Relations
@@ -1219,6 +1226,15 @@ channels:
                       type: string
                       default: aura-asteria-en
                       description: Text-to-speech model
+                    provider:
+                      type: string
+                      enum:
+                        - eleven_labs
+                        - cartesia
+                      description: Alternative TTS provider
+                    voice_id:
+                      type: string
+                      description: Unique voice identifier for the selected provider
             context:
               type: object
               nullable: true
@@ -1270,6 +1286,8 @@ channels:
                           - order_id
                 speak:
                   model: aura-asteria-en
+                  provider: eleven_labs
+                  voice_id: bIHbv24MWmeRgasZH58o
               context:
                 messages: []
                 replay: false
@@ -1686,6 +1704,7 @@ channels:
               message: 'Failed to process audio input: Invalid audio format'
 operations:
   sendText:
+    description: Send text to Deepgram's Text to Speech API
     action: send
     channel:
       $ref: '#/channels/speak'
@@ -1693,59 +1712,69 @@ operations:
       - $ref: '#/channels/speak/messages/textToSpeechRequest'
   sendSpeakControlMessage:
     action: send
+    description: Send control messages to Deepgram's Text to Speech API
     channel:
       $ref: '#/channels/speak'
     messages:
       - $ref: '#/channels/speak/messages/controlMessagesRequest'
   receiveAudio:
+    description: Receive audio from Deepgram's Text to Speech API
     action: receive
     channel:
       $ref: '#/channels/speak'
     messages:
       - $ref: '#/channels/speak/messages/textToSpeechResponse'
   receiveSpeakControlResponse:
+    description: Receive control messages from Deepgram's Text to Speech API
     action: receive
     channel:
       $ref: '#/channels/speak'
     messages:
       - $ref: '#/channels/speak/messages/controlMessagesResponse'
   sendAudio:
+    description: Send audio to Deepgram's Speech to Text API
     action: send
     channel:
       $ref: '#/channels/listen'
     messages:
       - $ref: '#/channels/listen/messages/transcriptionRequest'
   sendListenControlMessage:
+    description: Send control messages to Deepgram's Speech to Text API
     action: send
     channel:
       $ref: '#/channels/listen'
     messages:
       - $ref: '#/channels/listen/messages/controlMessagesRequest'
   receiveTranscription:
+    description: Receive transcription from Deepgram's Speech to Text API
     action: receive
     channel:
       $ref: '#/channels/listen'
     messages:
       - $ref: '#/channels/listen/messages/transcriptionResponse'
   receiveListenControlResponse:
+    description: Receive control messages from Deepgram's Speech to Text API
     action: receive
     channel:
       $ref: '#/channels/listen'
     messages:
       - $ref: '#/channels/listen/messages/controlMessageResponse'
   sendSettingsConfiguration:
+    description: Send settings configuration to Deepgram's Voice Agent API
     action: send
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/settingsConfiguration'
   sendUpdateInstructions:
+    description: Send update instructions to Deepgram's Voice Agent API
     action: send
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/updateInstructions'
   sendUpdateSpeak:
+    description: Send update speak to Deepgram's Voice Agent API
     action: send
     channel:
       $ref: '#/channels/agent'
@@ -1753,77 +1782,90 @@ operations:
       - $ref: '#/channels/agent/messages/updateSpeak'
   sendInjectAgentMessage:
     action: send
+    description: Send inject agent message to Deepgram's Voice Agent API
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/injectAgentMessage'
   sendFunctionCallResponse:
+    description: Send function call response to Deepgram's Voice Agent API
     action: send
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/functionCallResponse'
   sendKeepAlive:
+    description: Send keep alive to Deepgram's Voice Agent API
     action: send
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/agentKeepAlive'
   receiveWelcome:
+    description: Receive welcome message from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/welcomeMessage'
   receiveSettingsApplied:
+    description: Receive settings applied message from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/settingsApplied'
   receiveConversationText:
+    description: Receive conversation text from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/ConversationText'
   receiveUserStartedSpeaking:
+    description: Receive user started speaking message from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/userStartedSpeaking'
   receiveAgentThinking:
+    description: Receive agent thinking message from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/agentThinking'
   receiveFunctionCallRequest:
+    description: Receive function call request from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/functionCallRequest'
   receiveFunctionCalling:
+    description: Receive function calling message from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/functionCalling'
   receiveAgentStartedSpeaking:
+    description: Receive agent started speaking message from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/agentStartedSpeaking'
   receiveAgentAudioDone:
+    description: Receive agent audio done message from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/agentAudioDone'
   receiveError:
+    description: Receive error response from Deepgram's Voice Agent API
     action: receive
     channel:
       $ref: '#/channels/agent'
