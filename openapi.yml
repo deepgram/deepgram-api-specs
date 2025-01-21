@@ -1806,9 +1806,6 @@ components:
       name: version
       in: query
       required: false
-      externalDocs:
-        description: STT Models
-        url: https://developers.deepgram.com/docs/version
       description: Version of an AI model to use
       schema:
         default: latest
@@ -1836,9 +1833,6 @@ components:
       name: read_summarize
       in: query
       required: false
-      externalDocs:
-        description: Summarize
-        url: https://developers.deepgram.com/docs/text-summarization
       description: Summarize text
       schema:
         default: false
