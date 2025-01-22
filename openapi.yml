@@ -35,9 +35,9 @@ externalDocs:
   url: http://developers.deepgram.com
 paths:
   /v1/listen:
-    summary: Transcribe and analyze pre-recorded audio
     description: Use Deepgram's speech-to-text API to transcribe and analyze pre-recorded audio
     post:
+      summary: Transcribe and analyze pre-recorded audio
       tags:
         - Speech to Text
       security:
@@ -49,21 +49,10 @@ paths:
         content:
           application/json:
             schema:
-              required:
-                - url
-              type: object
-              description: Audio file to transcribe
-              properties:
-                url:
-                  type: string
-                  format: uri
-                  example: https://dpgr.am/spacewalk.wav
-            example:
-              url: https://dpgr.am/spacewalk.wav
-          file:
+              $ref: '#/components/schemas/ListenRequest'
+          audio/*:
             schema:
-              type: string
-              format: binary
+              $ref: '#/components/schemas/ListenRequestFile'
         required: true
       parameters:
         - $ref: '#/components/parameters/callback'
@@ -124,35 +113,21 @@ paths:
                 '200':
                   description: We expect a 200 to determine whether the callback was successfully received
   /v1/read:
-    summary: Analyze text content
     description: Use Deepgram's speech-to-text API to analyze the content of text sources
     post:
+      summary: Analyze text content
       tags:
         - Text Intelligence
       security:
         - ApiKeyAuth: []
       operationId: TextRead
-      summary: Analyze text
       description: Analyze text content using Deepgram's text analysis API
       requestBody:
         description: Analyze a text file
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                url:
-                  type: string
-                  format: uri
-                  description: A URL pointing to the text source
-                text:
-                  type: string
-                  description: The plain text to analyze
-              oneOf:
-                - required:
-                    - url
-                - required:
-                    - text
+              $ref: '#/components/schemas/text_request'
       parameters:
         - $ref: '#/components/parameters/callback'
         - $ref: '#/components/parameters/callback_method'
@@ -188,14 +163,13 @@ paths:
                 '200':
                   description: We expect a 200 to determine whether the callback was successfully received
   /v1/speak:
-    summary: Text to Speech transformation
     description: Use Deepgram's Aura text-to-speech API to transform text to speech
     post:
+      summary: Text to Speech transformation
       tags:
         - Text to Speech
       security:
         - ApiKeyAuth: []
-      summary: Transform text to speech
       description: Convert text into natural-sounding speech using Deepgram's TTS API
       operationId: speak
       requestBody:
@@ -204,11 +178,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                text:
-                  type: string
-                  description: The text to transform to speech
+              $ref: '#/components/schemas/speak_request'
       parameters:
         - $ref: '#/components/parameters/bit_rate'
         - $ref: '#/components/parameters/callback'
@@ -276,15 +246,14 @@ paths:
                 '200':
                   description: We expect a 200 to determine whether the callback was successfully received
   /v1/projects:
-    summary: List Projects
     description: Manage your projects
     get:
+      summary: List Projects
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjects
-      summary: List Projects
       description: Retrieves basic information about the projects associated with the API key
       responses:
         '200':
@@ -308,17 +277,16 @@ paths:
         '403':
           $ref: '#/components/responses/authentication_failed'
   /v1/projects/{project_id}:
-    summary: Project Details
     description: Manage individual project details and settings
     parameters:
       - $ref: '#/components/parameters/project_id'
     get:
+      summary: Get a Project
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: getProject
-      summary: Get a Project
       description: Retrieves information about the specified project
       parameters:
         - $ref: '#/components/parameters/limit'
@@ -346,12 +314,12 @@ paths:
         '404':
           $ref: '#/components/responses/project_not_found'
     patch:
+      summary: Update a Project
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: updateProject
-      summary: Updates the specified project
       description: Updates the name or other properties of an existing project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -360,13 +328,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                name:
-                  type: string
-                  description: The name of the project
-              example:
-                name: My Project
+              $ref: '#/components/schemas/update_projects'
       responses:
         '200':
           description: A project
@@ -387,12 +349,12 @@ paths:
         '404':
           $ref: '#/components/responses/project_not_found'
     delete:
+      summary: Delete a Project
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: deleteProject
-      summary: Deletes a project
       description: Deletes the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -418,12 +380,12 @@ paths:
   /v1/projects/{project_id}/balances:
     description: Manage your project balances
     get:
+      summary: Get Project Balances
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: getProjectBalances
-      summary: Get Project Balances
       description: Generates a list of outstanding balances for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -468,12 +430,12 @@ paths:
   /v1/projects/{project_id}/balances/{balance_id}:
     description: Manage your project balances
     get:
+      summary: Get a Project Balance
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: getProjectBalance
-      summary: Retrieves details about the specified balance
       description: Retrieves details about the specified balance
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -513,13 +475,13 @@ paths:
   /v1/projects/{project_id}/models:
     description: Manage your project models
     get:
+      summary: Returns metadata on all the latest models
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjectModels
-      summary: Returns metadata on all the latest models that a specific project has access to, including non-public models.
-      description: Returns metadata on all the latest models that a specific project has access to, including non-public models.
+      description: Returns metadata on all the latest models that a specific project has access to, including non-public models
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/include_outdated'
@@ -547,12 +509,12 @@ paths:
       - $ref: '#/components/parameters/project_id'
       - $ref: '#/components/parameters/model_id'
     get:
+      summary: Get a Project Model
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: getProjectModel
-      summary: Returns metadata for a specific model
       description: Returns metadata for a specific model
       responses:
         '200':
@@ -570,12 +532,12 @@ paths:
     parameters:
       - $ref: '#/components/parameters/project_id'
     get:
+      summary: List Project Keys
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjectKeys
-      summary: Returns a list of API keys for a specific project
       description: Retrieves all API keys associated with the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -596,12 +558,12 @@ paths:
         '404':
           $ref: '#/components/responses/project_not_found'
     post:
+      summary: Create a Project Key
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: createProjectKey
-      summary: Creates a new API key for a specific project
       description: Creates a new API key with specified settings for the project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -626,12 +588,12 @@ paths:
   /v1/projects/{project_id}/keys/{key_id}:
     description: Manage your project keys
     get:
+      summary: Get a Project Key
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: getProjectKey
-      summary: Retrieves information about a specified API key
       description: Retrieves information about a specified API key
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -681,12 +643,12 @@ paths:
   /v1/projects/{project_id}/members:
     description: Manage your project members
     get:
+      summary: List Project Members
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjectMembers
-      summary: Retrieves a list of account objects for a specific project
       description: Retrieves a list of account objects for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -724,12 +686,12 @@ paths:
   /v1/projects/{project_id}/members/{member_id}:
     description: Manage your project members
     delete:
+      summary: Delete a Project Member
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: deleteProjectMember
-      summary: Removes the specified member from a project
       description: Removes a member from the project using their unique member ID
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -754,12 +716,12 @@ paths:
   /v1/projects/{project_id}/members/{member_id}/scopes:
     description: Manage your project members
     get:
+      summary: List Project Member Scopes
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjectMemberScopes
-      summary: Retrieves a list of scopes for a specific member
       description: Retrieves a list of scopes for a specific member
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -782,12 +744,12 @@ paths:
         '404':
           $ref: '#/components/responses/project_not_found'
     put:
+      summary: Update Project Member Scopes
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: updateProjectMemberScopes
-      summary: Updates the scopes for a specific member
       description: Updates the scopes for a specific member
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -797,14 +759,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - scope
-              properties:
-                scope:
-                  type: string
-                  description: A scope to update
-                  example: admin
+              $ref: '#/components/schemas/update_member_scope'
       responses:
         '200':
           description: Updated the scopes for a specific member
@@ -825,12 +780,12 @@ paths:
   /v1/projects/{project_id}/invites:
     description: Manage your project invites
     get:
+      summary: List Project Invites
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjectInvites
-      summary: Generates a list of invites for a specific project
       description: Generates a list of invites for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -854,12 +809,12 @@ paths:
                           type: string
                           description: The scope of the invitee
     post:
+      summary: Create a Project Invite
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: createProjectInvite
-      summary: Generates an invite for a specific project
       description: Generates an invite for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -868,17 +823,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              required:
-                - email
-                - scope
-              properties:
-                email:
-                  type: string
-                  description: The email address of the invitee
-              scope:
-                type: string
-                description: The scope of the invitee
+              $ref: '#/components/schemas/create_project_invite'
       responses:
         '200':
           description: The invite was successfully generated
@@ -901,12 +846,12 @@ paths:
   /v1/projects/{project_id}/invites/{email}:
     description: Manage your project invites
     delete:
+      summary: Delete a Project Invite
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: deleteProjectInvite
-      summary: Deletes an invite for a specific project
       description: Deletes an invite for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -933,12 +878,12 @@ paths:
   /v1/projects/{project_id}/leave:
     description: Manage your project accounts
     delete:
+      summary: Leave a Project
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: deleteProjectLeave
-      summary: Removes the authenticated account from the specific project
       description: Removes the authenticated account from the specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -964,12 +909,12 @@ paths:
   /v1/projects/{project_id}/requests:
     description: Manage your project requests
     get:
+      summary: List Project Requests
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjectRequests
-      summary: Generates a list of requests for a specific project
       description: Generates a list of requests for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1002,12 +947,12 @@ paths:
   /v1/projects/{project_id}/requests/{request_id}:
     description: Manage your project requests
     get:
+      summary: Get a Project Request
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: getProjectRequest
-      summary: Retrieves a specific request for a specific project
       description: Retrieves a specific request for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1026,12 +971,12 @@ paths:
   /v1/projects/{project_id}/usage:
     description: Manage your project usage
     get:
+      summary: Get Project Usage
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: getProjectUsage
-      summary: Retrieves the usage for a specific project
       description: Retrieves the usage for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1089,12 +1034,12 @@ paths:
   /v1/projects/{project_id}/usage/fields:
     description: Manage your project usage
     get:
+      summary: List Project Usage Fields
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjectUsageFields
-      summary: Lists the features, models, tags, languages, and processing method used
       description: Lists the features, models, tags, languages, and processing method used for requests in the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1114,12 +1059,12 @@ paths:
   /v1/projects/{project_id}/purchases:
     description: Manage your project purchases
     get:
+      summary: List Project Purchases
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listProjectPurchases
-      summary: Returns the original purchased amount
       description: Returns the original purchased amount on an order transaction
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1128,12 +1073,12 @@ paths:
   /v1/models:
     description: Manage your project models
     get:
+      summary: List Project Models
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listModels
-      summary: Returns metadata on all the latest public models
       description: Returns metadata on all the latest public models
       parameters:
         - $ref: '#/components/parameters/include_outdated'
@@ -1162,12 +1107,12 @@ paths:
   /v1/projects/{project_id}/self-hosted/distribution/credentials:
     description: Returns sets of distribution credentials for the specified project
     get:
+      summary: List Project Self-Hosted Distribution Credentials
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: listSelfHostedDistCreds
-      summary: Lists sets of distribution credentials for the specified project
       description: Lists sets of distribution credentials for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1179,12 +1124,12 @@ paths:
         '404':
           $ref: '#/components/responses/project_not_found'
     post:
+      summary: Create a Project Self-Hosted Distribution Credential
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: createSelfHostedDistCreds
-      summary: Creates a set of distribution credentials for the specified project
       description: Creates a set of distribution credentials for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1196,19 +1141,16 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                comment:
-                  type: string
+              $ref: '#/components/schemas/create_distribution_creds'
   /v1/projects/{project_id}/self-hosted/distribution/credentials/{distribution_credentials_id}:
     description: Returns a single set of distribution credentials for the specified project
     get:
+      summary: Get a Project Self-Hosted Distribution Credential
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: getSelfHostedCredentials
-      summary: Get a Project Self-Hosted Distribution Credential
       description: Returns a set of distribution credentials for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1221,12 +1163,12 @@ paths:
         '404':
           $ref: '#/components/responses/project_not_found'
     delete:
+      summary: Delete a Project Self-Hosted Distribution Credential
       tags:
         - Management API
       security:
         - ApiKeyAuth: []
       operationId: deleteSelfHostedDistCreds
-      summary: Deletes a set of distribution credentials for the specified project
       description: Deletes a set of distribution credentials for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1353,9 +1295,9 @@ components:
       in: query
       required: false
       description: Version of the diarization feature to use. Only used when the diarization feature is enabled (`diarize=true` is passed to the API)
-      default: v2
       schema:
         type: string
+        default: v2
       example: v2
     diarize:
       name: diarize
@@ -1500,7 +1442,7 @@ components:
               - tr
               - uk
               - vi
-            examples: en-US
+            example: en-US
           - type: string
             title: Nova model languages
             enum:
@@ -1843,8 +1785,8 @@ components:
       in: query
       required: false
       description: The bitrate of the audio in bits per second. Choose from predefined ranges or specific values based on the encoding type.
-      default: 48000
       schema:
+        default: 48000
         oneOf:
           - title: mp3(default)
             description: Encoding - mp3(default). Supported bitrates - 32000, 48000(default) bps.
@@ -1867,8 +1809,8 @@ components:
       in: query
       required: false
       description: Container specifies the file format wrapper for the output audio. The available options depend on the encoding type.
-      default: wav
       schema:
+        default: wav
         oneOf:
           - title: linear16
             description: Encoding - linear16. Supported container - wav (default), or no container.
@@ -1898,8 +1840,8 @@ components:
       in: query
       required: false
       description: Encoding allows you to specify the expected encoding of your audio output
-      default: mp3
       schema:
+        default: mp3
         oneOf:
           - title: linear16
             description: Encoding - linear16. Uncompressed, high-quality audio format often used for telephony or audio processing.
@@ -1942,8 +1884,8 @@ components:
       in: query
       required: false
       description: AI model used to process submitted text
-      default: aura-asteria-en
       schema:
+        default: aura-asteria-en
         type: string
         enum:
           - aura-asteria-en
@@ -1964,8 +1906,8 @@ components:
       in: query
       required: false
       description: Sample Rate specifies the sample rate for the output audio. Based on the encoding, different sample rates are supported. For some encodings, the sample rate is not configurable
-      default: 24000
       schema:
+        default: 24000
         oneOf:
           - title: linear16
             description: Encoding - linear16. Supported sample rates - 8000, 16000, 24000, 32000, 48000 Hz.
@@ -2105,8 +2047,8 @@ components:
       in: query
       required: false
       description: The number of channels in the submitted audio
-      default: 1
       schema:
+        default: 1
         type: integer
         format: int32
       example: 2
@@ -2124,8 +2066,8 @@ components:
       in: query
       required: false
       description: Sample rate of submitted audio. Required (and only read) when a value is provided for encoding
-      default: 1
       schema:
+        default: 1
         type: integer
         format: int32
       example: 8000
@@ -2179,6 +2121,23 @@ components:
         type: string
       example: 8b36cfd0-472f-4a21-833f-2d6343c3a2f3
   schemas:
+    ListenRequest:
+      required:
+        - url
+      type: object
+      description: Audio file to transcribe
+      properties:
+        url:
+          type: string
+          format: uri
+          example: https://dpgr.am/spacewalk.wav
+      example:
+        url: https://dpgr.am/spacewalk.wav
+    ListenRequestFile:
+      type: string
+      format: binary
+      description: Binary audio file to transcribe
+      example: <audiofile>
     metadata:
       required:
         - request_id
@@ -2547,23 +2506,23 @@ components:
         segments:
           type: array
           items:
-            - type: object
-              properties:
-                text:
-                  type: string
-                  example: Yeah. As as much as, um, it's worth celebrating, uh, the first, uh, spacewalk, um, with an all-female team, I think many of us are looking forward to it just being normal. And, um, I think if it signifies anything, it is, uh, to honor the the women who came before us who, um, were skilled and qualified, um, and didn't get the the same opportunities that we have today.
-                start_word:
-                  type: number
-                  example: 0
-                end_word:
-                  type: number
-                  example: 69
-                sentiment:
-                  type: string
-                  example: positive
-                sentiment_score:
-                  type: number
-                  example: 0.5810546875
+            type: object
+            properties:
+              text:
+                type: string
+                example: Yeah. As as much as, um, it's worth celebrating, uh, the first, uh, spacewalk, um, with an all-female team, I think many of us are looking forward to it just being normal. And, um, I think if it signifies anything, it is, uh, to honor the the women who came before us who, um, were skilled and qualified, um, and didn't get the the same opportunities that we have today.
+              start_word:
+                type: number
+                example: 0
+              end_word:
+                type: number
+                example: 69
+              sentiment:
+                type: string
+                example: positive
+              sentiment_score:
+                type: number
+                example: 0.5810546875
         average:
           type: object
           properties:
@@ -2602,6 +2561,24 @@ components:
           x-collapse: true
         results:
           $ref: '#/components/schemas/results'
+    text_request:
+      components:
+        schemas:
+          ReadRequest:
+            type: object
+            properties:
+              url:
+                type: string
+                format: uri
+                description: A URL pointing to the text source
+              text:
+                type: string
+                description: The plain text to analyze
+            oneOf:
+              - required:
+                  - url
+              - required:
+                  - text
     text_metadata:
       required:
         - request_id
@@ -2704,12 +2681,32 @@ components:
           x-collapse: true
         results:
           $ref: '#/components/schemas/text_results'
+    speak_request:
+      components:
+        schemas:
+          SpeakRequest:
+            type: object
+            properties:
+              text:
+                type: string
+                description: The text to speak
     speak_response:
       description: The standard text response
       properties:
         results:
           type: string
           format: binary
+    update_projects:
+      components:
+        schemas:
+          UpdateProjectRequest:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The name of the project
+            example:
+              name: My Project
     stt_models:
       type: array
       items:
@@ -2882,25 +2879,52 @@ components:
             last_name:
               type: string
               example: Doe
-            api_key: null
-            type: object
-            properties:
-              api_key_id:
-                type: string
-                example: 1234567890abcdef1234567890abcdef
-              comment:
-                type: string
-                example: A comment
-              scopes:
-                type: array
-                items:
+            api_key:
+              type: object
+              properties:
+                api_key_id:
                   type: string
-                example:
-                  - admin
-              created:
+                  example: 1234567890abcdef1234567890abcdef
+                comment:
+                  type: string
+                  example: A comment
+                scopes:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    - admin
+                created:
+                  type: string
+                  format: date-time
+                  example: '2021-01-01T00:00:00Z'
+    update_member_scope:
+      components:
+        schemas:
+          UpdateMemberScopesRequest: null
+          type: object
+          required:
+            - scope
+          properties:
+            scope:
+              type: string
+              description: A scope to update
+              example: admin
+    create_project_invite:
+      components:
+        schemas:
+          CreateProjectInviteRequest:
+            type: object
+            required:
+              - email
+              - scope
+            properties:
+              email:
                 type: string
-                format: date-time
-                example: '2021-01-01T00:00:00Z'
+                description: The email address of the invitee
+              scope:
+                type: string
+                description: The scope of the invitee
     request:
       components:
         responses:
@@ -2939,280 +2963,263 @@ components:
                     callback:
                       type: string
                       description: The callback URL for the request
+    create_distribution_creds:
+      components:
+        schemas:
+          CreateDistributionCredentialsRequest:
+            type: object
+            properties:
+              comment:
+                type: string
+                description: Optional comment about the credentials
   responses:
     bad_request:
-      components:
-        responses:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  err_code:
-                    type: string
-                    description: The error code
-                  err_msg:
-                    type: string
-                    description: The error message
-                  request_id:
-                    type: string
-                    description: The request ID
-                example:
-                  err_code: INVALID_QUERY_PARAMETER
-                  err_msg: Failed to deserialize query parameters...
-                  request_id: 123456-7890-1234-5678-901234
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              err_code:
+                type: string
+                description: The error code
+              err_msg:
+                type: string
+                description: The error message
+              request_id:
+                type: string
+                description: The request ID
+            example:
+              err_code: INVALID_QUERY_PARAMETER
+              err_msg: Failed to deserialize query parameters...
+              request_id: 123456-7890-1234-5678-901234
     insufficient_permissions:
-      components:
-        responses:
-          insufficient_permissions:
-            description: Insufficient permissions, Model not found
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    err_code:
-                      type: string
-                      description: The error code
-                    err_msg:
-                      type: string
-                      description: The error message
-                    request_id:
-                      type: string
-                      description: The request ID
-                  example:
-                    err_code: INSUFFICIENT_PERMISSIONS
-                    err_msg: Project does not have access to the requested model.
-                    request_id: 123456-7890-1234-5678-901234
+      description: Insufficient permissions, Model not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              err_code:
+                type: string
+                description: The error code
+              err_msg:
+                type: string
+                description: The error message
+              request_id:
+                type: string
+                description: The request ID
+            example:
+              err_code: INSUFFICIENT_PERMISSIONS
+              err_msg: Project does not have access to the requested model.
+              request_id: 123456-7890-1234-5678-901234
     payload_too_large:
-      components:
-        responses:
-          payload_too_large:
-            description: Payload too large
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    err_code:
-                      type: string
-                      description: The error code
-                    err_msg:
-                      type: string
-                      description: The error message
-                    request_id:
-                      type: string
-                      description: The request ID
-                  example:
-                    err_code: Payload too large
-                    err_msg: Input text exceeds maximum character limit of 2000.
-                    request_id: 123456-7890-1234-5678-901234
+      description: Payload too large
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              err_code:
+                type: string
+                description: The error code
+              err_msg:
+                type: string
+                description: The error message
+              request_id:
+                type: string
+                description: The request ID
+            example:
+              err_code: Payload too large
+              err_msg: Input text exceeds maximum character limit of 2000.
+              request_id: 123456-7890-1234-5678-901234
     unsupported_media_type:
-      components:
-        responses:
-          unsupported_media_type:
-            description: Unsupported media type
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    err_code:
-                      type: string
-                      description: The error code
-                    err_msg:
-                      type: string
-                      description: The error message
-                    request_id:
-                      type: string
-                      description: The request ID
-                  example:
-                    err_code: UNSUPPORTED_MEDIA_TYPE
-                    err_msg: Content-Type header is not supported. Content-Type must be either text/plain or application/json.
-                    request_id: 123456-7890-1234-5678-901234
+      description: Unsupported media type
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              err_code:
+                type: string
+                description: The error code
+              err_msg:
+                type: string
+                description: The error message
+              request_id:
+                type: string
+                description: The request ID
+            example:
+              err_code: UNSUPPORTED_MEDIA_TYPE
+              err_msg: Content-Type header is not supported. Content-Type must be either text/plain or application/json.
+              request_id: 123456-7890-1234-5678-901234
     authentication_failed:
-      components:
-        responses:
-          authenticationFailed:
-            description: Authentication failed
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    category:
-                      type: string
-                      description: The category of the error
-                    message:
-                      type: string
-                      description: A message about the error
-                    details:
-                      type: string
-                      description: A description of the error
-                    request_id:
-                      type: string
-                      description: The unique identifier of the request
-                example:
-                  category: UNAUTHORIZED
-                  message: Authentication failed.
-                  details: Check that you are using the correct credentials.
-                  request_id: 123456-7890-1234-5678-901234
+      description: Authentication failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              category:
+                type: string
+                description: The category of the error
+              message:
+                type: string
+                description: A message about the error
+              details:
+                type: string
+                description: A description of the error
+              request_id:
+                type: string
+                description: The unique identifier of the request
+          example:
+            category: UNAUTHORIZED
+            message: Authentication failed.
+            details: Check that you are using the correct credentials.
+            request_id: 123456-7890-1234-5678-901234
     projects_bad_request:
-      components:
-        responses:
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  category:
-                    type: string
-                    description: The error category
-                  message:
-                    type: string
-                    description: The error message
-                  details:
-                    type: string
-                    description: Additional details about the error
-                  request_id:
-                    type: string
-                    description: The request ID
-                example:
-                  category: INVALID_JSON
-                  message: Invalid JSON submitted.
-                  details: 'Json deserialize error: EOF while parsing a value at line 1 column 0'
-                  request_id: 123456-7890-1234-5678-901234
+      description: Project Bad Request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              category:
+                type: string
+                description: The error category
+              message:
+                type: string
+                description: The error message
+              details:
+                type: string
+                description: Additional details about the error
+              request_id:
+                type: string
+                description: The request ID
+            example:
+              category: INVALID_JSON
+              message: Invalid JSON submitted.
+              details: 'Json deserialize error: EOF while parsing a value at line 1 column 0'
+              request_id: 123456-7890-1234-5678-901234
     project_not_found:
-      components:
-        responses:
-          description: Project not found
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  category:
-                    type: string
-                    description: The category of the error
-                  details:
-                    type: string
-                    description: A description of the error
-                  message:
-                    type: string
-                    description: A message about the error
-                  request_id:
-                    type: string
-                    description: The unique identifier of the request
-              example:
-                category: NOT_FOUND
-                message: A project with the submitted ID cannot be found.
-                details: Check that you have submitted the intended project ID and that the project has not been deleted.
-                request_id: 123456-7890-1234-5678-901234
+      description: Project not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              category:
+                type: string
+                description: The category of the error
+              details:
+                type: string
+                description: A description of the error
+              message:
+                type: string
+                description: A message about the error
+              request_id:
+                type: string
+                description: The unique identifier of the request
+          example:
+            category: NOT_FOUND
+            message: A project with the submitted ID cannot be found.
+            details: Check that you have submitted the intended project ID and that the project has not been deleted.
+            request_id: 123456-7890-1234-5678-901234
     invalid_request:
-      components:
-        responses:
-          description: Invalid Request
-          content:
-            text/plain:
-              schema:
-                type: string
-              example: 'Invalid request: scope must be either ''member'', ''admin'' or ''owner''.'
+      description: Invalid Request
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: 'Invalid request: scope must be either ''member'', ''admin'' or ''owner''.'
     unauthorized:
-      components:
-        responses:
-          description: Unauthorized
-          content:
-            text/plain:
-              schema:
-                type: string
-              example: User does not have sufficient permissions.
+      description: Unauthorized
+      content:
+        text/plain:
+          schema:
+            type: string
+          example: User does not have sufficient permissions.
     usage:
-      components:
-        responses:
-          description: Usage Summary
-          content:
-            application/json:
-              schema:
+      description: Usage Summary
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              start:
+                type: string
+                format: date
+                example: '2024-10-16'
+              end:
+                type: string
+                format: date
+                example: '2024-10-23'
+              resolution:
                 type: object
                 properties:
-                  start:
+                  units:
                     type: string
-                    format: date
-                    example: '2024-10-16'
-                  end:
-                    type: string
-                    format: date
-                    example: '2024-10-23'
-                  resolution:
+                    example: day
+                  amount:
+                    type: integer
+                    example: 1
+                results:
+                  type: array
+                  items:
                     type: object
                     properties:
-                      units:
+                      start:
                         type: string
-                        example: day
-                      amount:
+                        format: date
+                        example: '2024-10-16'
+                      end:
+                        type: string
+                        format: date
+                        example: '2024-10-16'
+                      hours:
+                        type: number
+                        format: float
+                        example: 1097.4274322222223
+                      total_hours:
+                        type: number
+                        format: float
+                        example: 1099.3888366666667
+                      requests:
                         type: integer
-                        example: 1
-                    results:
-                      type: array
-                      items:
+                        example: 425109
+                      tokens:
                         type: object
                         properties:
-                          start:
-                            type: string
-                            format: date
-                            example: '2024-10-16'
-                          end:
-                            type: string
-                            format: date
-                            example: '2024-10-16'
-                          hours:
-                            type: number
-                            format: float
-                            example: 1097.4274322222223
-                          total_hours:
-                            type: number
-                            format: float
-                            example: 1099.3888366666667
+                          in:
+                            type: integer
+                            example: 24770
+                          out:
+                            type: integer
+                            example: 7521
+                      tts:
+                        type: object
+                        properties:
+                          characters:
+                            type: integer
+                            example: 9004185
                           requests:
                             type: integer
-                            example: 425109
-                          tokens:
-                            type: object
-                            properties:
-                              in:
-                                type: integer
-                                example: 24770
-                              out:
-                                type: integer
-                                example: 7521
-                          tts:
-                            type: object
-                            properties:
-                              characters:
-                                type: integer
-                                example: 9004185
-                              requests:
-                                type: integer
-                                example: 231261
+                            example: 23126
     fields:
-      components:
-        responses:
-          description: A list of fields for a specific project
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  tags:
-                    type: array
-                    description: List of tags associated with the project
-                    items:
-                      type: string
-                    example:
-                      - tag=dev
-                      - tag=production
+      description: A list of fields for a specific project
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              tags:
+                type: array
+                description: List of tags associated with the project
+                items:
+                  type: string
+                example:
+                  - tag=dev
+                  - tag=production
               models:
                 type: array
                 description: List of models available for the project.
@@ -3253,321 +3260,311 @@ components:
                   - detect_entities
                   - detect_language
     all_models:
-      components:
-        responses:
-          '200':
-            description: A list of all public models
-            content:
-              application/json:
-                schema:
+      description: A list of all public models
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              stt:
+                type: array
+                items:
                   type: object
                   properties:
-                    stt:
+                    name:
+                      type: string
+                      example: general
+                    canonical_name:
+                      type: string
+                      example: enhanced-general
+                    architecture:
+                      type: string
+                      example: polaris
+                    languages:
                       type: array
                       items:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            example: general
-                          canonical_name:
-                            type: string
-                            example: enhanced-general
-                          architecture:
-                            type: string
-                            example: polaris
-                          languages:
-                            type: array
-                            items:
-                              type: string
-                            example:
-                              - en
-                              - en-us
-                          version:
-                            type: string
-                            example: 2022-05-18.1
-                          uuid:
-                            type: string
-                            format: uuid
-                            example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
-                          batch:
-                            type: boolean
-                            example: true
-                          streaming:
-                            type: boolean
-                            example: true
-                          formatted_output:
-                            type: boolean
-                            example: false
-                    tts:
+                        type: string
+                      example:
+                        - en
+                        - en-us
+                    version:
+                      type: string
+                      example: 2022-05-18.1
+                    uuid:
+                      type: string
+                      format: uuid
+                      example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
+                    batch:
+                      type: boolean
+                      example: true
+                    streaming:
+                      type: boolean
+                      example: true
+                    formatted_output:
+                      type: boolean
+                      example: false
+              tts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      example: angus
+                    canonical_name:
+                      type: string
+                      example: aura-angus-en
+                    architecture:
+                      type: string
+                      example: aura
+                    languages:
                       type: array
                       items:
-                        type: object
-                        properties:
-                          name:
-                            type: string
-                            example: angus
-                          canonical_name:
-                            type: string
-                            example: aura-angus-en
-                          architecture:
-                            type: string
-                            example: aura
-                          languages:
-                            type: array
-                            items:
-                              type: string
-                            example:
-                              - en
-                              - en-us
-                          version:
-                            type: string
-                            example: 2024-07-30.0
-                          uuid:
-                            type: string
-                            format: uuid
-                            example: eed36e9e-37aa-40a3-91fa-a2911e73a5da
-                          metadata:
-                            type: object
-                            properties:
-                              accent:
-                                type: string
-                                example: Irish
-                              color:
-                                type: string
-                                example: '#BA80F5'
-                              image:
-                                type: string
-                                format: uri
-                                example: https://static.deepgram.com/examples/avatars/angus.jpg
-                              sample:
-                                type: string
-                                format: uri
-                                example: https://static.deepgram.com/examples/voices/angus.wav
-                              tags:
-                                type: array
-                                items:
-                                  type: string
-                                example:
-                                  - masculine
-    model:
-      components:
-        responses:
-          '200':
-            description: A model object that can be either STT or TTS
-            content:
-              application/json:
-                schema:
-                  oneOf:
-                    - type: object
-                      properties:
-                        name:
-                          type: string
-                          example: general
-                        canonical_name:
-                          type: string
-                          example: enhanced-general
-                        architecture:
-                          type: string
-                          example: polaris
-                        languages:
-                          type: array
-                          items:
-                            type: string
-                          example:
-                            - en
-                            - en-us
-                        version:
-                          type: string
-                          example: 2022-05-18.1
-                        uuid:
-                          type: string
-                          format: uuid
-                          example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
-                        batch:
-                          type: boolean
-                          example: true
-                        streaming:
-                          type: boolean
-                          example: true
-                        formatted_output:
-                          type: boolean
-                          example: false
-                    - type: object
-                      properties:
-                        name:
-                          type: string
-                          example: angus
-                        canonical_name:
-                          type: string
-                          example: aura-angus-en
-                        architecture:
-                          type: string
-                          example: aura
-                        languages:
-                          type: array
-                          items:
-                            type: string
-                          example:
-                            - en
-                            - en-us
-                        version:
-                          type: string
-                          example: 2024-07-30.0
-                        uuid:
-                          type: string
-                          format: uuid
-                          example: eed36e9e-37aa-40a3-91fa-a2911e73a5da
-                        metadata:
-                          type: object
-                          properties:
-                            accent:
-                              type: string
-                              example: Irish
-                            color:
-                              type: string
-                              example: '#BA80F5'
-                            image:
-                              type: string
-                              format: uri
-                              example: https://static.deepgram.com/examples/avatars/angus.jpg
-                            sample:
-                              type: string
-                              format: uri
-                              example: https://static.deepgram.com/examples/voices/angus.wav
-                            tags:
-                              type: array
-                              items:
-                                type: string
-                              example:
-                                - masculine
-    credentials:
-      components:
-        responses:
-          description: List of distribution credentials
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  distribution_credentials:
-                    type: array
-                    description: Array of distribution credentials with associated member information
-                    items:
+                        type: string
+                      example:
+                        - en
+                        - en-us
+                    version:
+                      type: string
+                      example: 2024-07-30.0
+                    uuid:
+                      type: string
+                      format: uuid
+                      example: eed36e9e-37aa-40a3-91fa-a2911e73a5da
+                    metadata:
                       type: object
-                      required:
-                        - member
-                        - distribution_credentials
                       properties:
-                        member:
-                          type: object
-                          required:
-                            - member_id
-                            - email
-                          properties:
-                            member_id:
-                              type: string
-                              format: uuid
-                              description: Unique identifier for the member
-                              example: 3376abcd-8e5e-49d3-92d4-876d3a4f0363
-                            email:
-                              type: string
-                              format: email
-                              description: Email address of the member
-                              example: email@example.com
-                        distribution_credentials:
-                          type: object
-                          required:
-                            - distribution_credentials_id
-                            - provider
-                            - scopes
-                            - created
-                          properties:
-                            distribution_credentials_id:
-                              type: string
-                              format: uuid
-                              description: Unique identifier for the distribution credentials
-                              example: 8b36cfd0-472f-4a21-833f-2d6343c3a2f3
-                            provider:
-                              type: string
-                              description: The provider of the distribution service
-                              example: quay
-                            comment:
-                              type: string
-                              description: Optional comment about the credentials
-                              example: My Self-Hosted Distribution Credentials
-                            scopes:
-                              type: array
-                              description: List of permission scopes for the credentials
-                              items:
-                                type: string
-                              example:
-                                - self-hosted:product:api
-                                - self-hosted:product:engine
-                            created:
-                              type: string
-                              format: date-time
-                              description: Timestamp when the credentials were created
-                              example: '2023-06-28T15:36:59.609841Z'
-    credential:
-      components:
-        responses:
-          description: Single distribution credential
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - member
-                  - distribution_credentials
+                        accent:
+                          type: string
+                          example: Irish
+                        color:
+                          type: string
+                          example: '#BA80F5'
+                        image:
+                          type: string
+                          format: uri
+                          example: https://static.deepgram.com/examples/avatars/angus.jpg
+                        sample:
+                          type: string
+                          format: uri
+                          example: https://static.deepgram.com/examples/voices/angus.wav
+                        tags:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                            - masculine
+    model:
+      description: A model object that can be either STT or TTS
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - type: object
                 properties:
-                  member:
+                  name:
+                    type: string
+                    example: general
+                  canonical_name:
+                    type: string
+                    example: enhanced-general
+                  architecture:
+                    type: string
+                    example: polaris
+                  languages:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - en
+                      - en-us
+                  version:
+                    type: string
+                    example: 2022-05-18.1
+                  uuid:
+                    type: string
+                    format: uuid
+                    example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
+                  batch:
+                    type: boolean
+                    example: true
+                  streaming:
+                    type: boolean
+                    example: true
+                  formatted_output:
+                    type: boolean
+                    example: false
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    example: angus
+                  canonical_name:
+                    type: string
+                    example: aura-angus-en
+                  architecture:
+                    type: string
+                    example: aura
+                  languages:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - en
+                      - en-us
+                  version:
+                    type: string
+                    example: 2024-07-30.0
+                  uuid:
+                    type: string
+                    format: uuid
+                    example: eed36e9e-37aa-40a3-91fa-a2911e73a5da
+                  metadata:
                     type: object
-                    required:
-                      - member_id
-                      - email
                     properties:
-                      member_id:
+                      accent:
                         type: string
-                        format: uuid
-                        description: Unique identifier for the member
-                        example: c7b9b131-73f3-11d9-8665-0b00d2e44b83
-                      email:
+                        example: Irish
+                      color:
                         type: string
-                        format: email
-                        description: Email address of the member
-                        example: email@example.com
-                  distribution_credentials:
-                    type: object
-                    required:
-                      - distribution_credentials_id
-                      - provider
-                      - scopes
-                      - created
-                    properties:
-                      distribution_credentials_id:
+                        example: '#BA80F5'
+                      image:
                         type: string
-                        format: uuid
-                        description: Unique identifier for the distribution credentials
-                        example: 82c32c10-53b2-4d23-993f-864b3d44502a
-                      provider:
+                        format: uri
+                        example: https://static.deepgram.com/examples/avatars/angus.jpg
+                      sample:
                         type: string
-                        description: The provider of the distribution service
-                        example: quay
-                      comment:
-                        type: string
-                        description: Optional comment about the credentials
-                        example: My Self-Hosted Distribution Credentials
-                      scopes:
+                        format: uri
+                        example: https://static.deepgram.com/examples/voices/angus.wav
+                      tags:
                         type: array
-                        description: List of permission scopes for the credentials
                         items:
                           type: string
                         example:
-                          - self-hosted:product:api
-                          - self-hosted:product:engine
-                      created:
-                        type: string
-                        format: date-time
-                        description: Timestamp when the credentials were created
-                        example: '2023-06-28T15:36:59.609841Z'
+                          - masculine
+    credentials:
+      description: List of distribution credentials
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              distribution_credentials:
+                type: array
+                description: Array of distribution credentials with associated member information
+                items:
+                  type: object
+                  required:
+                    - member
+                    - distribution_credentials
+                  properties:
+                    member:
+                      type: object
+                      required:
+                        - member_id
+                        - email
+                      properties:
+                        member_id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier for the member
+                          example: 3376abcd-8e5e-49d3-92d4-876d3a4f0363
+                        email:
+                          type: string
+                          format: email
+                          description: Email address of the member
+                          example: email@example.com
+                    distribution_credentials:
+                      type: object
+                      required:
+                        - distribution_credentials_id
+                        - provider
+                        - scopes
+                        - created
+                      properties:
+                        distribution_credentials_id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier for the distribution credentials
+                          example: 8b36cfd0-472f-4a21-833f-2d6343c3a2f3
+                        provider:
+                          type: string
+                          description: The provider of the distribution service
+                          example: quay
+                        comment:
+                          type: string
+                          description: Optional comment about the credentials
+                          example: My Self-Hosted Distribution Credentials
+                        scopes:
+                          type: array
+                          description: List of permission scopes for the credentials
+                          items:
+                            type: string
+                          example:
+                            - self-hosted:product:api
+                            - self-hosted:product:engine
+                        created:
+                          type: string
+                          format: date-time
+                          description: Timestamp when the credentials were created
+                          example: '2023-06-28T15:36:59.609841Z'
+    credential:
+      description: Single distribution credential
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - member
+              - distribution_credentials
+            properties:
+              member:
+                type: object
+                required:
+                  - member_id
+                  - email
+                properties:
+                  member_id:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the member
+                    example: c7b9b131-73f3-11d9-8665-0b00d2e44b83
+                  email:
+                    type: string
+                    format: email
+                    description: Email address of the member
+                    example: email@example.com
+              distribution_credentials:
+                type: object
+                required:
+                  - distribution_credentials_id
+                  - provider
+                  - scopes
+                  - created
+                properties:
+                  distribution_credentials_id:
+                    type: string
+                    format: uuid
+                    description: Unique identifier for the distribution credentials
+                    example: 82c32c10-53b2-4d23-993f-864b3d44502a
+                  provider:
+                    type: string
+                    description: The provider of the distribution service
+                    example: quay
+                  comment:
+                    type: string
+                    description: Optional comment about the credentials
+                    example: My Self-Hosted Distribution Credentials
+                  scopes:
+                    type: array
+                    description: List of permission scopes for the credentials
+                    items:
+                      type: string
+                    example:
+                      - self-hosted:product:api
+                      - self-hosted:product:engine
+                  created:
+                    type: string
+                    format: date-time
+                    description: Timestamp when the credentials were created
+                    example: '2023-06-28T15:36:59.609841Z'
