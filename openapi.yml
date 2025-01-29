@@ -944,6 +944,8 @@ paths:
           $ref: '#/components/responses/projects_bad_request'
         '403':
           $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/requests/{request_id}:
     description: Manage your project requests
     get:
@@ -982,44 +984,7 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
         - $ref: '#/components/parameters/end'
-        - $ref: '#/components/parameters/callback_method'
-        - $ref: '#/components/parameters/callback'
-        - $ref: '#/components/parameters/channels'
-        - $ref: '#/components/parameters/custom_intent_mode'
-        - $ref: '#/components/parameters/custom_intent'
-        - $ref: '#/components/parameters/custom_topic_mode'
-        - $ref: '#/components/parameters/custom_topic'
-        - $ref: '#/components/parameters/detect_entities'
-        - $ref: '#/components/parameters/detect_language'
-        - $ref: '#/components/parameters/diarize'
-        - $ref: '#/components/parameters/diarize_version'
-        - $ref: '#/components/parameters/dictation'
-        - $ref: '#/components/parameters/detect_topics'
-        - $ref: '#/components/parameters/encoding'
-        - $ref: '#/components/parameters/extra'
-        - $ref: '#/components/parameters/filler_words'
-        - $ref: '#/components/parameters/intents'
-        - $ref: '#/components/parameters/keywords'
-        - $ref: '#/components/parameters/language'
-        - $ref: '#/components/parameters/measurements'
-        - $ref: '#/components/parameters/model'
-        - $ref: '#/components/parameters/multichannel'
-        - $ref: '#/components/parameters/numerals'
-        - $ref: '#/components/parameters/paragraphs'
-        - $ref: '#/components/parameters/profanity_filter'
-        - $ref: '#/components/parameters/punctuate'
-        - $ref: '#/components/parameters/redact'
-        - $ref: '#/components/parameters/replace'
-        - $ref: '#/components/parameters/sample_rate'
-        - $ref: '#/components/parameters/smart_format'
-        - $ref: '#/components/parameters/search'
-        - $ref: '#/components/parameters/sentiment'
-        - $ref: '#/components/parameters/summarize'
-        - $ref: '#/components/parameters/tag'
-        - $ref: '#/components/parameters/topics'
-        - $ref: '#/components/parameters/utterances'
-        - $ref: '#/components/parameters/utt_split'
-        - $ref: '#/components/parameters/version'
+        - $ref: '#/components/parameters/project_filters'
       responses:
         '200':
           $ref: '#/components/responses/usage'
@@ -1056,6 +1021,39 @@ paths:
           $ref: '#/components/responses/authentication_failed'
         '404':
           $ref: '#/components/responses/project_not_found'
+  /v1/projects/{project_id}/usage/breakdown:
+    description: Manage your project usage breakdown with various filter options
+    get:
+      summary: Get Project Usage Breakdown
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProjectUsageBreakdown
+      description: |
+        Returns the breakdown of usage for a specific project. Supports the following filter options:
+        - &accessor={accessor_id} - The public API key accessor used
+        - &deployment={deployment} - The deployment type used
+        - &endpoint={endpoint} - The endpoint used
+        - &feature_set={feature_set} - The collection of features used
+        - &model={model_id} - The model used
+        - &method={method} - The processing method used
+        - &tags={tag} - Any tags used
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/start'
+        - $ref: '#/components/parameters/end'
+        - $ref: '#/components/parameters/project_filters'
+        - $ref: '#/components/parameters/usage_breakdown_filters'
+      responses:
+        '200':
+          $ref: '#/components/responses/usage_breakdown'
+        '400':
+          $ref: '#/components/responses/projects_bad_request'
+        '401':
+          $ref: '#/components/responses/unauthorized'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/purchases:
     description: Manage your project purchases
     get:
@@ -1070,6 +1068,11 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
         - $ref: '#/components/parameters/limit'
+      responses:
+        '200':
+          $ref: '#/components/responses/purchases'
+        '400':
+          $ref: '#/components/responses/projects_bad_request'
   /v1/models:
     description: Manage your project models
     get:
@@ -2042,35 +2045,84 @@ components:
       schema:
         type: string
       example: 123456-7890-1234-5678-901234
-    channels:
-      name: channels
+    project_filters:
+      name: project_filters
       in: query
       required: false
-      description: The number of channels in the submitted audio
+      description: Common filter parameters
       schema:
-        default: 1
-        type: integer
-        format: int32
-      example: 2
-    detect_topics:
-      name: detect_topics
+        type: string
+        enum:
+          - alternatives.yml
+          - callback_method.yml
+          - callback.yml
+          - channels.yml
+          - custom_intent_mode.yml
+          - custom_intent.yml
+          - custom_topic_mode.yml
+          - custom_topic.yml
+          - detect_entities.yml
+          - detect_language.yml
+          - diarize.yml
+          - diarize_version.yml
+          - dictation.yml
+          - detect_topics.yml
+          - encoding.yml
+          - extra.yml
+          - filler_words.yml
+          - intents.yml
+          - keywords.yml
+          - language.yml
+          - measurements.yml
+          - model.yml
+          - multichannel.yml
+          - numerals.yml
+          - paragraphs.yml
+          - profanity_filter.yml
+          - punctuate.yml
+          - redact.yml
+          - replace.yml
+          - sample_rate.yml
+          - smart_format.yml
+          - search.yml
+          - sentiment.yml
+          - summarize.yml
+          - tag.yml
+          - topics.yml
+          - utterances.yml
+          - utt_split.yml
+          - version.yml
+    usage_breakdown_filters:
+      name: usage_breakdown_filters
       in: query
       required: false
-      description: Identify and extract key topics
+      description: |
+        Filter options for usage breakdown. Multiple filters can be used with '&' prefix.
+        Example: &model={model_id}&tags={tag}&accessor={accessor_id}
       schema:
-        default: false
-        type: boolean
-      example: true
-    sample_rate:
-      name: sample_rate
-      in: query
-      required: false
-      description: Sample rate of submitted audio. Required (and only read) when a value is provided for encoding
-      schema:
-        default: 1
-        type: integer
-        format: int32
-      example: 8000
+        type: object
+        properties:
+          accessor:
+            type: string
+            description: Filter results by specific accessor ID
+          deployment:
+            type: string
+            description: Filter results by specific deployment type
+          endpoint:
+            type: string
+            description: Filter results by specific endpoint
+          feature_set:
+            type: string
+            description: Filter results by specific feature set
+          model:
+            type: string
+            description: Filter results by specific model ID
+          method:
+            type: string
+            description: Filter results by specific processing method
+          tags:
+            type: string
+            description: Filter results by specific tags
     distribution_comment:
       name: comment
       in: query
@@ -3259,6 +3311,169 @@ components:
                   - alternatives
                   - detect_entities
                   - detect_language
+    usage_breakdown:
+      description: Usage breakdown response
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - start
+              - end
+              - resolution
+              - results
+            properties:
+              start:
+                type: string
+                format: date
+                description: Start date of the usage period
+                example: '2025-01-16'
+              end:
+                type: string
+                format: date
+                description: End date of the usage period
+                example: '2025-01-23'
+              resolution:
+                type: object
+                required:
+                  - units
+                  - amount
+                properties:
+                  units:
+                    type: string
+                    description: Time unit for the resolution
+                    example: day
+                  amount:
+                    type: integer
+                    description: Amount of units
+                    example: 1
+              results:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - hours
+                    - total_hours
+                    - agent_hours
+                    - tokens_in
+                    - tokens_out
+                    - tts_characters
+                    - requests
+                    - grouping
+                  properties:
+                    hours:
+                      type: number
+                      format: float
+                      description: Audio hours processed
+                      example: 1619.7242069444444
+                    total_hours:
+                      type: number
+                      format: float
+                      description: Total hours including all processing
+                      example: 1621.7395791666668
+                    agent_hours:
+                      type: number
+                      format: float
+                      description: Agent hours used
+                      example: 41.33564388888889
+                    tokens_in:
+                      type: integer
+                      description: Number of input tokens
+                      example: 0
+                    tokens_out:
+                      type: integer
+                      description: Number of output tokens
+                      example: 0
+                    tts_characters:
+                      type: integer
+                      description: Number of text-to-speech characters processed
+                      example: 9158866
+                    requests:
+                      type: integer
+                      description: Number of requests
+                      example: 373381
+                    grouping:
+                      type: object
+                      properties:
+                        start:
+                          type: string
+                          format: date
+                          description: Start date for this group
+                          example: '2025-01-16'
+                        end:
+                          type: string
+                          format: date
+                          description: End date for this group
+                          example: '2025-01-16'
+                        accessor:
+                          type: string
+                          nullable: true
+                          description: Optional accessor identifier
+                          example: '123456789012345678901234'
+                        endpoint:
+                          type: string
+                          nullable: true
+                          description: Optional endpoint identifier
+                          example: listen
+                        feature_set:
+                          type: string
+                          nullable: true
+                          description: Optional feature set identifier
+                          example: punctuate
+                        models:
+                          type: string
+                          nullable: true
+                          description: Optional models identifier
+                          example: Nova-2
+                        method:
+                          type: string
+                          nullable: true
+                          description: Optional method identifier
+                          example: async
+                        tags:
+                          type: string
+                          nullable: true
+                          description: Optional tags
+                          example: tag1
+                        deployment:
+                          type: string
+                          nullable: true
+                          description: Optional deployment identifier
+                          example: self-hosted
+    purchases:
+      description: Successful response with orders list
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              orders:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    order_id:
+                      type: string
+                      format: uuid
+                      example: 025e19ba-b6d9-4a04-9f99-4fe715aca5f1
+                    expiration:
+                      type: string
+                      format: date-time
+                      example: '2026-03-04T00:00:00Z'
+                    created:
+                      type: string
+                      format: date-time
+                      example: '2023-02-21T21:13:40.014373Z'
+                    amount:
+                      type: number
+                      format: float
+                      example: 150
+                    units:
+                      type: string
+                      example: usd
+                    order_type:
+                      type: string
+                      example: promotional
     all_models:
       description: A list of all public models
       content:
