@@ -1294,6 +1294,22 @@ channels:
               message: >-
                 I apologize, but I need to correct my previous statement. Let me
                 provide you with the accurate information.
+      injectionRefused:
+        contentType: application/json
+        summary: Receive injection refused message
+        payload:
+          type: object
+          required:
+            - type
+            - message
+          properties:
+            type:
+              type: string
+              const: InjectionRefused
+              description: Message type identifier for injection refused
+        examples:
+          - payload:
+              type: InjectionRefused
       functionCallResponse:
         contentType: application/json
         summary: Configure the voice agent and configure the function call response
@@ -1666,6 +1682,13 @@ operations:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/injectAgentMessage'
+  receiveInjectionRefused:
+    description: Receive injection refused message from Deepgram's Voice Agent API
+    action: receive
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/injectionRefused'
   sendFunctionCallResponse:
     description: Send function call response to Deepgram's Voice Agent API
     action: send
