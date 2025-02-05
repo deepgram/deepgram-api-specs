@@ -442,18 +442,24 @@ channels:
         location: $message.payload#/keywords
         examples:
           - Twilio:2
+      keyterm:
+        description: >-
+          Key term prompting can boost or suppress specialized terminology and
+          brands. Only compatible with Nova-3
+        location: $message.payload#/keyterm
+        examples:
+          - Snuffleupagus
       language:
         description: >-
           The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that
-          hints at the primary spoken language. Depending o the Model you choose
-          only certain [languages are
-          available](https://developers.deepgram.com/docs/models-languages-overview)
+          hints at the primary spoken language. Depending on the Model you
+          choose only certain languages are available
         location: $message.payload#/language
         default: en
         enum:
           - bg
           - ca
-          - cz
+          - cs
           - da
           - da-DK
           - de
@@ -489,6 +495,7 @@ channels:
           - pl
           - pt
           - pt-BR
+          - pt-PT
           - ro
           - ru
           - sk
@@ -502,6 +509,9 @@ channels:
           - vi
           - zh
           - zh-CN
+          - zh-HK
+          - zh-Hans
+          - zh-Hant
           - zh-TW
         examples:
           - en
@@ -509,6 +519,8 @@ channels:
         description: AI model to use for the transcription
         location: $message.payload#/model
         enum:
+          - nova-3
+          - nova-3-general
           - nova-2
           - nova-2-general
           - nova-2-meeting

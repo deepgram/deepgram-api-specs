@@ -70,6 +70,7 @@ paths:
         - $ref: '#/components/parameters/extra'
         - $ref: '#/components/parameters/filler_words'
         - $ref: '#/components/parameters/intents'
+        - $ref: '#/components/parameters/keyterm'
         - $ref: '#/components/parameters/keywords'
         - $ref: '#/components/parameters/language'
         - $ref: '#/components/parameters/measurements'
@@ -1371,6 +1372,20 @@ components:
         default: false
         type: boolean
       example: true
+    keyterm:
+      name: keyterm
+      in: query
+      required: false
+      description: Key term prompting can boost or suppress specialized terminology and brands. Only compatible with Nova-3
+      style: form
+      explode: true
+      schema:
+        type: array
+        items:
+          type: string
+      example:
+        - Snuffleupagus
+        - Sesame Street
     keywords:
       name: keywords
       in: query
@@ -1391,137 +1406,68 @@ components:
       name: language
       in: query
       required: false
-      description: The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that hints at the primary spoken language
+      description: The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that hints at the primary spoken language. Depending on the Model you choose only certain languages are available
       schema:
+        type: string
         default: en
-        oneOf:
-          - type: string
-            title: Nova 2 model languages
-            enum:
-              - bg
-              - ca
-              - cz
-              - da
-              - da-DK
-              - nl
-              - en
-              - en-US
-              - en-AU
-              - en-GB
-              - en-NZ
-              - en-IN
-              - et
-              - fi
-              - nl-BE
-              - fr
-              - fr-CA
-              - de
-              - de-CH
-              - el
-              - hi
-              - hi-Latn
-              - hu
-              - id
-              - it
-              - ja
-              - ko
-              - ko-KR
-              - lv
-              - lt
-              - ms
-              - 'no'
-              - pl
-              - pt
-              - pt-BR
-              - ro
-              - ru
-              - sk
-              - es
-              - es-419
-              - sv
-              - sv-SE
-              - th
-              - th-TH
-              - tr
-              - uk
-              - vi
-            example: en-US
-          - type: string
-            title: Nova model languages
-            enum:
-              - en
-              - en-US
-              - en-AU
-              - en-GB
-              - en-NZ
-              - en-IN
-              - es
-              - es-419
-            example: en-US
-          - type: string
-            title: Enhanced model languages
-            description: Recommended for lower word error rates than Base, high accuracy timestamps, and use cases that require keyword boosting.
-            enum:
-              - da
-              - nl
-              - en
-              - en-US
-              - nl
-              - fr
-              - de
-              - hi
-              - hi-Latn
-              - id
-              - it
-              - ja
-              - ko
-              - 'no'
-              - pl
-              - pt
-              - pt-BR
-              - ru
-              - es
-              - es-419
-              - es-LATAM
-              - sv
-              - taq
-              - tr
-              - uk
-            example: en-US
-          - type: string
-            title: Base model languages.
-            description: Recommended for large transcription volumes and high accuracy timestamps.
-            enum:
-              - zh
-              - zh-CN
-              - zh-TW
-              - da
-              - nl
-              - en
-              - en-US
-              - nl
-              - fr
-              - fr-CA
-              - de
-              - hi
-              - hi-Latn
-              - id
-              - it
-              - ja
-              - ko
-              - 'no'
-              - pl
-              - pt
-              - pt-BR
-              - ru
-              - es
-              - es-419
-              - es-LATAM
-              - sv
-              - taq
-              - tr
-              - uk
-            example: en-US
+        enum:
+          - bg
+          - ca
+          - zh
+          - zh-CN
+          - zh-TW
+          - zh-HK
+          - zh-Hans
+          - zh-Hant
+          - cs
+          - da
+          - da-DK
+          - nl
+          - nl-BE
+          - en
+          - en-US
+          - en-AU
+          - en-GB
+          - en-NZ
+          - en-IN
+          - et
+          - fi
+          - fr
+          - fr-CA
+          - de
+          - de-CH
+          - el
+          - hi
+          - hi-Latn
+          - hu
+          - id
+          - it
+          - ja
+          - ko
+          - ko-KR
+          - lv
+          - lt
+          - ms
+          - 'no'
+          - pl
+          - pt
+          - pt-BR
+          - pt-PT
+          - ro
+          - ru
+          - sk
+          - es
+          - es-419
+          - es-LATAM
+          - sv
+          - sv-SE
+          - taq
+          - th
+          - th-TH
+          - tr
+          - uk
+          - vi
+        example: en-US
     measurements:
       name: measurements
       in: query
@@ -1542,6 +1488,8 @@ components:
           - type: string
             description: Our public models available to all accounts
             enum:
+              - nova-3
+              - nova-3-general
               - nova-2
               - nova-2-general
               - nova-2-meeting
