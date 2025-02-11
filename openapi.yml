@@ -2827,42 +2827,40 @@ components:
                 format: date-time
                 example: '2021-01-01T00:00:00Z'
     key_created:
-      components:
-        responses:
-          description: API key created
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  api_key_id:
-                    type: string
-                    description: The unique identifier of the API key
-                  key:
-                    type: string
-                    description: The API key
-                  comment:
-                    type: string
-                    description: A comment for the API key
-                  scopes:
-                    type: array
-                    description: the scopes for the API key
-                    items:
-                      type: string
-                  tags:
-                    type: array
-                    description: the tags for the API key
-                    items:
-                      type: string
-              example:
-                api_key_id: 1234567890abcdef1234567890abcdef
-                key: 1234567890abcdef1234567890abcdef
-                comments: a comment
-                scopes:
-                  - member
-                tags:
-                  - tag-1
-                expiration_date: '2024-05-01T00:00:00.000000Z'
+      description: API key created
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              api_key_id:
+                type: string
+                description: The unique identifier of the API key
+              key:
+                type: string
+                description: The API key
+              comment:
+                type: string
+                description: A comment for the API key
+              scopes:
+                type: array
+                description: the scopes for the API key
+                items:
+                  type: string
+              tags:
+                type: array
+                description: the tags for the API key
+                items:
+                  type: string
+          example:
+            api_key_id: 1234567890abcdef1234567890abcdef
+            key: 1234567890abcdef1234567890abcdef
+            comments: a comment
+            scopes:
+              - member
+            tags:
+              - tag-1
+            expiration_date: '2024-05-01T00:00:00.000000Z'
     key:
       type: object
       properties:
@@ -2926,43 +2924,40 @@ components:
           type: string
           description: The scope of the invitee
     request:
-      components:
-        responses:
-          request:
-            description: A single request
-            content:
-              application/json:
-                schema:
-                  type: object
-                  properties:
-                    request_id:
-                      type: string
-                      description: The unique identifier of the request
-                    project_uuid:
-                      type: string
-                      description: The unique identifier of the project
-                    created:
-                      type: string
-                      format: date-time
-                      description: The date and time the request was created
-                    path:
-                      type: string
-                      description: The API path of the request
-                    api_key_id:
-                      type: string
-                      description: The unique identifier of the API key
-                    response:
-                      type: object
-                      description: The response of the request
-                    code:
-                      type: integer
-                      description: The response code of the request
-                    deployment:
-                      type: string
-                      description: The deployment type
-                    callback:
-                      type: string
-                      description: The callback URL for the request
+      description: A single request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              request_id:
+                type: string
+                description: The unique identifier of the request
+              project_uuid:
+                type: string
+                description: The unique identifier of the project
+              created:
+                type: string
+                format: date-time
+                description: The date and time the request was created
+              path:
+                type: string
+                description: The API path of the request
+              api_key_id:
+                type: string
+                description: The unique identifier of the API key
+              response:
+                type: object
+                description: The response of the request
+              code:
+                type: integer
+                description: The response code of the request
+              deployment:
+                type: string
+                description: The deployment type
+              callback:
+                type: string
+                description: The callback URL for the request
     create_distribution_creds:
       type: object
       description: Request body for creating distribution credentials
