@@ -101,7 +101,7 @@ paths:
         '400':
           $ref: '#/components/responses/bad_request'
         '401':
-          $ref: '#/components/responses/listen_unauthorized'
+          $ref: '#/components/responses/unauthorized'
         '402':
           $ref: '#/components/responses/payment_required'
         '403':
@@ -154,6 +154,8 @@ paths:
                 $ref: '#/components/schemas/text_response'
         '400':
           $ref: '#/components/responses/bad_request'
+        '401':
+          $ref: '#/components/responses/unauthorized'
       callbacks:
         transcriptionCallback:
           '{$request.query.callback}':
@@ -845,7 +847,7 @@ paths:
         '400':
           $ref: '#/components/responses/invalid_request'
         '401':
-          $ref: '#/components/responses/unauthorized'
+          $ref: '#/components/responses/project_unauthorized'
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
@@ -877,7 +879,7 @@ paths:
         '400':
           $ref: '#/components/responses/invalid_request'
         '401':
-          $ref: '#/components/responses/unauthorized'
+          $ref: '#/components/responses/project_unauthorized'
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
@@ -908,7 +910,7 @@ paths:
         '400':
           $ref: '#/components/responses/invalid_request'
         '401':
-          $ref: '#/components/responses/unauthorized'
+          $ref: '#/components/responses/project_unauthorized'
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
@@ -998,7 +1000,7 @@ paths:
         '400':
           $ref: '#/components/responses/invalid_request'
         '401':
-          $ref: '#/components/responses/unauthorized'
+          $ref: '#/components/responses/project_unauthorized'
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
@@ -1023,7 +1025,7 @@ paths:
         '400':
           $ref: '#/components/responses/invalid_request'
         '401':
-          $ref: '#/components/responses/unauthorized'
+          $ref: '#/components/responses/project_unauthorized'
         '403':
           $ref: '#/components/responses/authentication_failed'
         '404':
@@ -1058,7 +1060,7 @@ paths:
         '400':
           $ref: '#/components/responses/projects_bad_request'
         '401':
-          $ref: '#/components/responses/unauthorized'
+          $ref: '#/components/responses/project_unauthorized'
         '404':
           $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/purchases:
@@ -2989,7 +2991,7 @@ components:
               err_code: INVALID_QUERY_PARAMETER
               err_msg: Failed to deserialize query parameters...
               request_id: 123456-7890-1234-5678-901234
-    listen_unauthorized:
+    unauthorized:
       description: Unauthorized
       content:
         application/json:
@@ -3168,8 +3170,8 @@ components:
           schema:
             type: string
           example: 'Invalid request: scope must be either ''member'', ''admin'' or ''owner''.'
-    unauthorized:
-      description: Unauthorized
+    project_unauthorized:
+      description: Project Unauthorized
       content:
         text/plain:
           schema:
