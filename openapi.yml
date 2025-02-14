@@ -49,7 +49,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ListenRequest'
+              $ref: '#/components/schemas/ListenRequestUrl'
           audio/*:
             schema:
               $ref: '#/components/schemas/ListenRequestFile'
@@ -2129,18 +2129,16 @@ components:
         type: string
       example: 8b36cfd0-472f-4a21-833f-2d6343c3a2f3
   schemas:
-    ListenRequest:
+    ListenRequestUrl:
+      type: object
+      description: Audio file URL to transcribe
       required:
         - url
-      type: object
-      description: Audio file to transcribe
       properties:
         url:
           type: string
           format: uri
           example: https://dpgr.am/spacewalk.wav
-      example:
-        url: https://dpgr.am/spacewalk.wav
     ListenRequestFile:
       type: string
       format: binary
