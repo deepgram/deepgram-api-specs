@@ -141,9 +141,9 @@ paths:
         - $ref: '#/components/parameters/custom_topic'
         - $ref: '#/components/parameters/custom_topic_mode'
         - $ref: '#/components/parameters/intents'
-        - $ref: '#/components/parameters/read_language'
+        - $ref: '#/components/parameters/language'
         - $ref: '#/components/parameters/sentiment'
-        - $ref: '#/components/parameters/read_summarize'
+        - $ref: '#/components/parameters/summarize'
         - $ref: '#/components/parameters/topics'
       responses:
         '200':
@@ -1414,7 +1414,7 @@ components:
       name: language
       in: query
       required: false
-      description: The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that hints at the primary spoken language. Depending on the Model you choose only certain languages are available
+      description: The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that hints at the primary spoken language. Depending on the Model and API endpoint you choose only certain languages are available
       schema:
         type: string
         default: en
@@ -1649,18 +1649,18 @@ components:
       name: summarize
       in: query
       required: false
-      description: Summarize content
+      description: Summarize content. For Listen API, supports string version option. For Read API, accepts boolean only.
       schema:
-        default: false
         oneOf:
-          - title: Versions
+          - title: Listen API Version Option
             type: string
             enum:
               - v2
               - v1
-          - title: Legacy
+          - title: Read API Boolean Option
             type: boolean
-      example: v2
+            default: false
+      example: false
     tag:
       name: tag
       in: query
@@ -1719,26 +1719,6 @@ components:
           - type: string
             description: Use a previous version of a model
             example: model-123
-    read_language:
-      name: read_language
-      in: query
-      required: false
-      description: The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that hints at the primary spoken language
-      schema:
-        type: string
-        default: en
-        enum:
-          - en
-      example: en
-    read_summarize:
-      name: read_summarize
-      in: query
-      required: false
-      description: Summarize text
-      schema:
-        default: false
-        type: boolean
-      example: true
     bit_rate:
       name: bit_rate
       in: query
