@@ -350,15 +350,6 @@ channels:
         default: '1'
         examples:
           - '1'
-      dictation:
-        description: Identify and extract key entities from content in submitted audio
-        location: $message.payload#/dictation
-        default: 'false'
-        enum:
-          - 'true'
-          - 'false'
-        examples:
-          - 'true'
       diarize:
         description: >-
           Recognize speaker changes. Each word in the transcript will be
@@ -379,6 +370,15 @@ channels:
         examples:
           - v1
           - v2
+      dictation:
+        description: Identify and extract key entities from content in submitted audio
+        location: $message.payload#/dictation
+        default: 'false'
+        enum:
+          - 'true'
+          - 'false'
+        examples:
+          - 'true'
       encoding:
         description: Specify the expected encoding of your submitted audio
         location: $message.payload#/encoding
@@ -437,11 +437,6 @@ channels:
           - 'false'
         examples:
           - 'true'
-      keywords:
-        description: Keywords can boost or suppress specialized terminology and brands
-        location: $message.payload#/keywords
-        examples:
-          - Twilio:2
       keyterm:
         description: >-
           Key term prompting can boost or suppress specialized terminology and
@@ -449,6 +444,11 @@ channels:
         location: $message.payload#/keyterm
         examples:
           - Snuffleupagus
+      keywords:
+        description: Keywords can boost or suppress specialized terminology and brands
+        location: $message.payload#/keywords
+        examples:
+          - Twilio:2
       language:
         description: >-
           The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that
