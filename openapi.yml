@@ -1751,6 +1751,12 @@ components:
       schema:
         default: wav
         oneOf:
+          - title: none
+            description: No container.
+            type: string
+            enum:
+              - none
+            nullable: true
           - title: linear16
             description: Encoding - linear16. Supported container - wav (default), or no container.
             type: string
@@ -1775,7 +1781,7 @@ components:
             enum:
               - ogg
     speak_encoding:
-      name: speak_encoding
+      name: encoding
       in: query
       required: false
       description: Encoding allows you to specify the expected encoding of your audio output
@@ -1819,7 +1825,7 @@ components:
               - aac
       example: linear16
     speak_model:
-      name: speak_model
+      name: model
       in: query
       required: false
       description: AI model used to process submitted text
@@ -1841,7 +1847,7 @@ components:
           - aura-zeus-en
       example: aura-asteria-en
     speak_sample_rate:
-      name: speak_sample_rate
+      name: sample_rate
       in: query
       required: false
       description: Sample Rate specifies the sample rate for the output audio. Based on the encoding, different sample rates are supported. For some encodings, the sample rate is not configurable
