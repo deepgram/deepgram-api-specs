@@ -41,10 +41,11 @@ channels:
     parameters:
       ApiKey:
         description: >-
-          API key for authentication. Format should be 'token <DEEPGRAM_API_KEY>'
+          API key for authentication. Format should be 'token
+          <DEEPGRAM_API_KEY>'
         location: $message.header#/Authorization
         examples:
-          - token 65ac49808209f98a9955bc542f545d4e
+          - token YOUR_DEEPGRAM_API_KEY
       encoding:
         description: >-
           Encoding allows you to specify the expected encoding of your audio
@@ -303,10 +304,11 @@ channels:
     parameters:
       ApiKey:
         description: >-
-          API key for authentication. Format should be 'token <DEEPGRAM_API_KEY>'
+          API key for authentication. Format should be 'token
+          <DEEPGRAM_API_KEY>'
         location: $message.header#/Authorization
         examples:
-          - token 65ac49808209f98a9955bc542f545d4e
+          - token YOUR_DEEPGRAM_API_KEY
       callback:
         description: URL to which we'll make the callback request
         location: $message.payload#/callback
@@ -1016,10 +1018,11 @@ channels:
     parameters:
       ApiKey:
         description: >-
-          API key for authentication. Format should be 'token <DEEPGRAM_API_KEY>'
+          API key for authentication. Format should be 'token
+          <DEEPGRAM_API_KEY>'
         location: $message.header#/Authorization
         examples:
-          - token 65ac49808209f98a9955bc542f545d4e
+          - token YOUR_DEEPGRAM_API_KEY
     messages:
       settingsConfiguration:
         contentType: application/json
@@ -1776,4 +1779,4 @@ components:
       description: API key for authentication. Format should be 'token <DEEPGRAM_API_KEY>'
       location: $message.header#/Authorization
       examples:
-        - token 65ac49808209f98a9955bc542f545d4e
+        - token YOUR_DEEPGRAM_API_KEY
