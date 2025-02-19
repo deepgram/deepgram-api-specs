@@ -1,0 +1,56 @@
+name: Sync to Fern Repository
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "openapi.yml"
+      - "asyncapi.yml"
+jobs:
+  publish-file:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the source repository
+        uses: actions/checkout@v2
+
+      - name: Load date value
+        id: date
+        run: echo "date=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Clone the target repository
+        env:
+          TARGET_REPO_TOKEN: ${{ secrets.DGPAT }}
+        run: |
+          git clone https://github.com/deepgram/deepgram-fern-config.git
+          cd deepgram-fern-config
+
+          # Create a new branch for the PR
+          BRANCH_NAME="update-specs-${{ steps.date.outputs.date }}"  # Using timestamp format
+          git checkout -b $BRANCH_NAME
+
+          # Copy both spec files
+          cp ../openapi.yml ./fern/openapi.yml
+          cp ../asyncapi.yml ./fern/asyncapi.yml
+
+          git add ./fern/openapi.yml ./fern/asyncapi.yml
+          git commit -m "feat: update API specifications"
+          git push https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-fern-config.git $BRANCH_NAME
+
+      - name: Create Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.DGPAT }}
+        run: |
+          gh pr create \
+            --repo deepgram/deepgram-fern-config \
+            --title "feat: update API specifications" \
+            --body "This PR updates both OpenAPI and AsyncAPI specifications from the main branch of `deepgram-api-specs`." \
+            --base main \
+            --head "update-specs-${{ steps.date.outputs.date }}"
