@@ -1211,7 +1211,6 @@ components:
       description: URL to which we'll make the callback request
       schema:
         type: string
-      example: https://example.com
     callback_method:
       name: callback_method
       in: query
@@ -1222,7 +1221,6 @@ components:
         enum:
           - POST
           - PUT
-      example: PUT
     custom_topic:
       name: custom_topic
       in: query
@@ -1237,9 +1235,6 @@ components:
             items:
               type: string
             maxItems: 100
-      example:
-        - unsubscribe
-        - account%20deletion
     custom_topic_mode:
       name: custom_topic_mode
       in: query
@@ -1251,7 +1246,6 @@ components:
         enum:
           - extended
           - strict
-      example: strict
     custom_intent:
       name: custom_intent
       in: query
@@ -1262,12 +1256,10 @@ components:
       schema:
         oneOf:
           - type: string
-            example: unsubscribe
           - type: array
             items:
               type: string
               maxItems: 100
-              example: unsubscribe, account deletion
     custom_intent_mode:
       name: custom_intent_mode
       in: query
@@ -1279,7 +1271,6 @@ components:
         enum:
           - extended
           - strict
-      example: strict
     detect_entities:
       name: detect_entities
       in: query
@@ -1288,7 +1279,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     detect_language:
       name: detect_language
       in: query
@@ -1300,11 +1290,9 @@ components:
         oneOf:
           - type: boolean
             default: false
-            example: true
           - type: array
             items:
               type: string
-              example: en, fr
     diarize_version:
       name: diarize_version
       in: query
@@ -1313,7 +1301,6 @@ components:
       schema:
         type: string
         default: v2
-      example: v2
     diarize:
       name: diarize
       in: query
@@ -1322,7 +1309,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     dictation:
       name: dictation
       in: query
@@ -1331,7 +1317,6 @@ components:
       schema:
         default: false
         type: boolean
-        example: true
     encoding:
       name: encoding
       in: query
@@ -1348,7 +1333,6 @@ components:
           - opus
           - speex
           - g729
-      example: linear16
     extra:
       name: extra
       in: query
@@ -1362,9 +1346,6 @@ components:
           - type: array
             items:
               type: string
-      example:
-        - key:value
-        - user:1234567890
     filler_words:
       name: filler_words
       in: query
@@ -1373,7 +1354,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     intents:
       name: intents
       in: query
@@ -1382,7 +1362,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     keyterm:
       name: keyterm
       in: query
@@ -1394,9 +1373,6 @@ components:
         type: array
         items:
           type: string
-      example:
-        - Snuffleupagus
-        - Sesame Street
     keywords:
       name: keywords
       in: query
@@ -1410,9 +1386,6 @@ components:
           - type: array
             items:
               type: string
-      example:
-        - Twilio:2
-        - Algolia
     language:
       name: language
       in: query
@@ -1478,7 +1451,6 @@ components:
           - tr
           - uk
           - vi
-        example: en-US
     measurements:
       name: measurements
       in: query
@@ -1487,7 +1459,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     model:
       name: model
       in: query
@@ -1527,10 +1498,10 @@ components:
               - conversationalai
               - voicemail
               - video
-            example: nova-2
           - type: string
             description: Custom string if you've had a model trained by Deepgram
-            example: custom-model-123
+      example:
+        model: nova-3
     multichannel:
       name: multichannel
       in: query
@@ -1539,7 +1510,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     numerals:
       name: numerals
       in: query
@@ -1548,7 +1518,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     paragraphs:
       name: paragraphs
       in: query
@@ -1557,7 +1526,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     profanity_filter:
       name: profanity_filter
       in: query
@@ -1566,7 +1534,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     punctuate:
       name: punctuate
       in: query
@@ -1575,7 +1542,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     redact:
       name: redact
       in: query
@@ -1595,9 +1561,6 @@ components:
                 - pii
                 - numbers
             maxItems: 100
-      example:
-        - pii
-        - pci
     replace:
       name: replace
       in: query
@@ -1611,9 +1574,6 @@ components:
           - type: array
             items:
               type: string
-      example:
-        - monika:Monica
-        - jon:John
     search:
       name: search
       in: query
@@ -1627,9 +1587,6 @@ components:
           - type: array
             items:
               type: string
-      example:
-        - Deepgram
-        - Text to Speech
     sentiment:
       name: sentiment
       in: query
@@ -1638,7 +1595,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     smart_format:
       name: smart_format
       in: query
@@ -1647,7 +1603,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     summarize:
       name: summarize
       in: query
@@ -1663,7 +1618,6 @@ components:
           - title: Read API Boolean Option
             type: boolean
             default: false
-      example: false
     tag:
       name: tag
       in: query
@@ -1677,8 +1631,6 @@ components:
           - type: array
             items:
               type: string
-      example:
-        - test
     topics:
       name: topics
       in: query
@@ -1687,7 +1639,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     utterances:
       name: utterances
       in: query
@@ -1696,7 +1647,6 @@ components:
       schema:
         default: false
         type: boolean
-      example: true
     utt_split:
       name: utt_split
       in: query
@@ -1705,7 +1655,6 @@ components:
       schema:
         default: 0.8
         type: number
-      example: 1.2
     version:
       name: version
       in: query
@@ -1718,10 +1667,8 @@ components:
             description: Use the latest version of a model
             enum:
               - latest
-            example: latest
           - type: string
             description: Use a previous version of a model
-            example: model-123
     bit_rate:
       name: bit_rate
       in: query
@@ -1826,7 +1773,6 @@ components:
             type: string
             enum:
               - aac
-      example: linear16
     speak_model:
       name: model
       in: query
@@ -1848,7 +1794,6 @@ components:
           - aura-orpheus-en
           - aura-helios-en
           - aura-zeus-en
-      example: aura-asteria-en
     speak_sample_rate:
       name: sample_rate
       in: query
@@ -1888,7 +1833,6 @@ components:
             type: integer
             enum:
               - 48000
-      example: 24000
     project_id:
       name: project_id
       in: path
@@ -1907,7 +1851,6 @@ components:
         default: 10
         minimum: 1
         maximum: 1000
-      example: 10
     start:
       name: start
       in: query
@@ -1916,7 +1859,6 @@ components:
       schema:
         type: string
         format: date-time
-      example: '2024-07-01T00:00:00'
     end:
       name: end
       in: query
@@ -1925,7 +1867,6 @@ components:
       schema:
         type: string
         format: date-time
-      example: '2024-07-31T00:00:00'
     page:
       name: page
       in: query
@@ -1933,7 +1874,6 @@ components:
       description: Navigate and return the results to retrieve specific portions of information of the response
       schema:
         type: integer
-      example: 10
     balance_id:
       name: balance_id
       in: path
@@ -1949,7 +1889,6 @@ components:
       description: returns non-latest versions of models
       schema:
         type: boolean
-      example: true
     model_id:
       name: model_id
       in: path
@@ -2118,7 +2057,6 @@ components:
       description: Optional comment about the credentials
       schema:
         type: string
-      example: My Self-Hosted Distribution Credentials
     distribution_scopes:
       name: scopes
       in: query
@@ -2139,8 +2077,6 @@ components:
             - self-hosted:product:billing
             - self-hosted:product:hotpepper
             - self-hosted:product:metrics-server
-      example:
-        - self-hosted:products
     distribution_provider:
       name: provider
       in: query
@@ -2151,7 +2087,6 @@ components:
         type: string
         enum:
           - quay
-      example: quay
     distribution_credentials_id:
       name: distribution_credentials_id
       in: path
