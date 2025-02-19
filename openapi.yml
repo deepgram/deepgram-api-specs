@@ -484,7 +484,7 @@ paths:
   /v1/projects/{project_id}/models:
     description: Manage your project models
     get:
-      summary: Returns metadata on all the latest models
+      summary: Get All Project Models
       tags:
         - Management API
       security:
@@ -627,7 +627,7 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: deleteProjectKey
-      summary: Deletes an API key for a specific project
+      summary: Delete a Project Key
       description: Deletes an API key for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
@@ -1040,14 +1040,17 @@ paths:
         - ApiKeyAuth: []
       operationId: getProjectUsageBreakdown
       description: |
-        Returns the breakdown of usage for a specific project. Supports the following filter options:
-        - &accessor={accessor_id} - The public API key accessor used
-        - &deployment={deployment} - The deployment type used
-        - &endpoint={endpoint} - The endpoint used
-        - &feature_set={feature_set} - The collection of features used
-        - &model={model_id} - The model used
-        - &method={method} - The processing method used
-        - &tags={tag} - Any tags used
+        | Parameter | Type | Description |
+        |-----------|------|-------------|
+        | accessor | boolean | The public API key accessor used |
+        | deployment | boolean | The deployment type used |
+        | endpoint | boolean | The endpoint used |
+        | feature_set | boolean | The collection of features used |
+        | model | boolean | The model used |
+        | method | boolean | The processing method used |
+        | tags | boolean | Any tags used |
+        | diarize | boolean | Filter by diarization usage |
+        | utterances | boolean | Filter by utterances usage |
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
@@ -1107,7 +1110,7 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: getModel
-      summary: Returns metadata for a specific model
+      summary: Get a specific Project Model
       description: Returns metadata for a specific model
       parameters:
         - $ref: '#/components/parameters/model_id'
@@ -1942,7 +1945,7 @@ components:
     include_outdated:
       name: include_outdated
       in: query
-      required: true
+      required: false
       description: returns non-latest versions of models
       schema:
         type: boolean
@@ -1991,49 +1994,92 @@ components:
       name: project_filters
       in: query
       required: false
-      description: Common filter parameters
+      description: |
+        Filter options for project features. Each filter can be used as an individual query parameter.
+        Example: ?diarize=true&utterances=true
+      style: form
+      explode: true
       schema:
-        type: string
-        enum:
-          - alternatives.yml
-          - callback_method.yml
-          - callback.yml
-          - channels.yml
-          - custom_intent_mode.yml
-          - custom_intent.yml
-          - custom_topic_mode.yml
-          - custom_topic.yml
-          - detect_entities.yml
-          - detect_language.yml
-          - diarize.yml
-          - diarize_version.yml
-          - dictation.yml
-          - detect_topics.yml
-          - encoding.yml
-          - extra.yml
-          - filler_words.yml
-          - intents.yml
-          - keywords.yml
-          - language.yml
-          - measurements.yml
-          - model.yml
-          - multichannel.yml
-          - numerals.yml
-          - paragraphs.yml
-          - profanity_filter.yml
-          - punctuate.yml
-          - redact.yml
-          - replace.yml
-          - sample_rate.yml
-          - smart_format.yml
-          - search.yml
-          - sentiment.yml
-          - summarize.yml
-          - tag.yml
-          - topics.yml
-          - utterances.yml
-          - utt_split.yml
-          - version.yml
+        type: object
+        properties:
+          alternatives:
+            type: boolean
+          callback_method:
+            type: boolean
+          callback:
+            type: boolean
+          channels:
+            type: boolean
+          custom_intent_mode:
+            type: boolean
+          custom_intent:
+            type: boolean
+          custom_topic_mode:
+            type: boolean
+          custom_topic:
+            type: boolean
+          detect_entities:
+            type: boolean
+          detect_language:
+            type: boolean
+          diarize:
+            type: boolean
+          diarize_version:
+            type: boolean
+          dictation:
+            type: boolean
+          detect_topics:
+            type: boolean
+          encoding:
+            type: boolean
+          extra:
+            type: boolean
+          filler_words:
+            type: boolean
+          intents:
+            type: boolean
+          keywords:
+            type: boolean
+          language:
+            type: boolean
+          measurements:
+            type: boolean
+          model:
+            type: boolean
+          multichannel:
+            type: boolean
+          numerals:
+            type: boolean
+          paragraphs:
+            type: boolean
+          profanity_filter:
+            type: boolean
+          punctuate:
+            type: boolean
+          redact:
+            type: boolean
+          replace:
+            type: boolean
+          sample_rate:
+            type: boolean
+          smart_format:
+            type: boolean
+          search:
+            type: boolean
+          sentiment:
+            type: boolean
+          summarize:
+            type: boolean
+          tag:
+            type: boolean
+          topics:
+            type: boolean
+          utterances:
+            type: boolean
+          utt_split:
+            type: boolean
+          version:
+            type: boolean
     usage_breakdown_filters:
       name: usage_breakdown_filters
       in: query
@@ -2714,10 +2760,10 @@ components:
         properties:
           name:
             type: string
-            example: conversationalai
+            example: nova-3
           canonical_name:
             type: string
-            example: conversationalai
+            example: nova-3
           architecture:
             type: string
             example: base
