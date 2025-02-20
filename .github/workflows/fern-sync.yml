@@ -51,6 +51,6 @@ jobs:
           gh pr create \
             --repo deepgram/deepgram-fern-config \
             --title "feat: update API specifications" \
-            --body "This PR updates both OpenAPI and AsyncAPI specifications from the main branch of `deepgram-api-specs`." \
+            --body "This PR updates both OpenAPI and AsyncAPI specifications from the main branch of deepgram-api-specs." \
             --base main \
             --head "update-specs-${{ steps.date.outputs.date }}"
