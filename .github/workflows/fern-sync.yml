@@ -27,7 +27,7 @@ jobs:
 
       - name: Clone the target repository
         env:
-          TARGET_REPO_TOKEN: ${{ secrets.DGPAT }}
+          TARGET_REPO_TOKEN: ${{ secrets.FERN_PRS }}
         run: |
           git clone https://github.com/deepgram/deepgram-fern-config.git
           cd deepgram-fern-config
@@ -46,7 +46,7 @@ jobs:
 
       - name: Create Pull Request
         env:
-          GH_TOKEN: ${{ secrets.DGPAT }}
+          GH_TOKEN: ${{ secrets.FERN_PRS }}
         run: |
           gh pr create \
             --repo deepgram/deepgram-fern-config \
