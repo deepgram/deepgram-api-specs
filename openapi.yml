@@ -1500,8 +1500,7 @@ components:
               - video
           - type: string
             description: Custom string if you've had a model trained by Deepgram
-      example:
-        model: nova-3
+        example: nova-3
     multichannel:
       name: multichannel
       in: query

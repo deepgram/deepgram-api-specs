@@ -51,7 +51,6 @@ channels:
           Encoding allows you to specify the expected encoding of your audio
           output
         location: $message.payload#/encoding
-        required: false
         default: mp3
         enum:
           - linear16
@@ -66,7 +65,6 @@ channels:
       model:
         description: AI model used to process submitted text
         location: $message.payload#/model
-        required: false
         default: aura-asteria-en
         enum:
           - aura-asteria-en
@@ -89,7 +87,6 @@ channels:
           encoding 8000 or 24000 are possible defaults. For some encodings
           sample rate is not configurable.
         location: $message.payload#/sample_rate
-        required: false
         default: '24000'
         enum:
           - '8000'
@@ -315,13 +312,11 @@ channels:
       callback:
         description: URL to which we'll make the callback request
         location: $message.payload#/callback
-        required: false
         examples:
           - https://example.com
       callback_method:
         description: HTTP method by which the callback request will be made
         location: $message.payload#/callback_method
-        required: false
         default: POST
         enum:
           - POST
@@ -336,7 +331,6 @@ channels:
       channels:
         description: The number of channels in the submitted audio
         location: $message.payload#/channels
-        required: false
         default: '1'
         examples:
           - '1'
@@ -345,7 +339,6 @@ channels:
           Recognize speaker changes. Each word in the transcript will be
           assigned a speaker number starting at 0
         location: $message.payload#/diarize
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -357,7 +350,6 @@ channels:
           Version of the diarization feature to use. Only used when the
           diarization feature is enabled (`diarize=true` is passed to the API)
         location: $message.payload#/diarize_version
-        required: false
         default: v2
         examples:
           - v1
@@ -365,7 +357,6 @@ channels:
       dictation:
         description: Identify and extract key entities from content in submitted audio
         location: $message.payload#/dictation
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -375,7 +366,6 @@ channels:
       encoding:
         description: Specify the expected encoding of your submitted audio
         location: $message.payload#/encoding
-        required: false
         enum:
           - linear16
           - flac
@@ -396,7 +386,6 @@ channels:
           with a speech_final parameter set to true. Can also be set to false to
           disable endpointing
         location: $message.payload#/endpointing
-        required: false
         default: '10'
         examples:
           - '300'
@@ -406,7 +395,6 @@ channels:
           Arbitrary key-value pairs that are attached to the API response for
           usage in downstream processing
         location: $message.payload#/extra
-        required: false
         examples:
           - key:value
       filler_words:
@@ -414,7 +402,6 @@ channels:
           Filler Words can help transcribe interruptions in your audio, like
           "uh" and "um"
         location: $message.payload#/filler_words
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -428,7 +415,6 @@ channels:
           endpoint sends continuous updates, meaning transcription results may
           evolve over time
         location: $message.payload#/interim_results
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -440,13 +426,11 @@ channels:
           Key term prompting can boost or suppress specialized terminology and
           brands. Only compatible with Nova-3
         location: $message.payload#/keyterm
-        required: false
         examples:
           - Snuffleupagus
       keywords:
         description: Keywords can boost or suppress specialized terminology and brands
         location: $message.payload#/keywords
-        required: false
         examples:
           - Twilio:2
       language:
@@ -455,7 +439,6 @@ channels:
           hints at the primary spoken language. Depending on the Model you
           choose only certain languages are available
         location: $message.payload#/language
-        required: false
         default: en
         enum:
           - bg
@@ -519,7 +502,6 @@ channels:
       model:
         description: AI model to use for the transcription
         location: $message.payload#/model
-        required: false
         enum:
           - nova-3
           - nova-3-general
@@ -556,7 +538,6 @@ channels:
       multichannel:
         description: Transcribe each audio channel independently
         location: $message.payload#/multichannel
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -566,7 +547,6 @@ channels:
       numerals:
         description: Convert numbers from written format to numerical format
         location: $message.payload#/numerals
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -579,7 +559,6 @@ channels:
           nearest recognized non-profane word or removes it from the transcript
           completely
         location: $message.payload#/profanity_filter
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -589,7 +568,6 @@ channels:
       punctuate:
         description: Add punctuation and capitalization to the transcript
         location: $message.payload#/punctuate
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -599,7 +577,6 @@ channels:
       redact:
         description: Redaction removes sensitive information from your transcripts
         location: $message.payload#/redact
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -609,7 +586,6 @@ channels:
       replace:
         description: Search for terms or phrases in submitted audio and replaces them
         location: $message.payload#/replace
-        required: false
         examples:
           - monika:Monica
       sample_rate:
@@ -617,13 +593,11 @@ channels:
           Sample rate of submitted audio. Required (and only read) when a value
           is provided for encoding
         location: $message.payload#/sample_rate
-        required: false
         examples:
           - '8000'
       search:
         description: Search for terms or phrases in submitted audio
         location: $message.payload#/search
-        required: false
         examples:
           - Deepgram
           - Text to Speech
@@ -632,7 +606,6 @@ channels:
           Apply formatting to transcript output. When set to true, additional
           formatting will be applied to transcripts to improve readability
         location: $message.payload#/smart_format
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -644,7 +617,6 @@ channels:
           Label your requests for the purpose of identification during usage
           reporting
         location: $message.payload#/tag
-        required: false
         examples:
           - my-team
           - marketing%20team
@@ -653,7 +625,6 @@ channels:
           Indicates how long Deepgram will wait to send an UtteranceEnd message
           after a word has been transcribed. Use with interim_results
         location: $message.payload#/utterance_end
-        required: false
         examples:
           - '1000'
       vad_events:
@@ -661,7 +632,6 @@ channels:
           Indicates that speech has started. You'll begin receiving Speech
           Started messages upon speech starting
         location: $message.payload#/vad_events
-        required: false
         default: 'false'
         enum:
           - 'true'
@@ -671,7 +641,6 @@ channels:
       version:
         description: Version of an AI model to use
         location: $message.payload#/version
-        required: false
         default: latest
         examples:
           - MODEL_VERSION
