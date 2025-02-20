@@ -34,15 +34,18 @@ servers:
   public:
     host: api.deepgram.com
     protocol: wss
+  agent:
+    host: agent.deepgram.com
+    protocol: wss
 channels:
   speak:
     address: /v1/speak
     description: Deepgram Text to Speech WebSocket
+    servers:
+      - $ref: '#/servers/public'
     parameters:
       ApiKey:
-        description: >-
-          API key for authentication. Format should be 'token
-          <DEEPGRAM_API_KEY>'
+        description: API key for authentication. Format should be token <DEEPGRAM_API_KEY>
         location: $message.header#/Authorization
         examples:
           - token YOUR_DEEPGRAM_API_KEY
@@ -300,12 +303,12 @@ channels:
               description: Time limit exceeded
   listen:
     address: /v1/listen
+    servers:
+      - $ref: '#/servers/public'
     description: Deepgram Speech to Text WebSocket
     parameters:
       ApiKey:
-        description: >-
-          API key for authentication. Format should be 'token
-          <DEEPGRAM_API_KEY>'
+        description: API key for authentication. Format should be token <DEEPGRAM_API_KEY>
         location: $message.header#/Authorization
         examples:
           - token YOUR_DEEPGRAM_API_KEY
@@ -1014,12 +1017,12 @@ channels:
               description: Failed to receive message
   agent:
     address: /agent
+    servers:
+      - $ref: '#/servers/agent'
     description: Deepgram Voice Agent WebSocket
     parameters:
       ApiKey:
-        description: >-
-          API key for authentication. Format should be 'token
-          <DEEPGRAM_API_KEY>'
+        description: API key for authentication. Format should be token <DEEPGRAM_API_KEY>
         location: $message.header#/Authorization
         examples:
           - token YOUR_DEEPGRAM_API_KEY
@@ -1778,7 +1781,7 @@ operations:
 components:
   parameters:
     ApiKey:
-      description: API key for authentication. Format should be 'token <DEEPGRAM_API_KEY>'
+      description: API key for authentication. Format should be token <DEEPGRAM_API_KEY>
       location: $message.header#/Authorization
       examples:
         - token YOUR_DEEPGRAM_API_KEY
