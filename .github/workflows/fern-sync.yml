@@ -27,7 +27,7 @@ jobs:
 
       - name: Clone the target repository
         env:
-          TARGET_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET_REPO_TOKEN: ${{ secrets.DGPAT }}
         run: |
           git clone https://github.com/deepgram/deepgram-fern-config.git
           cd deepgram-fern-config
