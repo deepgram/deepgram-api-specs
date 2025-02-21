@@ -1631,6 +1631,13 @@ operations:
       $ref: '#/channels/speak'
     messages:
       - $ref: '#/channels/speak/messages/controlMessagesResponse'
+  receiveSpeakCloseFrame:
+    description: Receive close frame from Deepgram's Text to Speech API
+    action: receive
+    channel:
+      $ref: '#/channels/speak'
+    messages:
+      - $ref: '#/channels/speak/messages/closeFrame'
   sendAudio:
     description: Send audio to Deepgram's Speech to Text API
     action: send
@@ -1659,6 +1666,13 @@ operations:
       $ref: '#/channels/listen'
     messages:
       - $ref: '#/channels/listen/messages/controlMessageResponse'
+  receiveListenCloseFrame:
+    description: Receive close frame from Deepgram's Speech to Text API
+    action: receive
+    channel:
+      $ref: '#/channels/listen'
+    messages:
+      - $ref: '#/channels/listen/messages/closeFrame'
   sendSettingsConfiguration:
     description: Send settings configuration to Deepgram's Voice Agent API
     action: send
