@@ -1085,8 +1085,13 @@ channels:
                   properties:
                     model:
                       type: string
-                      default: nova-2
+                      default: nova-3
                       description: Model to use for speech recognition
+                    keyterms:
+                      type: array
+                      items:
+                        type: string
+                      description: List of keyterms to listen for, only available on nova-3
                 think:
                   type: object
                   properties:
