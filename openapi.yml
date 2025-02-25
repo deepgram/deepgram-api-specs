@@ -1793,6 +1793,7 @@ components:
           - aura-orpheus-en
           - aura-helios-en
           - aura-zeus-en
+      example: aura-asteria-en
     speak_sample_rate:
       name: sample_rate
       in: query
