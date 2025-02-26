@@ -540,6 +540,7 @@ paths:
     description: Manage your project keys
     parameters:
       - $ref: '#/components/parameters/project_id'
+      - $ref: '#/components/parameters/keys_status'
     get:
       summary: List Project Keys
       tags:
@@ -1947,6 +1948,15 @@ components:
       schema:
         type: string
       example: af6e9977-99f6-4d8f-b6f5-dfdf6fb6e291
+    keys_status:
+      name: status
+      in: query
+      required: false
+      description: Only return keys with a specific status
+      schema:
+        type: string
+        enum:
+          - expired
     key_id:
       name: key_id
       in: path
