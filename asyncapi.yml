@@ -584,6 +584,10 @@ channels:
         enum:
           - 'true'
           - 'false'
+          - pci
+          - numbers
+          - aggressive_numbers
+          - ssn
         examples:
           - 'true'
       replace:
