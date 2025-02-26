@@ -1956,6 +1956,7 @@ components:
       schema:
         type: string
         enum:
+          - active
           - expired
     key_id:
       name: key_id
