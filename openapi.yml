@@ -1682,16 +1682,31 @@ components:
             enum:
               - 32000
               - 48000
+            x-fern-enum:
+              '32000':
+                name: ThirtyTwoThousand
+              '48000':
+                name: FortyEightThousand
           - title: opus
             description: Encoding - opus. Bitrate range - 4000-650000 bps.
             type: integer
             minimum: 4000
             maximum: 650000
+            x-fern-enum:
+              '4000':
+                name: FourThousand
+              '650000':
+                name: SixHundredFiftyThousand
           - title: aac
             description: Encoding -aac. Bitrate range - 4000-192000 bps.
             type: integer
             minimum: 4000
             maximum: 192000
+            x-fern-enum:
+              '4000':
+                name: FourThousand
+              '192000':
+                name: OneHundredNinetyTwoThousand
     container:
       name: container
       in: query
@@ -1811,28 +1826,55 @@ components:
               - 24000
               - 32000
               - 48000
+            x-fern-enum:
+              '8000':
+                name: EightThousand
+              '16000':
+                name: SixteenThousand
+              '24000':
+                name: TwentyFourThousand
+              '32000':
+                name: ThirtyTwoThousand
+              '48000':
+                name: FortyEightThousand
           - title: mulaw
             description: Encoding - mulaw. Supported sample rates - 8000, 16000 Hz.
             type: integer
             enum:
               - 8000
               - 16000
+            x-fern-enum:
+              '8000':
+                name: EightThousand
+              '16000':
+                name: SixteenThousand
           - title: alaw
             description: Encoding - alaw. Supported sample rates - 8000, 16000 Hz.
             type: integer
             enum:
               - 8000
               - 16000
+            x-fern-enum:
+              '8000':
+                name: EightThousand
+              '16000':
+                name: SixteenThousand
           - title: mp3
             description: Encoding - mp3. Sample rate is fixed and not configurable (22050 Hz).
             type: integer
             enum:
               - 22050
+            x-fern-enum:
+              '22050':
+                name: TwentyTwoThousandFifty
           - title: opus
             description: Encoding - opus. Sample rate is fixed at 48000 Hz.
             type: integer
             enum:
               - 48000
+            x-fern-enum:
+              '48000':
+                name: FortyEightThousand
     project_id:
       name: project_id
       in: path
