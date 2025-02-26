@@ -97,6 +97,17 @@ channels:
           - '24000'
           - '44100'
           - '48000'
+        x-fern-enum:
+          '8000':
+            name: EightThousand
+          '16000':
+            name: SixteenThousand
+          '24000':
+            name: TwentyFourThousand
+          '44100':
+            name: FortyFourThousandOneHundred
+          '48000':
+            name: FortyEightThousand
         examples:
           - '24000'
     messages:
@@ -211,6 +222,19 @@ channels:
                 - 429
                 - 503
               description: HTTP status code equivalent
+              x-fern-enum:
+                '400':
+                  name: BadRequest
+                '401':
+                  name: Unauthorized
+                '402':
+                  name: PaymentRequired
+                '403':
+                  name: Forbidden
+                '429':
+                  name: TooManyRequests
+                '503':
+                  name: ServiceUnavailable
             error_message:
               type: string
               description: Error message
@@ -233,6 +257,9 @@ channels:
               enum:
                 - 200
               description: HTTP status code equivalent
+              x-fern-enum:
+                '200':
+                  name: OK
             success_message:
               type: string
               description: Success message
@@ -260,6 +287,17 @@ channels:
                 - 1009
                 - 1011
               description: WebSocket close status code
+              x-fern-enum:
+                '1000':
+                  name: NormalClosure
+                '1003':
+                  name: ProtocolError
+                '1008':
+                  name: PolicyViolation
+                '1009':
+                  name: MessageTooBig
+                '1011':
+                  name: InternalServerError
             payload:
               type: string
               enum:
@@ -951,6 +989,19 @@ channels:
                 - 429
                 - 503
               description: HTTP status code equivalent
+              x-fern-enum:
+                '400':
+                  name: BadRequest
+                '401':
+                  name: Unauthorized
+                '402':
+                  name: PaymentRequired
+                '403':
+                  name: Forbidden
+                '429':
+                  name: TooManyRequests
+                '503':
+                  name: ServiceUnavailable
             error_message:
               type: string
               description: Error message
@@ -973,6 +1024,9 @@ channels:
               enum:
                 - 200
               description: HTTP status code equivalent
+              x-fern-enum:
+                '200':
+                  name: OK
             success_message:
               type: string
               description: Success message
@@ -998,6 +1052,13 @@ channels:
                 - 1008
                 - 1011
               description: WebSocket close status code
+              x-fern-enum:
+                '1000':
+                  name: NormalClosure
+                '1008':
+                  name: PolicyViolation
+                '1011':
+                  name: InternalServerError
             payload:
               type: string
               enum:
@@ -1202,7 +1263,7 @@ channels:
                   container: none
               agent:
                 listen:
-                  model: nova-2
+                  model: nova-3
                 think:
                   provider:
                     type: openai
