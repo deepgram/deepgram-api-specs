@@ -1679,6 +1679,7 @@ components:
           - title: mp3(default)
             description: Encoding - mp3(default). Supported bitrates - 32000, 48000(default) bps.
             type: integer
+            nullable: true
             enum:
               - 32000
               - 48000
@@ -1690,6 +1691,7 @@ components:
           - title: opus
             description: Encoding - opus. Bitrate range - 4000-650000 bps.
             type: integer
+            nullable: true
             minimum: 4000
             maximum: 650000
             x-fern-enum:
@@ -1700,6 +1702,7 @@ components:
           - title: aac
             description: Encoding -aac. Bitrate range - 4000-192000 bps.
             type: integer
+            nullable: true
             minimum: 4000
             maximum: 192000
             x-fern-enum:
@@ -1820,6 +1823,7 @@ components:
           - title: linear16
             description: Encoding - linear16. Supported sample rates - 8000, 16000, 24000, 32000, 48000 Hz.
             type: integer
+            nullable: true
             enum:
               - 8000
               - 16000
@@ -1840,6 +1844,7 @@ components:
           - title: mulaw
             description: Encoding - mulaw. Supported sample rates - 8000, 16000 Hz.
             type: integer
+            nullable: true
             enum:
               - 8000
               - 16000
@@ -1851,6 +1856,7 @@ components:
           - title: alaw
             description: Encoding - alaw. Supported sample rates - 8000, 16000 Hz.
             type: integer
+            nullable: true
             enum:
               - 8000
               - 16000
@@ -1862,6 +1868,7 @@ components:
           - title: mp3
             description: Encoding - mp3. Sample rate is fixed and not configurable (22050 Hz).
             type: integer
+            nullable: true
             enum:
               - 22050
             x-fern-enum:
@@ -1870,6 +1877,7 @@ components:
           - title: opus
             description: Encoding - opus. Sample rate is fixed at 48000 Hz.
             type: integer
+            nullable: true
             enum:
               - 48000
             x-fern-enum:
