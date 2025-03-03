@@ -29,8 +29,8 @@ jobs:
         env:
           TARGET_REPO_TOKEN: ${{ secrets.FERN_PRS }}
         run: |
-          git clone https://github.com/deepgram/deepgram-fern-config.git
-          cd deepgram-fern-config
+          git clone https://github.com/deepgram/deepgram-docs.git
+          cd deepgram-docs
 
           # Create a new branch for the PR
           BRANCH_NAME="update-specs-${{ steps.date.outputs.date }}"  # Using timestamp format
@@ -42,14 +42,14 @@ jobs:
 
           git add ./fern/openapi.yml ./fern/asyncapi.yml
           git commit -m "feat: update API specifications"
-          git push https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-fern-config.git $BRANCH_NAME
+          git push https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-docs.git $BRANCH_NAME
 
       - name: Create Pull Request
         env:
           GH_TOKEN: ${{ secrets.FERN_PRS }}
         run: |
           gh pr create \
-            --repo deepgram/deepgram-fern-config \
+            --repo deepgram/deepgram-docs \
             --title "feat: update API specifications" \
             --body "This PR updates both OpenAPI and AsyncAPI specifications from the main branch of deepgram-api-specs." \
             --base main \
