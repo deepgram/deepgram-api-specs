@@ -31,7 +31,10 @@ jobs:
         run: |
           if [ -z "$TARGET_REPO_TOKEN" ]; then
             echo "Error: TARGET_REPO_TOKEN is not set"
+            exit 1
           fi
+          USERNAME=$(curl -s -H "Authorization: token ${TARGET_REPO_TOKEN}" https://api.github.com/user | jq -r '.login')
+          echo "Authenticated as $USERNAME"
           git clone https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-docs.git
           cd deepgram-docs
 
