@@ -1095,7 +1095,7 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: listModels
-      description: Returns metadata on all the latest public models
+      description: Returns metadata on all the latest public models. To retrieve custom models, use the Get Projects Models endpoint
       parameters:
         - $ref: '#/components/parameters/include_outdated'
       responses:
@@ -1111,8 +1111,8 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: getModel
-      summary: Get a specific Project Model
-      description: Returns metadata for a specific model
+      summary: Get a specific Model
+      description: Returns metadata for a specific public model
       parameters:
         - $ref: '#/components/parameters/model_id'
       responses:
