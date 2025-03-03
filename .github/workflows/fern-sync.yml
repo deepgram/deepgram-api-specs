@@ -29,7 +29,10 @@ jobs:
         env:
           TARGET_REPO_TOKEN: ${{ secrets.FERN_PRS }}
         run: |
-          git clone https://github.com/deepgram/deepgram-docs.git
+          if [ -z "$TARGET_REPO_TOKEN" ]; then
+            echo "Error: TARGET_REPO_TOKEN is not set"
+          fi
+          git clone https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-docs.git
           cd deepgram-docs
 
           # Create a new branch for the PR
@@ -45,9 +48,6 @@ jobs:
           echo "Staged files"
           git commit -m "feat: update API specifications"
           echo "Committed Files"
-          if [ -z "$TARGET_REPO_TOKEN" ]; then
-            echo "Error: TARGET_REPO_TOKEN is not set"
-          fi
           git push https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-docs.git $BRANCH_NAME
 
       - name: Create Pull Request
