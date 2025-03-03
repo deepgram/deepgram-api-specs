@@ -35,13 +35,19 @@ jobs:
           # Create a new branch for the PR
           BRANCH_NAME="update-specs-${{ steps.date.outputs.date }}"  # Using timestamp format
           git checkout -b $BRANCH_NAME
+          echo "Checked out $BRANCH_NAME"
 
           # Copy both spec files
           cp ../openapi.yml ./fern/openapi.yml
           cp ../asyncapi.yml ./fern/asyncapi.yml
 
           git add ./fern/openapi.yml ./fern/asyncapi.yml
+          echo "Staged files"
           git commit -m "feat: update API specifications"
+          echo "Committed Files"
+          if [ -z "$TARGET_REPO_TOKEN" ]; then
+            echo "Error: TARGET_REPO_TOKEN is not set"
+          fi
           git push https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-docs.git $BRANCH_NAME
 
       - name: Create Pull Request
