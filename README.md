@@ -1,30 +1,25 @@
 [![Discord](https://dcbadge.vercel.app/api/server/xWRaCDBtW4?style=flat)](https://discord.gg/xWRaCDBtW4)
 
-# Deepgram API Specs [Beta]
+# Deepgram API Specs
 
-This is intended as the single-source-of-truth specification for the Deepgram API, being developed and maintained by the DX team. It includes the specifications of internal and external features.
+This repository contains [OpenAPI](https://www.openapis.org) and  [AsyncAPI](https://www.asyncapi.com) specifications for the [Deepgram API](https://developers.deepgram.com/reference/deepgram-api-overview).
 
-## Status
+## Public mirror
 
-These API specs are currently in beta release and expected to change frequently as we finalize our specfications for public consumption.
-
-## Publishing Workflow
-
-A public version of the specifications (scrubbed of internal and sensitive data) will be automatically published when any changes are made to our API to this repo.
+This is a public mirror of the internal Deepgram API specifications. Pull requests to this spec document will not be merged. In the future, we may enable contributions and corrections via contribution to the spec, but for now they cannot be accepted. Thank you!
 
 ## Latest Public Version
 
-Check out the [openapi.yml](openapi.yml) file for the latest public version of the REST API spec.
+Check out the [openapi.yml](openapi.yml) file for the latest public version of the OpenAPI spec.
 
-Check out the [asyncapi.yml](asyncapi.yml) file for the latest public version of the WebSocket spec.
-
+Check out the [asyncapi.yml](asyncapi.yml) file for the latest public version of the AsyncAPI spec.
 
 ## Development and Contributing
 
-* Directly modifying these API spec files in not allowed. Any API spec change should be done in the upstream Internal API Spec repository.
-* Direct contributions to our Internal API specs are reserved to Deepgram Employees only.
+* Directly modifying these API spec files in not allowed. Any API spec change should be done in the upstream internal Deepgram API specifications.
+* Direct contributions a restricted to stakeholders only.
 
- ## Getting Help
+## Getting Help
 
 We love to hear from you so if you have questions, comments or find a bug in the project, let us know! You can either:
 
