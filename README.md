@@ -23,7 +23,7 @@ Check out the [asyncapi.yml](asyncapi.yml) file for the latest public version of
 
 We love to hear from you so if you have questions, comments or find a bug in the project, let us know! You can either:
 
-- [Open an issue in this repository](https://github.com/deepgram/deepgram-api-specs/issues/new)
+- Report an Issue: Coming Soon!
 - [Join the Deepgram Github Discussions Community](https://github.com/orgs/deepgram/discussions)
 - [Join the Deepgram Discord Community](https://discord.gg/xWRaCDBtW4)
 - [Review our API Documentation](https://developers.deepgram.com/reference/deepgram-api-overview)
