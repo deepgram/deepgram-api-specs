@@ -1149,7 +1149,6 @@ paths:
       description: Creates a set of distribution credentials for the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/distribution_comment'
         - $ref: '#/components/parameters/distribution_scopes'
         - $ref: '#/components/parameters/distribution_provider'
       requestBody:
@@ -2112,13 +2111,6 @@ components:
           tags:
             type: string
             description: Filter results by specific tags
-    distribution_comment:
-      name: comment
-      in: query
-      required: false
-      description: Optional comment about the credentials
-      schema:
-        type: string
     distribution_scopes:
       name: scopes
       in: query
