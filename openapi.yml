@@ -1040,24 +1040,14 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: getProjectUsageBreakdown
-      description: |
-        | Parameter | Type | Description |
-        |-----------|------|-------------|
-        | accessor | boolean | The public API key accessor used |
-        | deployment | boolean | The deployment type used |
-        | endpoint | boolean | The endpoint used |
-        | feature_set | boolean | The collection of features used |
-        | model | boolean | The model used |
-        | method | boolean | The processing method used |
-        | tags | boolean | Any tags used |
-        | diarize | boolean | Filter by diarization usage |
-        | utterances | boolean | Filter by utterances usage |
+      description: Retrieves the usage breakdown for a specific project, with various filter options
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
         - $ref: '#/components/parameters/end'
         - $ref: '#/components/parameters/project_filters'
         - $ref: '#/components/parameters/usage_breakdown_filters'
+        - $ref: '#/components/parameters/grouping'
       responses:
         '200':
           $ref: '#/components/responses/usage_breakdown'
@@ -2111,6 +2101,21 @@ components:
           tags:
             type: string
             description: Filter results by specific tags
+    grouping:
+      name: grouping
+      in: query
+      required: false
+      description: Common usage grouping parameters
+      schema:
+        type: string
+        enum:
+          - accessor
+          - endpoint
+          - feature_set
+          - models
+          - method
+          - tags
+          - deployment
     distribution_scopes:
       name: scopes
       in: query
