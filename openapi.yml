@@ -63,7 +63,6 @@ paths:
         - $ref: '#/components/parameters/custom_intent_mode'
         - $ref: '#/components/parameters/detect_entities'
         - $ref: '#/components/parameters/detect_language'
-        - $ref: '#/components/parameters/diarize_version'
         - $ref: '#/components/parameters/diarize'
         - $ref: '#/components/parameters/dictation'
         - $ref: '#/components/parameters/encoding'
@@ -1364,14 +1363,6 @@ components:
           - type: array
             items:
               type: string
-    diarize_version:
-      name: diarize_version
-      in: query
-      required: false
-      description: Version of the diarization feature to use. Only used when the diarization feature is enabled (`diarize=true` is passed to the API)
-      schema:
-        type: string
-        default: v2
     diarize:
       name: diarize
       in: query
