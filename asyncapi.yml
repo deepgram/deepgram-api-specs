@@ -386,15 +386,6 @@ channels:
           - 'false'
         examples:
           - 'true'
-      diarize_version:
-        description: >-
-          Version of the diarization feature to use. Only used when the
-          diarization feature is enabled (`diarize=true` is passed to the API)
-        location: $message.payload#/diarize_version
-        default: v2
-        examples:
-          - v1
-          - v2
       dictation:
         description: Identify and extract key entities from content in submitted audio
         location: $message.payload#/dictation
