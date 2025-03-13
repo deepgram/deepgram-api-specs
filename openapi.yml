@@ -994,7 +994,48 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
         - $ref: '#/components/parameters/end'
-        - $ref: '#/components/parameters/project_filters'
+        - $ref: '#/components/parameters/filter_accessor'
+        - $ref: '#/components/parameters/filter_alternatives'
+        - $ref: '#/components/parameters/filter_callback_method'
+        - $ref: '#/components/parameters/filter_callback'
+        - $ref: '#/components/parameters/filter_channels'
+        - $ref: '#/components/parameters/filter_custom_intent_mode'
+        - $ref: '#/components/parameters/filter_custom_intent'
+        - $ref: '#/components/parameters/filter_custom_topic_mode'
+        - $ref: '#/components/parameters/filter_custom_topic'
+        - $ref: '#/components/parameters/filter_deployment'
+        - $ref: '#/components/parameters/filter_detect_entities'
+        - $ref: '#/components/parameters/filter_detect_language'
+        - $ref: '#/components/parameters/filter_diarize'
+        - $ref: '#/components/parameters/filter_dictation'
+        - $ref: '#/components/parameters/filter_encoding'
+        - $ref: '#/components/parameters/filter_endpoint'
+        - $ref: '#/components/parameters/filter_extra'
+        - $ref: '#/components/parameters/filter_filler_words'
+        - $ref: '#/components/parameters/filter_intents'
+        - $ref: '#/components/parameters/filter_keyterm'
+        - $ref: '#/components/parameters/filter_keywords'
+        - $ref: '#/components/parameters/filter_language'
+        - $ref: '#/components/parameters/filter_measurements'
+        - $ref: '#/components/parameters/filter_method'
+        - $ref: '#/components/parameters/filter_model'
+        - $ref: '#/components/parameters/filter_multichannel'
+        - $ref: '#/components/parameters/filter_numerals'
+        - $ref: '#/components/parameters/filter_paragraphs'
+        - $ref: '#/components/parameters/filter_profanity_filter'
+        - $ref: '#/components/parameters/filter_punctuate'
+        - $ref: '#/components/parameters/filter_redact'
+        - $ref: '#/components/parameters/filter_replace'
+        - $ref: '#/components/parameters/filter_sample_rate'
+        - $ref: '#/components/parameters/filter_search'
+        - $ref: '#/components/parameters/filter_sentiment'
+        - $ref: '#/components/parameters/filter_smart_format'
+        - $ref: '#/components/parameters/filter_summarize'
+        - $ref: '#/components/parameters/filter_tag'
+        - $ref: '#/components/parameters/filter_topics'
+        - $ref: '#/components/parameters/filter_utt_split'
+        - $ref: '#/components/parameters/filter_utterances'
+        - $ref: '#/components/parameters/filter_version'
       responses:
         '200':
           $ref: '#/components/responses/usage'
@@ -1040,14 +1081,54 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: getProjectUsageBreakdown
-      description: Retrieves the usage breakdown for a specific project, with various filter options
+      description: Retrieves the usage breakdown for a specific project, with various filter options by API feature or by groupings.
       parameters:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start'
         - $ref: '#/components/parameters/end'
-        - $ref: '#/components/parameters/project_filters'
-        - $ref: '#/components/parameters/usage_breakdown_filters'
         - $ref: '#/components/parameters/grouping'
+        - $ref: '#/components/parameters/filter_accessor'
+        - $ref: '#/components/parameters/filter_alternatives'
+        - $ref: '#/components/parameters/filter_callback_method'
+        - $ref: '#/components/parameters/filter_callback'
+        - $ref: '#/components/parameters/filter_channels'
+        - $ref: '#/components/parameters/filter_custom_intent_mode'
+        - $ref: '#/components/parameters/filter_custom_intent'
+        - $ref: '#/components/parameters/filter_custom_topic_mode'
+        - $ref: '#/components/parameters/filter_custom_topic'
+        - $ref: '#/components/parameters/filter_deployment'
+        - $ref: '#/components/parameters/filter_detect_entities'
+        - $ref: '#/components/parameters/filter_detect_language'
+        - $ref: '#/components/parameters/filter_diarize'
+        - $ref: '#/components/parameters/filter_dictation'
+        - $ref: '#/components/parameters/filter_encoding'
+        - $ref: '#/components/parameters/filter_endpoint'
+        - $ref: '#/components/parameters/filter_extra'
+        - $ref: '#/components/parameters/filter_filler_words'
+        - $ref: '#/components/parameters/filter_intents'
+        - $ref: '#/components/parameters/filter_keyterm'
+        - $ref: '#/components/parameters/filter_keywords'
+        - $ref: '#/components/parameters/filter_language'
+        - $ref: '#/components/parameters/filter_measurements'
+        - $ref: '#/components/parameters/filter_method'
+        - $ref: '#/components/parameters/filter_model'
+        - $ref: '#/components/parameters/filter_multichannel'
+        - $ref: '#/components/parameters/filter_numerals'
+        - $ref: '#/components/parameters/filter_paragraphs'
+        - $ref: '#/components/parameters/filter_profanity_filter'
+        - $ref: '#/components/parameters/filter_punctuate'
+        - $ref: '#/components/parameters/filter_redact'
+        - $ref: '#/components/parameters/filter_replace'
+        - $ref: '#/components/parameters/filter_sample_rate'
+        - $ref: '#/components/parameters/filter_search'
+        - $ref: '#/components/parameters/filter_sentiment'
+        - $ref: '#/components/parameters/filter_smart_format'
+        - $ref: '#/components/parameters/filter_summarize'
+        - $ref: '#/components/parameters/filter_tag'
+        - $ref: '#/components/parameters/filter_topics'
+        - $ref: '#/components/parameters/filter_utt_split'
+        - $ref: '#/components/parameters/filter_utterances'
+        - $ref: '#/components/parameters/filter_version'
       responses:
         '200':
           $ref: '#/components/responses/usage_breakdown'
@@ -1980,127 +2061,315 @@ components:
       schema:
         type: string
       example: 123456-7890-1234-5678-901234
-    project_filters:
-      name: project_filters
+    filter_accessor:
+      name: accessor
       in: query
-      required: false
-      description: |
-        Filter options for project features. Each filter can be used as an individual query parameter.
-        Example: ?diarize=true&utterances=true
-      style: form
-      explode: true
+      description: Filter for requests where a specific accessor was used
       schema:
-        type: object
-        properties:
-          alternatives:
-            type: boolean
-          callback_method:
-            type: boolean
-          callback:
-            type: boolean
-          channels:
-            type: boolean
-          custom_intent_mode:
-            type: boolean
-          custom_intent:
-            type: boolean
-          custom_topic_mode:
-            type: boolean
-          custom_topic:
-            type: boolean
-          detect_entities:
-            type: boolean
-          detect_language:
-            type: boolean
-          diarize:
-            type: boolean
-          diarize_version:
-            type: boolean
-          dictation:
-            type: boolean
-          detect_topics:
-            type: boolean
-          encoding:
-            type: boolean
-          extra:
-            type: boolean
-          filler_words:
-            type: boolean
-          intents:
-            type: boolean
-          keywords:
-            type: boolean
-          language:
-            type: boolean
-          measurements:
-            type: boolean
-          model:
-            type: boolean
-          multichannel:
-            type: boolean
-          numerals:
-            type: boolean
-          paragraphs:
-            type: boolean
-          profanity_filter:
-            type: boolean
-          punctuate:
-            type: boolean
-          redact:
-            type: boolean
-          replace:
-            type: boolean
-          sample_rate:
-            type: boolean
-          smart_format:
-            type: boolean
-          search:
-            type: boolean
-          sentiment:
-            type: boolean
-          summarize:
-            type: boolean
-          tag:
-            type: boolean
-          topics:
-            type: boolean
-          utterances:
-            type: boolean
-          utt_split:
-            type: boolean
-          version:
-            type: boolean
-    usage_breakdown_filters:
-      name: usage_breakdown_filters
+        type: string
+      example: 12345678-1234-1234-1234-123456789012
+    filter_alternatives:
+      name: alternatives
       in: query
-      required: false
-      description: |
-        Filter options for usage breakdown. Multiple filters can be used with '&' prefix.
-        Example: &model={model_id}&tags={tag}&accessor={accessor_id}
+      description: Filter for requests where alternatives were used
       schema:
-        type: object
-        properties:
-          accessor:
-            type: string
-            description: Filter results by specific accessor ID
-          deployment:
-            type: string
-            description: Filter results by specific deployment type
-          endpoint:
-            type: string
-            description: Filter results by specific endpoint
-          feature_set:
-            type: string
-            description: Filter results by specific feature set
-          model:
-            type: string
-            description: Filter results by specific model ID
-          method:
-            type: string
-            description: Filter results by specific processing method
-          tags:
-            type: string
-            description: Filter results by specific tags
+        type: boolean
+      example: true
+    filter_callback_method:
+      name: callback_method
+      in: query
+      description: Filter for requests where callback method was used
+      schema:
+        type: boolean
+      example: true
+    filter_callback:
+      name: callback
+      in: query
+      description: Filter for requests where callback was used
+      schema:
+        type: boolean
+      example: true
+    filter_channels:
+      name: channels
+      in: query
+      description: Filter for requests where channels were used
+      schema:
+        type: boolean
+      example: true
+    filter_custom_intent_mode:
+      name: custom_intent_mode
+      in: query
+      description: Filter for requests where custom intent mode was used
+      schema:
+        type: boolean
+      example: true
+    filter_custom_intent:
+      name: custom_intent
+      in: query
+      description: Filter for requests where custom intent was used
+      schema:
+        type: boolean
+      example: true
+    filter_custom_topic_mode:
+      name: custom_topic_mode
+      in: query
+      description: Filter for requests where custom topic mode was used
+      schema:
+        type: boolean
+      example: true
+    filter_custom_topic:
+      name: custom_topic
+      in: query
+      description: Filter for requests where custom topic was used
+      schema:
+        type: boolean
+      example: true
+    filter_deployment:
+      name: deployment
+      in: query
+      description: Filter for requests where a specific deployment was used
+      schema:
+        type: string
+        enum:
+          - hosted
+          - beta
+          - self-hosted
+        description: Deployment type for the requests
+      example: hosted
+    filter_detect_entities:
+      name: detect_entities
+      in: query
+      description: Filter for requests where detect entities was used
+      schema:
+        type: boolean
+      example: true
+    filter_detect_language:
+      name: detect_language
+      in: query
+      description: Filter for requests where detect language was used
+      schema:
+        type: boolean
+      example: true
+    filter_diarize:
+      name: diarize
+      in: query
+      description: Filter for requests where diarize was used
+      schema:
+        type: boolean
+      example: true
+    filter_dictation:
+      name: dictation
+      in: query
+      description: Filter for requests where dictation was used
+      schema:
+        type: boolean
+      example: true
+    filter_encoding:
+      name: encoding
+      in: query
+      description: Filter for requests where encoding was used
+      schema:
+        type: boolean
+      example: true
+    filter_endpoint:
+      name: endpoint
+      in: query
+      description: Filter for requests where a specific endpoint was used
+      schema:
+        type: string
+        enum:
+          - listen
+          - read
+          - speak
+          - agent
+      example: listen
+    filter_extra:
+      name: extra
+      in: query
+      description: Filter for requests where extra was used
+      schema:
+        type: boolean
+      example: true
+    filter_filler_words:
+      name: filler_words
+      in: query
+      description: Filter for requests where filler words was used
+      schema:
+        type: boolean
+      example: true
+    filter_intents:
+      name: intents
+      in: query
+      description: Filter for requests where intents was used
+      schema:
+        type: boolean
+      example: true
+    filter_keyterm:
+      name: keyterm
+      in: query
+      description: Filter for requests where keyterm was used
+      schema:
+        type: boolean
+      example: true
+    filter_keywords:
+      name: keywords
+      in: query
+      description: Filter for requests where keywords was used
+      schema:
+        type: boolean
+      example: true
+    filter_language:
+      name: language
+      in: query
+      description: Filter for requests where language was used
+      schema:
+        type: boolean
+      example: true
+    filter_measurements:
+      name: measurements
+      in: query
+      description: Filter for requests where measurements were used
+      schema:
+        type: boolean
+      example: true
+    filter_method:
+      name: method
+      in: query
+      description: Filter for requests where a specific method was used
+      schema:
+        type: string
+        enum:
+          - sync
+          - async
+          - streaming
+        description: Method type for the request
+      example: async
+    filter_model:
+      name: model
+      in: query
+      description: Filter for requests where a specific model uuid was used
+      schema:
+        type: string
+      example: 6f548761-c9c0-429a-9315-11a1d28499c8
+    filter_multichannel:
+      name: multichannel
+      in: query
+      description: Filter for requests where multichannel was used
+      schema:
+        type: boolean
+      example: true
+    filter_numerals:
+      name: numerals
+      in: query
+      description: Filter for requests where numerals were used
+      schema:
+        type: boolean
+      example: true
+    filter_paragraphs:
+      name: paragraphs
+      in: query
+      description: Filter for requests where paragraphs were used
+      schema:
+        type: boolean
+      example: true
+    filter_profanity_filter:
+      name: profanity_filter
+      in: query
+      description: Filter for requests where profanity filter was used
+      schema:
+        type: boolean
+      example: true
+    filter_punctuate:
+      name: punctuate
+      in: query
+      description: Filter for requests where punctuate was used
+      schema:
+        type: boolean
+      example: true
+    filter_redact:
+      name: redact
+      in: query
+      description: Filter for requests where redact was used
+      schema:
+        type: boolean
+      example: true
+    filter_replace:
+      name: replace
+      in: query
+      description: Filter for requests where replace was used
+      schema:
+        type: boolean
+      example: true
+    filter_sample_rate:
+      name: sample_rate
+      in: query
+      description: Filter for requests where sample rate was used
+      schema:
+        type: boolean
+        example: true
+    filter_search:
+      name: search
+      in: query
+      description: Filter for requests where search was used
+      schema:
+        type: boolean
+      example: true
+    filter_sentiment:
+      name: sentiment
+      in: query
+      description: Filter for requests where sentiment was used
+      schema:
+        type: boolean
+      example: true
+    filter_smart_format:
+      name: smart_format
+      in: query
+      description: Filter for requests where smart format was used
+      schema:
+        type: boolean
+      example: true
+    filter_summarize:
+      name: summarize
+      in: query
+      description: Filter for requests where summarize was used
+      schema:
+        type: boolean
+      example: true
+    filter_tag:
+      name: tag
+      in: query
+      description: Filter for requests where a specific tag was used
+      schema:
+        type: string
+      example: tag1
+    filter_topics:
+      name: topics
+      in: query
+      description: Filter for requests where topics was used
+      schema:
+        type: boolean
+      example: true
+    filter_utt_split:
+      name: utt_split
+      in: query
+      description: Filter for requests where utt split was used
+      schema:
+        type: boolean
+      example: true
+    filter_utterances:
+      name: utterances
+      in: query
+      description: Filter for requests where utterances was used
+      schema:
+        type: boolean
+      example: true
+    filter_version:
+      name: version
+      in: query
+      description: Filter for requests where version was used
+      schema:
+        type: boolean
+      example: true
     grouping:
       name: grouping
       in: query
