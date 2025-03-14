@@ -298,8 +298,6 @@ paths:
       description: Retrieves information about the specified project
       parameters:
         - $ref: '#/components/parameters/limit'
-        - $ref: '#/components/parameters/start'
-        - $ref: '#/components/parameters/end'
         - $ref: '#/components/parameters/page'
       responses:
         '200':
@@ -927,8 +925,8 @@ paths:
       description: Generates a list of requests for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/start'
-        - $ref: '#/components/parameters/end'
+        - $ref: '#/components/parameters/start_date_time'
+        - $ref: '#/components/parameters/end_date_time'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/page'
       responses:
@@ -991,8 +989,8 @@ paths:
       description: Retrieves the usage for a specific project
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/start'
-        - $ref: '#/components/parameters/end'
+        - $ref: '#/components/parameters/start_date'
+        - $ref: '#/components/parameters/end_date'
         - $ref: '#/components/parameters/filter_accessor'
         - $ref: '#/components/parameters/filter_alternatives'
         - $ref: '#/components/parameters/filter_callback_method'
@@ -1058,8 +1056,8 @@ paths:
       description: Lists the features, models, tags, languages, and processing method used for requests in the specified project
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/start'
-        - $ref: '#/components/parameters/end'
+        - $ref: '#/components/parameters/start_date'
+        - $ref: '#/components/parameters/end_date'
       responses:
         '200':
           $ref: '#/components/responses/fields'
@@ -1083,8 +1081,8 @@ paths:
       description: Retrieves the usage breakdown for a specific project, with various filter options by API feature or by groupings.
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/start'
-        - $ref: '#/components/parameters/end'
+        - $ref: '#/components/parameters/start_date'
+        - $ref: '#/components/parameters/end_date'
         - $ref: '#/components/parameters/grouping'
         - $ref: '#/components/parameters/filter_accessor'
         - $ref: '#/components/parameters/filter_alternatives'
@@ -1149,7 +1147,6 @@ paths:
       description: Returns the original purchased amount on an order transaction
       parameters:
         - $ref: '#/components/parameters/project_id'
-        - $ref: '#/components/parameters/start'
         - $ref: '#/components/parameters/limit'
       responses:
         '200':
@@ -1964,22 +1961,6 @@ components:
         default: 10
         minimum: 1
         maximum: 1000
-    start:
-      name: start
-      in: query
-      required: false
-      description: Start date of the requested date range. Formats accepted are YYYY-MM-DD, YYYY-MM-DDTHH:MM:SS, or YYYY-MM-DDTHH:MM:SS+HH:MM
-      schema:
-        type: string
-        format: date-time
-    end:
-      name: end
-      in: query
-      required: false
-      description: End date of the requested date range. Formats accepted are YYYY-MM-DD, YYYY-MM-DDTHH:MM:SS, or YYYY-MM-DDTHH:MM:SS+HH:MM
-      schema:
-        type: string
-        format: date-time
     page:
       name: page
       in: query
@@ -2044,6 +2025,22 @@ components:
       schema:
         type: string
       example: john.doe@example.com
+    start_date_time:
+      name: start
+      in: query
+      required: false
+      description: Start date of the requested date range. Formats accepted are YYYY-MM-DD, YYYY-MM-DDTHH:MM:SS, or YYYY-MM-DDTHH:MM:SS+HH:MM
+      schema:
+        type: string
+        format: date-time
+    end_date_time:
+      name: end
+      in: query
+      required: false
+      description: End date of the requested date range. Formats accepted are YYYY-MM-DD, YYYY-MM-DDTHH:MM:SS, or YYYY-MM-DDTHH:MM:SS+HH:MM
+      schema:
+        type: string
+        format: date-time
     request_id:
       name: request_id
       in: path
@@ -2052,6 +2049,22 @@ components:
       schema:
         type: string
       example: 123456-7890-1234-5678-901234
+    start_date:
+      name: start
+      in: query
+      required: false
+      description: Start date of the requested date range. Format accepted is YYYY-MM-DD
+      schema:
+        type: string
+        format: date
+    end_date:
+      name: end
+      in: query
+      required: false
+      description: End date of the requested date range. Format accepted is YYYY-MM-DD
+      schema:
+        type: string
+        format: date
     filter_accessor:
       name: accessor
       in: query
