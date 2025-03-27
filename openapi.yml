@@ -3289,7 +3289,7 @@ components:
               err_msg: Failed to deserialize query parameters...
               request_id: 123456-7890-1234-5678-901234
     unauthorized:
-      description: Unauthorized
+      description: Authentication failed due to invalid API key.
       content:
         application/json:
           schema:
@@ -3297,17 +3297,13 @@ components:
             properties:
               err_code:
                 type: string
-                description: The error code
+                example: INVALID_AUTH
               err_msg:
                 type: string
-                description: The error message
+                example: Invalid credentials.
               request_id:
                 type: string
-                description: The request ID
-            example:
-              err_code: INVALID_AUTH
-              err_msg: Invalid credentials.
-              request_id: 123456-7890-1234-5678-901234
+                example: 6b295a11-89de-z151-8557-15cad81e8a80
     payment_required:
       description: Payment Required
       content:
