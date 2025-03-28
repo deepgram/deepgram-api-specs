@@ -602,7 +602,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/keys'
+              $ref: '#/components/schemas/create_key'
       responses:
         '200':
           description: API key created successfully
@@ -3165,6 +3165,44 @@ components:
                 type: string
                 format: date-time
                 example: '2021-01-01T00:00:00Z'
+    create_key:
+      type: object
+      required:
+        - comment
+        - scopes
+      properties:
+        comment:
+          type: string
+          example: A comment
+        scopes:
+          type: array
+          items:
+            type: string
+          example:
+            - admin
+        tags:
+          type: array
+          items:
+            type: string
+          example:
+            - prod
+            - west-region
+        expiration_date:
+          type: string
+          format: date-time
+          example: '2026-01-01T00:00:00Z'
+        time_to_live_in_seconds:
+          type: integer
+          example: 3600
+      oneOf:
+        - required:
+            - expiration_date
+        - required:
+            - time_to_live_in_seconds
+      not:
+        required:
+          - expiration_date
+          - time_to_live_in_seconds
     key_created:
       type: object
       description: API key created
@@ -3180,18 +3218,22 @@ components:
           description: A comment for the API key
         scopes:
           type: array
-          description: the scopes for the API key
+          description: The scopes for the API key
           items:
             type: string
         tags:
           type: array
-          description: the tags for the API key
+          description: The tags for the API key
           items:
             type: string
+        expiration_date:
+          type: string
+          description: The expiration date of the API key
+          format: date-time
       example:
         api_key_id: 1234567890abcdef1234567890abcdef
         key: 1234567890abcdef1234567890abcdef
-        comments: a comment
+        comment: a comment
         scopes:
           - member
         tags:
@@ -3220,7 +3262,7 @@ components:
               properties:
                 api_key_id:
                   type: string
-                  example: 1234567890abcdef1234567890abcdef
+                  example: 1000-2000-3000-4000
                 comment:
                   type: string
                   example: A comment
@@ -3230,6 +3272,17 @@ components:
                     type: string
                   example:
                     - admin
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  example:
+                    - prod
+                    - west-region
+                expiration_date:
+                  type: string
+                  format: date-time
+                  example: '2021-01-01T00:00:00Z'
                 created:
                   type: string
                   format: date-time
