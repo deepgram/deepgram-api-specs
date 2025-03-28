@@ -45,10 +45,13 @@ channels:
       - $ref: '#/servers/public'
     parameters:
       ApiKey:
-        description: API key for authentication. Format should be token <DEEPGRAM_API_KEY>
+        description: >-
+          API key for authentication. Format should be be either 'token
+          <DEEPGRAM_API_KEY>' or 'Bearer <JWT_TOKEN>'
         location: $message.header#/Authorization
         examples:
           - token YOUR_DEEPGRAM_API_KEY
+          - Bearer YOUR_JWT_TOKEN
       encoding:
         description: >-
           Encoding allows you to specify the expected encoding of your audio
@@ -346,10 +349,13 @@ channels:
     description: Deepgram Speech to Text WebSocket
     parameters:
       ApiKey:
-        description: API key for authentication. Format should be token <DEEPGRAM_API_KEY>
+        description: >-
+          API key for authentication. Format should be be either 'token
+          <DEEPGRAM_API_KEY>' or 'Bearer <JWT_TOKEN>'
         location: $message.header#/Authorization
         examples:
           - token YOUR_DEEPGRAM_API_KEY
+          - Bearer YOUR_JWT_TOKEN
       callback:
         description: URL to which we'll make the callback request
         location: $message.payload#/callback
@@ -1079,10 +1085,13 @@ channels:
     description: Deepgram Voice Agent WebSocket
     parameters:
       ApiKey:
-        description: API key for authentication. Format should be token <DEEPGRAM_API_KEY>
+        description: >-
+          API key for authentication. Format should be be either 'token
+          <DEEPGRAM_API_KEY>' or 'Bearer <JWT_TOKEN>'
         location: $message.header#/Authorization
         examples:
           - token YOUR_DEEPGRAM_API_KEY
+          - Bearer YOUR_JWT_TOKEN
     messages:
       settingsConfiguration:
         contentType: application/json
@@ -1857,7 +1866,10 @@ operations:
 components:
   parameters:
     ApiKey:
-      description: API key for authentication. Format should be token <DEEPGRAM_API_KEY>
+      description: >-
+        API key for authentication. Format should be be either 'token
+        <DEEPGRAM_API_KEY>' or 'Bearer <JWT_TOKEN>'
       location: $message.header#/Authorization
       examples:
         - token YOUR_DEEPGRAM_API_KEY
+        - Bearer YOUR_JWT_TOKEN

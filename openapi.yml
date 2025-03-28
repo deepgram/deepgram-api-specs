@@ -30,6 +30,8 @@ tags:
     description: Transform text to speech
   - name: Management API
     description: Manage your projects
+  - name: Authorization API
+    description: Grant ephemeral tokens
 externalDocs:
   description: Learn more about using Deepgram on our docs.
   url: http://developers.deepgram.com
@@ -42,6 +44,7 @@ paths:
         - Speech to Text
       security:
         - ApiKeyAuth: []
+        - JwtAuth: []
       description: Transcribe audio using Deepgram's speech-to-text API
       operationId: listen
       requestBody:
@@ -126,6 +129,7 @@ paths:
         - Text Intelligence
       security:
         - ApiKeyAuth: []
+        - JwtAuth: []
       operationId: TextRead
       description: Analyze text content using Deepgram's text analysis API
       requestBody:
@@ -178,6 +182,7 @@ paths:
         - Text to Speech
       security:
         - ApiKeyAuth: []
+        - JwtAuth: []
       description: Convert text into natural-sounding speech using Deepgram's TTS API
       operationId: speak
       requestBody:
@@ -533,6 +538,23 @@ paths:
                   - $ref: '#/components/schemas/tts_models'
         '400':
           $ref: '#/components/responses/projects_bad_request'
+  /v1/auth/grant:
+    description: Ephemeral Auth
+    post:
+      summary: Ephemeral Auth
+      tags:
+        - Authorization API
+      security:
+        - ApiKeyAuth: []
+      operationId: grantToken
+      description: Generates a temporary JSON Web Token (JWT) with a 30-second TTL and usage::write permission for core voice APIs, requiring an API key with Member or higher authorization
+      responses:
+        '200':
+          $ref: '#/components/responses/jwt'
+        '403':
+          $ref: '#/components/responses/authentication_failed'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/keys:
     description: Manage your project keys
     parameters:
@@ -1270,6 +1292,12 @@ components:
       name: Authorization
       description: |
         Use the `Authorization` header with the format `token <API KEY>`. Example:`Authorization token 12345abcdef`
+    JwtAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Use the `Authorization` header with the format `Bearer <JWT>`. Example:`Authorization Bearer eyJhbGciOiJ...`
   parameters:
     callback:
       name: callback
@@ -3456,6 +3484,24 @@ components:
             message: A project with the submitted ID cannot be found.
             details: Check that you have submitted the intended project ID and that the project has not been deleted.
             request_id: 123456-7890-1234-5678-901234
+    jwt:
+      description: JWT token response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                description: JSON Web Token (JWT)
+              expires_in:
+                type: number
+                description: Time in seconds until the JWT expires
+            required:
+              - access_token
+            example:
+              access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U
+              expires_in: 30
     invalid_request:
       description: Invalid Request
       content:
