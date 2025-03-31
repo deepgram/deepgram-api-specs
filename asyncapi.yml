@@ -1250,6 +1250,9 @@ channels:
                   type: boolean
                   default: false
                   description: Whether to replay the last assistant message
+              required:
+                - messages
+                - replay
         examples:
           - payload:
               type: SettingsConfiguration
