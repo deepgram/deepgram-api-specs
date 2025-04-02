@@ -315,9 +315,16 @@ paths:
                   project_id:
                     type: string
                     description: The unique identifier of the project
+                  mip_opt_out:
+                    type: boolean
+                    description: Model Improvement Program opt-out
                   name:
                     type: string
                     description: The name of the project
+              example:
+                project_id: 550e8400-e29b-41d4-a716-446655440000
+                name: My Project
+                mip_opt_out: false
         '400':
           $ref: '#/components/responses/projects_bad_request'
         '403':
