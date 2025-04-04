@@ -30,8 +30,8 @@ tags:
     description: Transform text to speech
   - name: Management API
     description: Manage your projects
-  - name: Authorization API
-    description: Grant ephemeral tokens
+  - name: Authentication API
+    description: Grant temporary tokens
 externalDocs:
   description: Learn more about using Deepgram on our docs.
   url: http://developers.deepgram.com
@@ -546,11 +546,11 @@ paths:
         '400':
           $ref: '#/components/responses/projects_bad_request'
   /v1/auth/grant:
-    description: Ephemeral Auth
+    description: Token-based Authentication
     post:
-      summary: Ephemeral Auth
+      summary: Token-based Authentication
       tags:
-        - Authorization API
+        - Authentication API
       security:
         - ApiKeyAuth: []
       operationId: grantToken
