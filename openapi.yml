@@ -536,13 +536,7 @@ paths:
       description: Returns metadata for a specific model
       responses:
         '200':
-          description: A specific model
-          content:
-            application/json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/stt_models'
-                  - $ref: '#/components/schemas/tts_models'
+          $ref: '#/components/responses/model'
         '400':
           $ref: '#/components/responses/projects_bad_request'
   /v1/auth/grant:
@@ -3142,44 +3136,59 @@ components:
             example: zeus
           canonical_name:
             type: string
-            example: aura-zeus-en
+            example: aura-2-zeus-en
           architecture:
             type: string
-            example: aura
+            example: aura-2
           languages:
             type: array
             items:
               type: string
             example:
               - en
-              - en-us
+              - en-US
           version:
             type: string
-            example: 2024-07-30.0
+            example: 2025-04-07.0
           uuid:
             type: string
-            example: 9c28bce5-f144-4d32-9034-843aa7aed63e
+            format: uuid
+            example: 2baf189d-91ac-481d-b6d1-750888667b31
           metadata:
             type: object
             properties:
               accent:
                 type: string
                 example: American
+              age:
+                type: string
+                example: Adult
               color:
                 type: string
-                example: '#949498'
+                example: '#C58DFF'
               image:
                 type: string
+                format: uri
                 example: https://static.deepgram.com/examples/avatars/zeus.jpg
               sample:
                 type: string
-                example: https://static.deepgram.com/examples/voices/zeus.wav
+                format: uri
+                example: https://static.deepgram.com/examples/Aura-2-zeus.wav
               tags:
                 type: array
                 items:
                   type: string
                 example:
                   - masculine
+                  - deep
+                  - trustworthy
+                  - smooth
+              use_cases:
+                type: array
+                items:
+                  type: string
+                example:
+                  - IVR
     keys:
       type: array
       items:
@@ -3585,6 +3594,106 @@ components:
             message: A project with the submitted ID cannot be found.
             details: Check that you have submitted the intended project ID and that the project has not been deleted.
             request_id: 123456-7890-1234-5678-901234
+    model:
+      description: A model object that can be either STT or TTS
+      content:
+        application/json:
+          schema:
+            oneOf:
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    example: general
+                  canonical_name:
+                    type: string
+                    example: enhanced-general
+                  architecture:
+                    type: string
+                    example: polaris
+                  languages:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - en
+                      - en-us
+                  version:
+                    type: string
+                    example: 2022-05-18.1
+                  uuid:
+                    type: string
+                    format: uuid
+                    example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
+                  batch:
+                    type: boolean
+                    example: true
+                  streaming:
+                    type: boolean
+                    example: true
+                  formatted_output:
+                    type: boolean
+                    example: false
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    example: zeus
+                  canonical_name:
+                    type: string
+                    example: aura-2-zeus-en
+                  architecture:
+                    type: string
+                    example: aura-2
+                  languages:
+                    type: array
+                    items:
+                      type: string
+                    example:
+                      - en
+                      - en-US
+                  version:
+                    type: string
+                    example: 2025-04-07.0
+                  uuid:
+                    type: string
+                    format: uuid
+                    example: 2baf189d-91ac-481d-b6d1-750888667b31
+                  metadata:
+                    type: object
+                    properties:
+                      accent:
+                        type: string
+                        example: American
+                      age:
+                        type: string
+                        example: Adult
+                      color:
+                        type: string
+                        example: '#C58DFF'
+                      image:
+                        type: string
+                        format: uri
+                        example: https://static.deepgram.com/examples/avatars/zeus.jpg
+                      sample:
+                        type: string
+                        format: uri
+                        example: https://static.deepgram.com/examples/Aura-2-zeus.wav
+                      tags:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          - masculine
+                          - deep
+                          - trustworthy
+                          - smooth
+                      use_cases:
+                        type: array
+                        items:
+                          type: string
+                        example:
+                          - IVR
     jwt:
       description: JWT token response
       content:
@@ -3951,138 +4060,62 @@ components:
                   properties:
                     name:
                       type: string
-                      example: angus
+                      example: zeus
                     canonical_name:
                       type: string
-                      example: aura-angus-en
+                      example: aura-2-zeus-en
                     architecture:
                       type: string
-                      example: aura
+                      example: aura-2
                     languages:
                       type: array
                       items:
                         type: string
                       example:
                         - en
-                        - en-us
+                        - en-US
                     version:
                       type: string
-                      example: 2024-07-30.0
+                      example: 2025-04-07.0
                     uuid:
                       type: string
                       format: uuid
-                      example: eed36e9e-37aa-40a3-91fa-a2911e73a5da
+                      example: 2baf189d-91ac-481d-b6d1-750888667b31
                     metadata:
                       type: object
                       properties:
                         accent:
                           type: string
-                          example: Irish
+                          example: American
+                        age:
+                          type: string
+                          example: Adult
                         color:
                           type: string
-                          example: '#BA80F5'
+                          example: '#C58DFF'
                         image:
                           type: string
                           format: uri
-                          example: https://static.deepgram.com/examples/avatars/angus.jpg
+                          example: https://static.deepgram.com/examples/avatars/zeus.jpg
                         sample:
                           type: string
                           format: uri
-                          example: https://static.deepgram.com/examples/voices/angus.wav
+                          example: https://static.deepgram.com/examples/Aura-2-zeus.wav
                         tags:
                           type: array
                           items:
                             type: string
                           example:
                             - masculine
-    model:
-      description: A model object that can be either STT or TTS
-      content:
-        application/json:
-          schema:
-            oneOf:
-              - type: object
-                properties:
-                  name:
-                    type: string
-                    example: general
-                  canonical_name:
-                    type: string
-                    example: enhanced-general
-                  architecture:
-                    type: string
-                    example: polaris
-                  languages:
-                    type: array
-                    items:
-                      type: string
-                    example:
-                      - en
-                      - en-us
-                  version:
-                    type: string
-                    example: 2022-05-18.1
-                  uuid:
-                    type: string
-                    format: uuid
-                    example: c7226e9e-ae1c-4057-ae2a-a71a6b0dc588
-                  batch:
-                    type: boolean
-                    example: true
-                  streaming:
-                    type: boolean
-                    example: true
-                  formatted_output:
-                    type: boolean
-                    example: false
-              - type: object
-                properties:
-                  name:
-                    type: string
-                    example: angus
-                  canonical_name:
-                    type: string
-                    example: aura-angus-en
-                  architecture:
-                    type: string
-                    example: aura
-                  languages:
-                    type: array
-                    items:
-                      type: string
-                    example:
-                      - en
-                      - en-us
-                  version:
-                    type: string
-                    example: 2024-07-30.0
-                  uuid:
-                    type: string
-                    format: uuid
-                    example: eed36e9e-37aa-40a3-91fa-a2911e73a5da
-                  metadata:
-                    type: object
-                    properties:
-                      accent:
-                        type: string
-                        example: Irish
-                      color:
-                        type: string
-                        example: '#BA80F5'
-                      image:
-                        type: string
-                        format: uri
-                        example: https://static.deepgram.com/examples/avatars/angus.jpg
-                      sample:
-                        type: string
-                        format: uri
-                        example: https://static.deepgram.com/examples/voices/angus.wav
-                      tags:
-                        type: array
-                        items:
-                          type: string
-                        example:
-                          - masculine
+                            - deep
+                            - trustworthy
+                            - smooth
+                        use_cases:
+                          type: array
+                          items:
+                            type: string
+                          example:
+                            - IVR
     credentials:
       description: List of distribution credentials
       content:
