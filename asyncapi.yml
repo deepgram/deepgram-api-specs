@@ -19,6 +19,8 @@ info:
       description: Text to Speech WebSocket API
     - name: agent
       description: Voice Agent WebSocket API
+    - name: experimental
+      description: Experimental features
   termsOfService: https://deepgram.com/terms/
   contact:
     name: Deepgram Developer Relations
@@ -1079,7 +1081,7 @@ channels:
               payload: NET-0001
               description: Failed to receive message
   agent:
-    address: /agent
+    address: /v1/agent/converse
     servers:
       - $ref: '#/servers/agent'
     description: Deepgram Voice Agent WebSocket
@@ -1093,7 +1095,7 @@ channels:
           - token YOUR_DEEPGRAM_API_KEY
           - Bearer YOUR_JWT_TOKEN
     messages:
-      settingsConfiguration:
+      settings:
         contentType: application/json
         payload:
           type: object
@@ -1104,21 +1106,29 @@ channels:
             - type
             - audio
             - agent
-            - think
-            - speak
           properties:
             type:
               type: string
-              const: SettingsConfiguration
+              const: Settings
+            experimental:
+              type: boolean
+              default: false
+              description: To enable experimental features
+            mip_opt_out:
+              type: boolean
+              default: false
+              description: To opt out of Deepgram Model Improvement Program
             audio:
               type: object
-              nullable: true
-              description: Optional audio configuration settings
               properties:
                 input:
                   type: object
-                  nullable: true
-                  description: Optional audio input configuration settings
+                  description: >-
+                    Audio input configuration settings. If omitted, defaults to
+                    encoding=linear16 and sample_rate=16000
+                  required:
+                    - encoding
+                    - sample_rate
                   properties:
                     encoding:
                       type: string
@@ -1126,39 +1136,32 @@ channels:
                       description: Audio encoding format
                     sample_rate:
                       type: integer
-                      default: 24000
+                      default: 16000
                       description: Sample rate in Hz
                 output:
                   type: object
-                  nullable: true
                   description: Audio output configuration settings
                   properties:
                     encoding:
                       type: string
+                      description: Audio encoding format
                     sample_rate:
                       type: integer
-                      default: 24000
                       description: Sample rate in Hz
                     bitrate:
                       type: integer
+                      description: Audio bitrate in bits per second
                     container:
                       type: string
+                      description: Audio container format. If omitted, defaults to 'none'
             agent:
               type: object
               properties:
+                language:
+                  type: string
+                  default: en
+                  description: Agent language
                 listen:
-                  type: object
-                  properties:
-                    model:
-                      type: string
-                      default: nova-3
-                      description: Model to use for speech recognition
-                    keyterms:
-                      type: array
-                      items:
-                        type: string
-                      description: List of keyterms to listen for, only available on nova-3
-                think:
                   type: object
                   properties:
                     provider:
@@ -1166,17 +1169,56 @@ channels:
                       properties:
                         type:
                           type: string
-                          description: LLM provider type
-                    model:
-                      type: string
-                      description: LLM model to use
-                    instructions:
-                      type: string
-                      nullable: true
-                      description: LLM System prompt
+                        model:
+                          type: string
+                          description: Model to use for speech to text
+                        keyterms:
+                          type: array
+                          items:
+                            type: string
+                          description: Prompt key-term recognition (nova-3 'en' only)
+                think:
+                  type: object
+                  required:
+                    - provider
+                  properties:
+                    provider:
+                      type: object
+                      required:
+                        - type
+                        - model
+                      properties:
+                        type:
+                          type: string
+                          description: LLM provider
+                          enum:
+                            - open_ai
+                            - anthropic
+                            - x_ai
+                        model:
+                          type: string
+                          description: LLM model
+                        temperature:
+                          type: number
+                          description: LLM temperature (0-2 OpenAI, 0-1 Anthropic)
+                          minimum: 0
+                          maximum: 2
+                    endpoint:
+                      type: object
+                      description: >
+                        Optional for non-Deepgram LLM providers. When present,
+                        must include url field and headers object
+                      properties:
+                        url:
+                          type: string
+                          description: Custom LLM endpoint URL
+                        headers:
+                          type: object
+                          description: Custom headers for the endpoint
+                          additionalProperties:
+                            type: string
                     functions:
                       type: array
-                      nullable: true
                       items:
                         type: object
                         properties:
@@ -1185,77 +1227,91 @@ channels:
                             description: Function name
                           description:
                             type: string
-                            description: Description of function purpose and usage
-                          url:
-                            type: string
-                            description: Function endpoint URL
-                          headers:
-                            type: array
-                            items:
-                              type: object
-                              properties:
-                                key:
-                                  type: string
-                                value:
-                                  type: string
-                          method:
-                            type: string
-                            default: post
-                            description: HTTP method for function call
+                            description: Function description
                           parameters:
                             type: object
+                            description: Function parameters
+                          endpoint:
+                            type: object
+                            description: >-
+                              The Function endpoint to call. if not passed,
+                              function is called client-side
                             properties:
-                              type:
+                              url:
                                 type: string
-                              properties:
+                                description: Endpoint URL
+                              method:
+                                type: string
+                                description: HTTP method
+                              headers:
                                 type: object
                                 additionalProperties:
-                                  type: object
-                                  properties:
-                                    type:
-                                      type: string
-                                    description:
-                                      type: string
-                              required:
-                                type: array
-                                items:
                                   type: string
+                    prompt:
+                      type: string
                 speak:
                   type: object
-                  nullable: true
                   properties:
-                    model:
-                      type: string
-                      default: aura-asteria-en
-                      description: Text-to-speech model
                     provider:
-                      type: string
-                      enum:
-                        - eleven_labs
-                        - cartesia
-                      description: Alternative TTS provider
-                    voice_id:
-                      type: string
-                      description: Unique voice identifier for the selected provider
-            context:
-              type: object
-              nullable: true
-              properties:
-                messages:
-                  type: array
-                  description: LLM message history for conversation restoration
-                  items:
-                    type: object
-                replay:
-                  type: boolean
-                  default: false
-                  description: Whether to replay the last assistant message
-              required:
-                - messages
-                - replay
+                      type: object
+                      description: |
+                        Provider-specific requirements:
+                        - deepgram: requires: model
+                        - eleven_labs: requires: model_id, language
+                        - cartesia: requires: model_id , voice, mode, & id
+                        - open_ai: requires: model and voice
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - deepgram
+                            - eleven_labs
+                            - cartesia
+                            - open_ai
+                        model:
+                          type: string
+                          description: Deepgram OR OpenAI Model to use for TTS
+                        model_id:
+                          type: string
+                          description: Eleven Labs OR Cartesia Model ID to use for TTS
+                        voice:
+                          type: object
+                          description: Cartesia voice configuration
+                          properties:
+                            mode:
+                              type: string
+                              description: Cartesia voice mode
+                            id:
+                              type: string
+                              description: Cartesia voice ID
+                        language:
+                          type: string
+                          description: Optional Cartesia Language to use for TTS
+                        language_code:
+                          type: string
+                          description: Optional Eleven Labs Language Code to use for TTS
+                    endpoint:
+                      type: object
+                      description: >
+                        Optional if provider is Deepgram. Required for
+                        non-Deepgram TTS providers.
+
+                        When present, must include url field and headers object
+                      properties:
+                        url:
+                          type: string
+                          description: Custom TTS endpoint URL
+                        headers:
+                          type: object
+                          additionalProperties:
+                            type: string
+                greeting:
+                  type: string
+                  description: Optional message that agent will speak at the start
         examples:
           - payload:
-              type: SettingsConfiguration
+              type: Settings
+              experimental: false
               audio:
                 input:
                   encoding: linear16
@@ -1266,21 +1322,23 @@ channels:
                   bitrate: 48000
                   container: none
               agent:
+                language: en
                 listen:
-                  model: nova-3
+                  provider:
+                    type: deepgram
+                    model: nova-3
+                    keyterms:
+                      - hello
+                      - goodbye
                 think:
                   provider:
-                    type: openai
-                  model: gpt-4
-                  instructions: You are a helpful AI assistant focused on customer service.
+                    type: open_ai
+                    model: gpt-4o-mini
+                    temperature: 0.7
+                  prompt: You are a helpful AI assistant focused on customer service.
                   functions:
                     - name: check_order_status
                       description: Check the status of a customer order
-                      url: https://api.example.com/orders/status
-                      headers:
-                        - key: authorization
-                          value: Bearer {{token}}
-                      method: post
                       parameters:
                         type: object
                         properties:
@@ -1289,40 +1347,18 @@ channels:
                             description: The order ID to check
                         required:
                           - order_id
+                      endpoint:
+                        url: https://api.example.com/orders/status
+                        method: post
+                        headers:
+                          authorization: Bearer {{token}}
                 speak:
-                  model: aura-asteria-en
-                  provider: eleven_labs
-                  voice_id: bIHbv24MWmeRgasZH58o
-              context:
-                messages: []
-                replay: false
-      updateInstructions:
-        contentType: application/json
-        payload:
-          type: object
-          description: >-
-            Send a message to give additional instructions to the Think model in
-            the middle of a conversation
-          required:
-            - type
-            - instructions
-          properties:
-            type:
-              type: string
-              const: UpdateInstructions
-              description: Message type identifier
-            instructions:
-              type: string
-              description: The new instructions to give to the Think model
-        examples:
-          - payload:
-              type: UpdateInstructions
-              instructions: >-
-                You are a helpful AI assistant. Your role is to help users with
-                their questions and tasks. Please be polite, professional, and
-                thorough in your responses. If you're unsure about something,
-                it's okay to say so. Focus on providing accurate and useful
-                information.
+                  provider:
+                    type: deepgram
+                    model: aura-2-thalia-en
+                    headers:
+                      authorization: Bearer {{token}}
+                greeting: Hello! How can I help you today?
       updateSpeak:
         contentType: application/json
         payload:
@@ -1332,19 +1368,63 @@ channels:
             conversation
           required:
             - type
-            - model
           properties:
             type:
               type: string
               const: UpdateSpeak
               description: Message type identifier for updating the speak model
-            model:
-              type: string
-              description: The new Text-to-Speech model to use
+            speak:
+              type: object
+              description: >-
+                Configuration for the speak model. Optional, defaults to latest
+                deepgram TTS model
+              properties:
+                provider:
+                  type: object
+                  description: Provider configuration for the speak model
+                  required:
+                    - type
+                  properties:
+                    type:
+                      type: string
+                      description: The type of the provider (e.g., 'deepgram')
+                    model:
+                      type: string
+                      description: The model to use for text-to-speech
+                endpoint:
+                  type: object
+                  description: >-
+                    Optional if provider is deepgram. Required for non-deepgram
+                    TTS providers
+                  properties:
+                    url:
+                      type: string
+                      description: >-
+                        The WebSocket endpoint URL (ws:// or wss://) for the
+                        speak model
+                    headers:
+                      type: object
+                      description: Optional headers to be sent with the request
+                      additionalProperties:
+                        type: string
         examples:
           - payload:
               type: UpdateSpeak
-              model: aura-asteria-en
+              speak:
+                provider:
+                  type: deepgram
+                  model: aura-2-thalia-en
+          - payload:
+              type: UpdateSpeak
+              speak:
+                provider:
+                  type: custom
+                  model: custom-model
+                endpoint:
+                  url: wss://api.custom-tts.com/v1/speak
+                  headers:
+                    Authorization: Bearer YOUR_API_KEY
+                    Custom-Header: value
       injectAgentMessage:
         contentType: application/json
         payload:
@@ -1354,19 +1434,19 @@ channels:
             conversation
           required:
             - type
-            - message
+            - content
           properties:
             type:
               type: string
               const: InjectAgentMessage
               description: Message type identifier for injecting an agent message
-            message:
+            content:
               type: string
               description: The statement that the agent should say
         examples:
           - payload:
               type: InjectAgentMessage
-              message: >-
+              content: >-
                 I apologize, but I need to correct my previous statement. Let me
                 provide you with the accurate information.
       injectionRefused:
@@ -1385,33 +1465,70 @@ channels:
         examples:
           - payload:
               type: InjectionRefused
-      functionCallResponse:
+      functionCallResponseSend:
         contentType: application/json
         payload:
           type: object
-          description: Configure the voice agent and configure the function call response
+          description: Client-side or server-side function call response sent by the server
           required:
             - type
-            - function_call_id
-            - output
+            - id
+            - name
+            - content
           properties:
             type:
               type: string
               const: FunctionCallResponse
               description: Message type identifier for function call responses
-            function_call_id:
+            id:
               type: string
-              description: >-
-                The unique identifier matching the original function call
-                request
-            output:
+              description: The unique identifier for the function call
+            name:
               type: string
-              description: The result of the function call execution
+              description: The name of the function being called
+            content:
+              type: string
+              description: The content or result of the function call
         examples:
           - payload:
               type: FunctionCallResponse
-              function_call_id: fc_12345678-90ab-cdef-1234-567890abcdef
-              output: >-
+              id: fc_12345678-90ab-cdef-1234-567890abcdef
+              name: check_order_status
+              content: >-
+                Order #123456 status: Shipped - Expected delivery date:
+                2024-03-15
+      functionCallResponseReceive:
+        contentType: application/json
+        payload:
+          type: object
+          description: >-
+            Client-side or server-side function call response received from the
+            server
+          required:
+            - type
+            - id
+            - name
+            - content
+          properties:
+            type:
+              type: string
+              const: FunctionCallResponse
+              description: Message type identifier for function call responses
+            id:
+              type: string
+              description: The unique identifier for the function call
+            name:
+              type: string
+              description: The name of the function being called
+            content:
+              type: string
+              description: The content or result of the function call
+        examples:
+          - payload:
+              type: FunctionCallResponse
+              id: fc_12345678-90ab-cdef-1234-567890abcdef
+              name: check_order_status
+              content: >-
                 Order #123456 status: Shipped - Expected delivery date:
                 2024-03-15
       agentKeepAlive:
@@ -1433,32 +1550,29 @@ channels:
         contentType: application/json
         payload:
           type: object
-          description: >-
-            Receive a welcome message from the server to confirm the websocket
-            has opened
+          description: Confirms that the WebSocket connection has been successfully opened
           required:
             - type
-            - session_id
+            - request_id
           properties:
             type:
               type: string
               const: Welcome
               description: Message type identifier for welcome message
-            session_id:
+            request_id:
               type: string
-              format: uuid
-              description: Unique identifier for the websocket session
+              description: Unique identifier for the request
         examples:
           - payload:
               type: Welcome
-              session_id: fc553ec9-5874-49ca-a47c-b670d525a4b1
+              request_id: fc553ec9-5874-49ca-a47c-b670d525a4b1
       settingsApplied:
         contentType: application/json
         payload:
           type: object
           description: >-
             Confirm the server has successfully received and applied the
-            Settings Configuration message
+            Settings message
           required:
             - type
           properties:
@@ -1469,7 +1583,7 @@ channels:
         examples:
           - payload:
               type: SettingsApplied
-      ConversationText:
+      conversationText:
         contentType: application/json
         payload:
           type: object
@@ -1552,64 +1666,60 @@ channels:
         contentType: application/json
         payload:
           type: object
-          description: >-
-            Request to call a function by sending a Function Call Request
-            message
+          description: Client-side or server-side function call request sent by the server
           required:
             - type
-            - function_name
-            - function_call_id
-            - input
+            - functions
           properties:
             type:
               type: string
               const: FunctionCallRequest
               description: Message type identifier for function call requests
-            function_name:
-              type: string
-              description: The name specified in the function definition
-            function_call_id:
-              type: string
-              description: Unique identifier to correlate the response with this request
-            input:
-              type: object
-              description: Parameters defined for this function in the function definition
+            functions:
+              type: array
+              description: Array of functions to be called
+              items:
+                type: object
+                required:
+                  - id
+                  - name
+                  - arguments
+                  - client_side
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the function call
+                  name:
+                    type: string
+                    description: The name of the function to call
+                  arguments:
+                    type: string
+                    description: JSON string containing the function arguments
+                  client_side:
+                    type: boolean
+                    description: Whether the function should be executed client-side
         examples:
           - payload:
               type: FunctionCallRequest
-              function_name: check_order_status
-              function_call_id: fc_12345678-90ab-cdef-1234-567890abcdef
-              input:
-                order_id: ORD-123456
-      functionCalling:
-        contentType: application/json
-        payload:
-          type: object
-          description: >-
-            Provides insights into function call workflows to assist in
-            debugging
-          required:
-            - type
-          properties:
-            type:
-              type: string
-              const: FunctionCalling
-              description: Message type identifier for function calling status
-        examples:
-          - payload:
-              type: FunctionCalling
+              functions:
+                - id: fc_12345678-90ab-cdef-1234-567890abcdef
+                  name: check_order_status
+                  arguments: '{"order_id": "ORD-123456"}'
+                  client_side: true
       agentStartedSpeaking:
+        tags:
+          - name: experimental
         contentType: application/json
         payload:
           type: object
+          x-experimental: true
+          x-internal: true
           description: >-
             Get notified when the server begins streaming an agent's audio
-            response for playback
+            response for playback. This message is only sent when the
+            experimental flag is enabled
           required:
             - type
-            - total_latency
-            - tts_latency
-            - ttt_latency
           properties:
             type:
               type: string
@@ -1663,19 +1773,82 @@ channels:
           description: Receive an error message from the server when an error occurs
           required:
             - type
-            - message
+            - description
+            - code
           properties:
             type:
               type: string
-              const: Error
               description: Message type identifier for error responses
-            message:
+            description:
               type: string
               description: A description of what went wrong
+            code:
+              type: string
+              description: Error code identifying the type of error
         examples:
           - payload:
               type: Error
-              message: 'Failed to process audio input: Invalid audio format'
+              description: 'Failed to process audio input: Invalid audio format'
+              code: INVALID_AUDIO_FORMAT
+      promptUpdated:
+        contentType: application/json
+        payload:
+          type: object
+          description: >-
+            Confirms that an UpdatePrompt message from the client has been
+            applied
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              const: PromptUpdated
+              description: Message type identifier for prompt update confirmation
+        examples:
+          - payload:
+              type: PromptUpdated
+      speakUpdated:
+        contentType: application/json
+        payload:
+          type: object
+          description: >-
+            Confirms that an UpdateSpeak message from the client has been
+            applied
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              const: SpeakUpdated
+              description: Message type identifier for speak update confirmation
+        examples:
+          - payload:
+              type: SpeakUpdated
+      agentWarning:
+        contentType: application/json
+        payload:
+          type: object
+          description: Notifies the client of non-fatal errors or warnings
+          required:
+            - type
+            - description
+            - code
+          properties:
+            type:
+              type: string
+              const: Warning
+              description: Message type identifier for warnings
+            description:
+              type: string
+              description: Description of the warning
+            code:
+              type: string
+              description: Warning code identifier
+        examples:
+          - payload:
+              type: Warning
+              description: Audio quality is below recommended threshold
+              code: AUDIO_QUALITY_WARNING
 operations:
   sendText:
     description: Send text to Deepgram's Text to Speech API
@@ -1747,20 +1920,13 @@ operations:
       $ref: '#/channels/listen'
     messages:
       - $ref: '#/channels/listen/messages/closeFrame'
-  sendSettingsConfiguration:
+  sendSettings:
     description: Send settings configuration to Deepgram's Voice Agent API
     action: send
     channel:
       $ref: '#/channels/agent'
     messages:
-      - $ref: '#/channels/agent/messages/settingsConfiguration'
-  sendUpdateInstructions:
-    description: Send update instructions to Deepgram's Voice Agent API
-    action: send
-    channel:
-      $ref: '#/channels/agent'
-    messages:
-      - $ref: '#/channels/agent/messages/updateInstructions'
+      - $ref: '#/channels/agent/messages/settings'
   sendUpdateSpeak:
     description: Send update speak to Deepgram's Voice Agent API
     action: send
@@ -1775,20 +1941,15 @@ operations:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/injectAgentMessage'
-  receiveInjectionRefused:
-    description: Receive injection refused message from Deepgram's Voice Agent API
-    action: receive
-    channel:
-      $ref: '#/channels/agent'
-    messages:
-      - $ref: '#/channels/agent/messages/injectionRefused'
   sendFunctionCallResponse:
-    description: Send function call response to Deepgram's Voice Agent API
+    description: >-
+      Send a function call response from the client to the server after
+      executing a requested function
     action: send
     channel:
       $ref: '#/channels/agent'
     messages:
-      - $ref: '#/channels/agent/messages/functionCallResponse'
+      - $ref: '#/channels/agent/messages/functionCallResponseSend'
   sendKeepAlive:
     description: Send keep alive to Deepgram's Voice Agent API
     action: send
@@ -1796,6 +1957,36 @@ operations:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/agentKeepAlive'
+  receiveFunctionCallResponse:
+    description: >-
+      Receive a function call response from the server containing information
+      about an agent-initiated function call
+    action: receive
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/functionCallResponseReceive'
+  receivePromptUpdate:
+    description: Receive prompt update from Deepgram's Voice Agent API
+    action: receive
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/promptUpdated'
+  receiveSpeakUpdate:
+    description: Receive speak update from Deepgram's Voice Agent API
+    action: receive
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/speakUpdated'
+  receiveInjectionRefused:
+    description: Receive injection refused message from Deepgram's Voice Agent API
+    action: receive
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/injectionRefused'
   receiveWelcome:
     description: Receive welcome message from Deepgram's Voice Agent API
     action: receive
@@ -1816,7 +2007,7 @@ operations:
     channel:
       $ref: '#/channels/agent'
     messages:
-      - $ref: '#/channels/agent/messages/ConversationText'
+      - $ref: '#/channels/agent/messages/conversationText'
   receiveUserStartedSpeaking:
     description: Receive user started speaking message from Deepgram's Voice Agent API
     action: receive
@@ -1838,14 +2029,9 @@ operations:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/functionCallRequest'
-  receiveFunctionCalling:
-    description: Receive function calling message from Deepgram's Voice Agent API
-    action: receive
-    channel:
-      $ref: '#/channels/agent'
-    messages:
-      - $ref: '#/channels/agent/messages/functionCalling'
   receiveAgentStartedSpeaking:
+    tags:
+      - name: experimental
     description: Receive agent started speaking message from Deepgram's Voice Agent API
     action: receive
     channel:
@@ -1866,6 +2052,13 @@ operations:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/agentErrorResponse'
+  receiveAgentWarning:
+    description: Receive warning messages from Deepgram's Voice Agent API
+    action: receive
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/agentWarning'
 components:
   parameters:
     ApiKey:
