@@ -1425,6 +1425,28 @@ channels:
                   headers:
                     Authorization: Bearer YOUR_API_KEY
                     Custom-Header: value
+      updatePrompt:
+        contentType: application/json
+        payload:
+          type: object
+          description: Send a message to update the system prompt of the agent
+          required:
+            - type
+            - prompt
+          properties:
+            type:
+              type: string
+              const: UpdatePrompt
+              description: Message type identifier for prompt update request
+            prompt:
+              type: string
+              description: The new system prompt to be used by the agent
+        examples:
+          - payload:
+              type: UpdatePrompt
+              prompt: >-
+                You are a helpful assistant that can answer questions and help
+                with tasks.
       injectAgentMessage:
         contentType: application/json
         payload:
@@ -1957,6 +1979,13 @@ operations:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/agentKeepAlive'
+  sendPromptUpdate:
+    description: Send a prompt update to Deepgram's Voice Agent API
+    action: send
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/updatePrompt'
   receiveFunctionCallResponse:
     description: >-
       Receive a function call response from the server containing information
