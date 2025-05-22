@@ -493,7 +493,7 @@ paths:
   /v1/projects/{project_id}/models:
     description: Manage your project models
     get:
-      summary: Get All Project Models
+      summary: List All Project Models
       tags:
         - Management API
       security:
@@ -1178,9 +1178,9 @@ paths:
         '400':
           $ref: '#/components/responses/projects_bad_request'
   /v1/models:
-    description: Manage your project models
+    description: Get information on public models
     get:
-      summary: List Project Models
+      summary: List Models
       tags:
         - Management API
       security:
@@ -1195,7 +1195,7 @@ paths:
         '400':
           $ref: '#/components/responses/projects_bad_request'
   /v1/models/{model_id}:
-    description: Manage your project models
+    description: Get information on a specific public model
     get:
       tags:
         - Management API
