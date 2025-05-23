@@ -1295,12 +1295,19 @@ channels:
                   properties:
                     provider:
                       type: object
-                      description: |
+                      description: >
                         Provider-specific requirements:
+
                         - deepgram: requires: model
+
                         - eleven_labs: requires: model_id, language
-                        - cartesia: requires: model_id , voice, mode, & id
+
+                        - cartesia: requires: model_id, voice, mode, & id
+
                         - open_ai: requires: model and voice
+
+                        - aws_polly: requires: voice, language_code, engine, and
+                        credentials
                       properties:
                         type:
                           type: string
@@ -1309,6 +1316,7 @@ channels:
                             - eleven_labs
                             - cartesia
                             - open_ai
+                            - aws_polly
                         model:
                           type: string
                           description: Deepgram OR OpenAI Model to use for TTS
@@ -1317,20 +1325,61 @@ channels:
                           description: Eleven Labs OR Cartesia Model ID to use for TTS
                         voice:
                           type: object
-                          description: Cartesia voice configuration
+                          description: >-
+                            Voice identifier (Cartesia, OpenAI, or AWS Polly
+                            voice ID)
                           properties:
                             mode:
                               type: string
                               description: Cartesia voice mode
                             id:
                               type: string
-                              description: Cartesia voice ID
+                              description: Cartesia or OpenAI voice ID
                         language:
                           type: string
                           description: Optional Cartesia Language to use for TTS
                         language_code:
                           type: string
-                          description: Optional Eleven Labs Language Code to use for TTS
+                          description: >-
+                            Optional language code for TTS (Eleven Labs or AWS
+                            Polly)
+                        engine:
+                          type: string
+                          description: AWS Polly engine type
+                          enum:
+                            - generative
+                            - long-form
+                            - standard
+                            - neural
+                        credentials:
+                          type: object
+                          description: AWS Polly voice credentials
+                          required:
+                            - type
+                            - region
+                            - access_key_id
+                            - secret_access_key
+                          properties:
+                            type:
+                              type: string
+                              description: >-
+                                AWS credentials type (STS short-lived or IAM
+                                long-lived)
+                              enum:
+                                - STS
+                                - IAM
+                            region:
+                              type: string
+                              description: AWS region
+                            access_key_id:
+                              type: string
+                              description: AWS Key ID
+                            secret_access_key:
+                              type: string
+                              description: AWS Secret Key ID
+                            session_token:
+                              type: string
+                              description: AWS session token (required for STS only)
                     endpoint:
                       type: object
                       description: >
@@ -1350,7 +1399,11 @@ channels:
                   type: string
                   description: Optional message that agent will speak at the start
         examples:
-          - payload:
+          - name: full_agent_configuration
+            summary: >-
+              Complete agent configuration with all components (listen, think,
+              speak)
+            payload:
               type: Settings
               experimental: false
               audio:
@@ -1400,6 +1453,79 @@ channels:
                     headers:
                       authorization: Bearer {{token}}
                 greeting: Hello! How can I help you today?
+          - name: eleven_labs_speak_provider
+            summary: Example using Eleven Labs TTS Speak Provider
+            payload:
+              agent:
+                speak:
+                  provider:
+                    type: eleven_labs
+                    model_id: eleven_monolingual_v1
+                    language_code: en-US
+                  endpoint:
+                    url: https://api.elevenlabs.io/v1/text-to-speech
+                    headers:
+                      xi-api-key: '{{ELEVEN_LABS_API_KEY}}'
+          - name: cartesia_speak_provider
+            summary: Example using Cartesia TTS Speak Provider
+            payload:
+              agent:
+                speak:
+                  provider:
+                    type: cartesia
+                    model_id: cartesia-v1
+                    voice:
+                      mode: premium
+                      id: cartesia-voice-1
+                    language: Language.EN
+          - name: openai_speak_provider
+            summary: Example using OpenAI TTS Speak Provider
+            payload:
+              agent:
+                speak:
+                  provider:
+                    type: open_ai
+                    model: tts-1
+                    voice: alloy
+                  endpoint:
+                    url: https://api.openai.com/v1/audio/speech
+                    headers:
+                      authorization: Bearer {{OPENAI_API_KEY}}
+          - name: aws_polly_sts_speak_provider
+            summary: Example using AWS Polly Speak Provider with STS credentials
+            payload:
+              agent:
+                speak:
+                  provider:
+                    type: aws_polly
+                    voice: Matthew
+                    language_code: en-US
+                    engine: standard
+                    credentials:
+                      type: STS
+                      region: us-west-2
+                      access_key_id: '{{AWS_ACCESS_KEY_ID}}'
+                      secret_access_key: '{{AWS_SECRET_ACCESS_KEY}}'
+                      session_token: '{{AWS_SESSION_TOKEN}}'
+                  endpoint:
+                    url: https://polly.us-west-2.amazonaws.com/v1/speech
+          - name: aws_polly_iam_speak_provider
+            summary: Example using AWS Polly Speak Provider with IAM credentials
+            payload:
+              agent:
+                speak:
+                  provider:
+                    type: aws_polly
+                    voice: Joanna
+                    language_code: en-US
+                    engine: standard
+                    credentials:
+                      type: IAM
+                      region: us-east-2
+                      access_key_id: '{{AWS_ACCESS_KEY_ID}}'
+                      secret_access_key: '{{AWS_SECRET_ACCESS_KEY}}'
+                  endpoint:
+                    url: https://polly.us-east-2.amazonaws.com/v1/speech
       updateSpeak:
         contentType: application/json
         payload:
