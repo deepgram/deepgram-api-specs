@@ -1290,6 +1290,20 @@ channels:
                                   type: string
                     prompt:
                       type: string
+                    context_length:
+                      description: >
+                        Specifies the number of characters retained in context
+                        between user messages, agent responses, and function
+                        calls. This setting is only configurable when a custom
+                        think endpoint is used
+                      oneOf:
+                        - title: max
+                          description: Agent will not discard context regardless of length
+                          type: string
+                          enum:
+                            - max
+                        - type: integer
+                          minimum: 2
                 speak:
                   type: object
                   properties:
@@ -1430,6 +1444,7 @@ channels:
                     model: gpt-4o-mini
                     temperature: 0.7
                   prompt: You are a helpful AI assistant focused on customer service.
+                  context_length: max
                   functions:
                     - name: check_order_status
                       description: Check the status of a customer order
