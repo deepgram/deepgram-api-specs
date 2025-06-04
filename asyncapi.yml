@@ -70,6 +70,16 @@ channels:
           - aac
         examples:
           - linear16
+      mip_opt_out:
+        description: >-
+          Opts out requests from the Deepgram Model Improvement Program. Refer
+          to our Docs for pricing impacts before setting this to true.
+          https://dpgr.am/deepgram-mip
+        location: $message.payload#/mip_opt_out
+        default: 'false'
+        examples:
+          - 'true'
+          - 'false'
       model:
         description: AI model used to process submitted text
         location: $message.payload#/model
@@ -580,6 +590,16 @@ channels:
           - zh-TW
         examples:
           - en
+      mip_opt_out:
+        description: >-
+          Opts out requests from the Deepgram Model Improvement Program. Refer
+          to our Docs for pricing impacts before setting this to true.
+          https://dpgr.am/deepgram-mip
+        location: $message.payload#/mip_opt_out
+        default: 'false'
+        examples:
+          - 'true'
+          - 'false'
       model:
         description: AI model to use for the transcription
         location: $message.payload#/model

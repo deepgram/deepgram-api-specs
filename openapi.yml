@@ -76,6 +76,7 @@ paths:
         - $ref: '#/components/parameters/keywords'
         - $ref: '#/components/parameters/language'
         - $ref: '#/components/parameters/measurements'
+        - $ref: '#/components/parameters/mip_opt_out'
         - $ref: '#/components/parameters/model'
         - $ref: '#/components/parameters/multichannel'
         - $ref: '#/components/parameters/numerals'
@@ -195,6 +196,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/bit_rate'
         - $ref: '#/components/parameters/callback'
+        - $ref: '#/components/parameters/callback_method'
+        - $ref: '#/components/parameters/mip_opt_out'
         - $ref: '#/components/parameters/container'
         - $ref: '#/components/parameters/speak_encoding'
         - $ref: '#/components/parameters/speak_model'
@@ -1545,6 +1548,14 @@ components:
       in: query
       required: false
       description: Spoken measurements will be converted to their corresponding abbreviations
+      schema:
+        default: false
+        type: boolean
+    mip_opt_out:
+      name: mip_opt_out
+      in: query
+      required: false
+      description: Opts out requests from the Deepgram Model Improvement Program. Refer to our Docs for pricing impacts before setting this to true. https://dpgr.am/deepgram-mip
       schema:
         default: false
         type: boolean
