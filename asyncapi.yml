@@ -1498,7 +1498,8 @@ channels:
                     model_id: eleven_monolingual_v1
                     language_code: en-US
                   endpoint:
-                    url: https://api.elevenlabs.io/v1/text-to-speech
+                    url: >-
+                      https://api.elevenlabs.io/v1/text-to-speech/bIHbv24MWmeRgasZH58o
                     headers:
                       xi-api-key: '{{ELEVEN_LABS_API_KEY}}'
           - name: cartesia_speak_provider
@@ -1508,11 +1509,15 @@ channels:
                 speak:
                   provider:
                     type: cartesia
-                    model_id: cartesia-v1
+                    model_id: sonic-2
                     voice:
-                      mode: premium
-                      id: cartesia-voice-1
-                    language: Language.EN
+                      mode: id
+                      id: a167e0f3-df7e-4d52-a9c3-f949145efdab
+                    language: en
+                  endpoint:
+                    url: https://api.cartesia.ai/tts/bytes
+                    headers:
+                      x-api-key: Bearer {{CARTESIA_API_KEY}}
           - name: openai_speak_provider
             summary: Example using OpenAI TTS Speak Provider
             payload:
