@@ -1,0 +1,64 @@
+name: Update OpenAI Vector Store
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "openapi.yml"
+  workflow_dispatch:
+    inputs:
+      force_update:
+        description: "Force update all files regardless of changes"
+        required: false
+        default: false
+        type: boolean
+
+jobs:
+  update-vector-store:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Download previous vectorstore metadata
+        uses: actions/download-artifact@v4
+        continue-on-error: true
+        with:
+          name: vectorstore-metadata
+          path: .deepgram/
+
+      - name: Create output directory
+        run: mkdir -p out/
+
+      - name: Generate documentation with Deepgram CLI
+        run: |
+          npx -y @deepgram/deepdown-cli@latest build openapi.yml \
+            .deepgram/openai.deepdown -o out/ --resolve-refs --resolve-security
+
+      - name: Make vectorize script executable
+        run: chmod +x .deepgram/vectorize
+
+      - name: Upload files to OpenAI Vector Store
+        run: |
+          node .deepgram/vectorize out/
+        env:
+          CI: true
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_VECTOR_MGMT }}
+
+      - name: Upload vectorize metadata as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vectorstore-metadata
+          path: .deepgram/vectorstore_metadata.json
+          retention-days: 90
