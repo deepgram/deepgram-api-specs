@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - "openapi.yml"
+      # - "asyncapi.yml"
   workflow_dispatch:
     inputs:
       force_update:
