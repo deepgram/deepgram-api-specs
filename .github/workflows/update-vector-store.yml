@@ -33,16 +33,21 @@ jobs:
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-          name: vectorstore-metadata
+          name: vectorstore-metadata.json
           path: .deepgram/
 
-      - name: Create output directory
-        run: mkdir -p out/
+      - name: Create output directories
+        run: mkdir -p tmp/openapi tmp/asyncapi
 
-      - name: Generate documentation with Deepgram CLI
+      - name: Generate OpenAPI documentation with Deepgram CLI
         run: |
           npx -y @deepgram/deepdown-cli@latest build openapi.yml \
-            .deepgram/openai.deepdown -o out/ --resolve-refs --resolve-security
+            .deepgram/openapi.deepdown -o tmp/openapi/ --resolve-refs --resolve-security
+
+      # - name: Generate AsyncAPI documentation with Deepgram CLI
+      #   run: |
+      #     npx -y @deepgram/deepdown-cli@latest build asyncapi.yml \
+      #       .deepgram/asyncapi.deepdown -o tmp/asyncapi/ --resolve-refs --resolve-security
 
       - name: Make vectorize script executable
         run: chmod +x .deepgram/vectorize
@@ -58,6 +63,6 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: vectorstore-metadata
+          name: vectorstore-metadata.json
           path: .deepgram/vectorstore_metadata.json
           retention-days: 90
