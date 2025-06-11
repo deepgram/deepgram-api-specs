@@ -53,9 +53,9 @@ jobs:
       - name: Make vectorize script executable
         run: chmod +x .deepgram/vectorize
 
-      - name: Upload files to OpenAI Vector Store
+      - name: Upload all files to Vector Store
         run: |
-          node .deepgram/vectorize out/
+          node .deepgram/vectorize tmp/
         env:
           CI: true
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_VECTOR_MGMT }}

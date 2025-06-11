@@ -815,8 +815,8 @@ Options:
 
 Examples:
   ${path.basename(process.argv[1])}                    # Use default directory (articles/en/docs)
-  ${path.basename(process.argv[1])} out/               # Upload files from out/ directory
-  ${path.basename(process.argv[1])} docs/api/         # Upload files from docs/api/ directory
+  ${path.basename(process.argv[1])} tmp/               # Upload files from tmp/ directory
+  ${path.basename(process.argv[1])} tmp/openapi/       # Upload files from tmp/openapi/ directory
         `);
         process.exit(0);
     }
