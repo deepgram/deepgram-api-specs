@@ -1677,13 +1677,31 @@ channels:
               prompt: >-
                 You are a helpful assistant that can answer questions and help
                 with tasks.
+      injectUserMessage:
+        contentType: application/json
+        payload:
+          type: object
+          description: Send a text based message to the agent
+          required:
+            - type
+            - content
+          properties:
+            type:
+              type: string
+              const: InjectUserMessage
+              description: Message type identifier for injecting a user message
+            content:
+              type: string
+              description: The specific phrase or statement the agent should respond to
+        examples:
+          - payload:
+              type: InjectUserMessage
+              content: Hello! Can you hear me?
       injectAgentMessage:
         contentType: application/json
         payload:
           type: object
-          description: >-
-            Send a message to change the Speak model in the middle of a
-            conversation
+          description: Immediately trigger an agent response during a conversation
           required:
             - type
             - content
@@ -2186,6 +2204,13 @@ operations:
       $ref: '#/channels/agent'
     messages:
       - $ref: '#/channels/agent/messages/updateSpeak'
+  sendInjectUserMessage:
+    action: send
+    description: Send inject user message to Deepgram's Voice Agent API
+    channel:
+      $ref: '#/channels/agent'
+    messages:
+      - $ref: '#/channels/agent/messages/injectUserMessage'
   sendInjectAgentMessage:
     action: send
     description: Send inject agent message to Deepgram's Voice Agent API
