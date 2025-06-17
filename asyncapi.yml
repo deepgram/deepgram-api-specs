@@ -1351,103 +1351,147 @@ channels:
                   type: object
                   properties:
                     provider:
-                      type: object
-                      description: >
-                        Provider-specific requirements:
-
-                        - deepgram: requires: model
-
-                        - eleven_labs: requires: model_id, language
-
-                        - cartesia: requires: model_id, voice, mode, & id
-
-                        - open_ai: requires: model and voice
-
-                        - aws_polly: requires: voice, language_code, engine, and
-                        credentials
-                      properties:
-                        type:
-                          type: string
-                          enum:
-                            - deepgram
-                            - eleven_labs
-                            - cartesia
-                            - open_ai
-                            - aws_polly
-                        model:
-                          type: string
-                          description: Deepgram OR OpenAI Model to use for TTS
-                        model_id:
-                          type: string
-                          description: Eleven Labs OR Cartesia Model ID to use for TTS
-                        voice:
-                          type: object
-                          description: >-
-                            Voice identifier (Cartesia, OpenAI, or AWS Polly
-                            voice ID)
-                          properties:
-                            mode:
-                              type: string
-                              description: Cartesia voice mode
-                            id:
-                              type: string
-                              description: Cartesia or OpenAI voice ID
-                        language:
-                          type: string
-                          description: Optional Cartesia Language to use for TTS
-                        language_code:
-                          type: string
-                          description: >-
-                            Optional language code for TTS (Eleven Labs or AWS
-                            Polly)
-                        engine:
-                          type: string
-                          description: AWS Polly engine type
-                          enum:
-                            - generative
-                            - long-form
-                            - standard
-                            - neural
-                        credentials:
-                          type: object
-                          description: AWS Polly voice credentials
+                      oneOf:
+                        - type: object
                           required:
                             - type
-                            - region
-                            - access_key_id
-                            - secret_access_key
+                            - model
                           properties:
                             type:
                               type: string
-                              description: >-
-                                AWS credentials type (STS short-lived or IAM
-                                long-lived)
+                              const: deepgram
+                            model:
+                              type: string
+                              description: Deepgram TTS model
+                        - type: object
+                          required:
+                            - type
+                            - model_id
+                          properties:
+                            type:
+                              type: string
+                              const: eleven_labs
+                            model_id:
+                              type: string
+                              description: Eleven Labs model ID
+                            language_code:
+                              type: string
+                              description: Eleven Labs optional language code
+                        - type: object
+                          required:
+                            - type
+                            - model_id
+                            - voice
+                          properties:
+                            type:
+                              type: string
+                              const: cartesia
+                            model_id:
+                              type: string
+                              description: Cartesia model ID
+                            voice:
+                              type: object
+                              required:
+                                - mode
+                                - id
+                              properties:
+                                mode:
+                                  type: string
+                                  description: Cartesia voice mode
+                                id:
+                                  type: string
+                                  description: Cartesia voice ID
+                            language:
+                              type: string
+                              description: Cartesia language code
+                        - type: object
+                          required:
+                            - type
+                            - model
+                            - voice
+                          properties:
+                            type:
+                              type: string
+                              const: open_ai
+                            model:
+                              type: string
                               enum:
-                                - STS
-                                - IAM
-                            region:
+                                - tts-1
+                                - tts-1-hd
+                              description: OpenAI TTS model
+                            voice:
                               type: string
-                              description: AWS region
-                            access_key_id:
+                              enum:
+                                - alloy
+                                - echo
+                                - fable
+                                - onyx
+                                - nova
+                                - shimmer
+                              description: OpenAI voice
+                        - type: object
+                          required:
+                            - type
+                            - voice
+                            - language_code
+                            - engine
+                            - credentials
+                          properties:
+                            type:
                               type: string
-                              description: AWS Key ID
-                            secret_access_key:
+                              const: aws_polly
+                            voice:
                               type: string
-                              description: AWS Secret Key ID
-                            session_token:
+                              description: AWS Polly voice name
+                            language_code:
                               type: string
-                              description: AWS session token (required for STS only)
+                              description: Language code (e.g., "en-US")
+                            engine:
+                              type: string
+                              enum:
+                                - generative
+                                - long-form
+                                - standard
+                                - neural
+                            credentials:
+                              type: object
+                              required:
+                                - type
+                                - region
+                                - access_key_id
+                                - secret_access_key
+                              properties:
+                                type:
+                                  type: string
+                                  enum:
+                                    - STS
+                                    - IAM
+                                region:
+                                  type: string
+                                access_key_id:
+                                  type: string
+                                secret_access_key:
+                                  type: string
+                                session_token:
+                                  type: string
+                                  description: Required for STS only
                     endpoint:
                       type: object
                       description: >
                         Optional if provider is Deepgram. Required for
                         non-Deepgram TTS providers.
 
-                        When present, must include url field and headers object
+                        When present, must include url field and headers object.
+                        Valid schemes are https and wss with wss only supported
+                        for Eleven Labs.
                       properties:
                         url:
                           type: string
-                          description: Custom TTS endpoint URL
+                          description: >
+                            Custom TTS endpoint URL. Cannot contain
+                            `output_format` or `model_id` query
+
+                            parameters when the provider is Eleven Labs.
                         headers:
                           type: object
                           additionalProperties:
