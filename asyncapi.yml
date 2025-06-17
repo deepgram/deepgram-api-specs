@@ -42,7 +42,7 @@ servers:
 channels:
   speak:
     address: /v1/speak
-    description: Deepgram Text to Speech WebSocket
+    description: Convert text into natural-sounding speech using Deepgram's TTS WebSocket
     servers:
       - $ref: '#/servers/public'
     parameters:
@@ -399,7 +399,7 @@ channels:
     address: /v1/listen
     servers:
       - $ref: '#/servers/public'
-    description: Deepgram Speech to Text WebSocket
+    description: Transcribe audio using Deepgram’s STT WebSocket
     parameters:
       ApiKey:
         description: >-
@@ -1145,7 +1145,7 @@ channels:
     address: /v1/agent/converse
     servers:
       - $ref: '#/servers/agent'
-    description: Deepgram Voice Agent WebSocket
+    description: Build a Voice Agent using Deepgram's Voice Agent WebSocket
     parameters:
       ApiKey:
         description: >-
