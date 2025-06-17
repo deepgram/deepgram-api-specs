@@ -45,7 +45,7 @@ paths:
       security:
         - ApiKeyAuth: []
         - JwtAuth: []
-      description: Transcribe audio using Deepgram's speech-to-text API
+      description: Transcribe audio using Deepgram's speech-to-text REST API
       operationId: listen
       requestBody:
         description: Transcribe an audio file
@@ -184,7 +184,7 @@ paths:
       security:
         - ApiKeyAuth: []
         - JwtAuth: []
-      description: Convert text into natural-sounding speech using Deepgram's TTS API
+      description: Convert text into natural-sounding speech using Deepgram's TTS REST API
       operationId: speak
       requestBody:
         description: Transform text to speech
