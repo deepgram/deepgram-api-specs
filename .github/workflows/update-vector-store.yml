@@ -34,7 +34,7 @@ jobs:
         uses: actions/download-artifact@v4
         continue-on-error: true
         with:
-          name: vectorstore-metadata.json
+          name: vectorstore_metadata
           path: .deepgram/
 
       - name: Create output directories
@@ -64,6 +64,6 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: vectorstore-metadata.json
+          name: vectorstore_metadata
           path: .deepgram/vectorstore_metadata.json
           retention-days: 90
