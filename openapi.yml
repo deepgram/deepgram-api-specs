@@ -601,7 +601,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/project_id'
       requestBody:
-        description: The API key settings
+        description: API key settings
         required: true
         content:
           application/json:
@@ -1953,6 +1953,16 @@ components:
           - aura-2-theia-en
           - aura-2-vesta-en
           - aura-2-zeus-en
+          - aura-2-sirio-es
+          - aura-2-nestor-es
+          - aura-2-carina-es
+          - aura-2-celeste-es
+          - aura-2-alvaro-es
+          - aura-2-diana-es
+          - aura-2-aquila-es
+          - aura-2-selena-es
+          - aura-2-estrella-es
+          - aura-2-javier-es
       example: aura-2-thalia-en
     speak_sample_rate:
       name: sample_rate
