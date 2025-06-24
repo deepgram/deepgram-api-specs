@@ -33,7 +33,7 @@ tags:
   - name: Authentication API
     description: Grant temporary tokens
 externalDocs:
-  description: Learn more about using Deepgram on our docs.
+  description: Visit our docs to learn more about using Deepgram.
   url: http://developers.deepgram.com
 paths:
   /v1/listen:
@@ -955,6 +955,12 @@ paths:
         - $ref: '#/components/parameters/end_date_time'
         - $ref: '#/components/parameters/limit'
         - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/filter_accessor'
+        - $ref: '#/components/parameters/filter_request_id'
+        - $ref: '#/components/parameters/filter_deployment'
+        - $ref: '#/components/parameters/filter_endpoint'
+        - $ref: '#/components/parameters/filter_method'
+        - $ref: '#/components/parameters/filter_status'
       responses:
         '200':
           description: A list of requests for a specific project
@@ -2133,6 +2139,66 @@ components:
       schema:
         type: string
         format: date-time
+    filter_accessor:
+      name: accessor
+      in: query
+      description: Filter for requests where a specific accessor was used
+      schema:
+        type: string
+      example: 12345678-1234-1234-1234-123456789012
+    filter_request_id:
+      name: request_id
+      in: query
+      description: Filter for a specific request id
+      schema:
+        type: string
+      example: 12345678-1234-1234-1234-123456789012
+    filter_deployment:
+      name: deployment
+      in: query
+      description: Filter for requests where a specific deployment was used
+      schema:
+        type: string
+        enum:
+          - hosted
+          - beta
+          - self-hosted
+        description: Deployment type for the requests
+      example: hosted
+    filter_endpoint:
+      name: endpoint
+      in: query
+      description: Filter for requests where a specific endpoint was used
+      schema:
+        type: string
+        enum:
+          - listen
+          - read
+          - speak
+          - agent
+      example: listen
+    filter_method:
+      name: method
+      in: query
+      description: Filter for requests where a specific method was used
+      schema:
+        type: string
+        enum:
+          - sync
+          - async
+          - streaming
+        description: Method type for the request
+      example: async
+    filter_status:
+      name: status
+      in: query
+      description: Filter for requests that succeeded (status code < 300) or failed (status code >=400)
+      schema:
+        type: string
+        enum:
+          - succeeded
+          - failed
+      example: succeeded
     request_id:
       name: request_id
       in: path
@@ -2157,13 +2223,6 @@ components:
       schema:
         type: string
         format: date
-    filter_accessor:
-      name: accessor
-      in: query
-      description: Filter for requests where a specific accessor was used
-      schema:
-        type: string
-      example: 12345678-1234-1234-1234-123456789012
     filter_alternatives:
       name: alternatives
       in: query
@@ -2220,18 +2279,6 @@ components:
       schema:
         type: boolean
       example: true
-    filter_deployment:
-      name: deployment
-      in: query
-      description: Filter for requests where a specific deployment was used
-      schema:
-        type: string
-        enum:
-          - hosted
-          - beta
-          - self-hosted
-        description: Deployment type for the requests
-      example: hosted
     filter_detect_entities:
       name: detect_entities
       in: query
@@ -2267,18 +2314,6 @@ components:
       schema:
         type: boolean
       example: true
-    filter_endpoint:
-      name: endpoint
-      in: query
-      description: Filter for requests where a specific endpoint was used
-      schema:
-        type: string
-        enum:
-          - listen
-          - read
-          - speak
-          - agent
-      example: listen
     filter_extra:
       name: extra
       in: query
@@ -2328,18 +2363,6 @@ components:
       schema:
         type: boolean
       example: true
-    filter_method:
-      name: method
-      in: query
-      description: Filter for requests where a specific method was used
-      schema:
-        type: string
-        enum:
-          - sync
-          - async
-          - streaming
-        description: Method type for the request
-      example: async
     filter_model:
       name: model
       in: query

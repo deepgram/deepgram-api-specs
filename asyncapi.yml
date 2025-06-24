@@ -30,7 +30,7 @@ info:
     name: Privacy Notice
     url: https://deepgram.com/privacy/
   externalDocs:
-    description: Learn more about using Deepgram on our docs.
+    description: Visit our docs to learn more about using Deepgram.
     url: http://developers.deepgram.com
 servers:
   public:
