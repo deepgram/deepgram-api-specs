@@ -17,6 +17,12 @@ on:
 jobs:
   update-vector-store:
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.TIGRIS_ACCESS_KEY_ID }}
+      AWS_ENDPOINT_URL: ${{ secrets.TIGRIS_ENDPOINT_URL }}
+      AWS_REGION: ${{ secrets.TIGRIS_REGION }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.TIGRIS_SECRET_ACCESS_KEY }}
+      BUCKET_NAME: ${{ secrets.TIGRIS_BUCKET_NAME }}
 
     steps:
       - name: Checkout repository
@@ -30,12 +36,29 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Download previous vectorstore metadata
-        uses: actions/download-artifact@v4
+      - name: Create .deepgram directory
+        run: mkdir -p .deepgram/metadata
+
+      - name: Download previous vectorstore metadata from S3
+        uses: urbann3/s3go-action@v1
         continue-on-error: true
         with:
-          name: vectorstore_metadata
-          path: .deepgram/
+          mode: download
+          bucket: ${{ env.BUCKET_NAME }}
+          prefix: ${{ github.repository }}/.deepgram/
+          localPath: ./
+          concurrency: 10
+          queueSize: 100
+
+      - name: Verify metadata download
+        run: |
+          if [ -f .deepgram/metadata/vectorstore_metadata.json ]; then
+            echo "✅ Successfully downloaded metadata from S3 for repository: ${{ github.repository }}"
+            echo "File contents preview:"
+            head -20 .deepgram/metadata/vectorstore_metadata.json || true
+          else
+            echo "⚠️ No existing metadata found in S3 for repository: ${{ github.repository }} - will start fresh"
+          fi
 
       - name: Create output directories
         run: mkdir -p tmp/openapi tmp/asyncapi
@@ -60,10 +83,13 @@ jobs:
           CI: true
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY_VECTOR_MGMT }}
 
-      - name: Upload vectorize metadata as artifact
-        uses: actions/upload-artifact@v4
-        if: always()
+      - name: Upload vectorize metadata to S3
+        if: always() && hashFiles('.deepgram/metadata/vectorstore_metadata.json') != ''
+        uses: urbann3/s3go-action@v1
         with:
-          name: vectorstore_metadata
-          path: .deepgram/vectorstore_metadata.json
-          retention-days: 90
+          mode: upload
+          bucket: ${{ env.BUCKET_NAME }}
+          prefix: ${{ github.repository }}/
+          localPath: .deepgram/
+          concurrency: 10
+          queueSize: 100
