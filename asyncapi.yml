@@ -1230,6 +1230,9 @@ channels:
               properties:
                 language:
                   type: string
+                  enum:
+                    - en
+                    - es
                   default: en
                   description: Agent language
                 listen:
