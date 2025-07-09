@@ -1481,8 +1481,8 @@ channels:
                                     type:
                                       type: string
                                       enum:
-                                        - STS
-                                        - IAM
+                                        - sts
+                                        - iam
                                     region:
                                       type: string
                                     access_key_id:
@@ -1634,8 +1634,8 @@ channels:
                                       type:
                                         type: string
                                         enum:
-                                          - STS
-                                          - IAM
+                                          - sts
+                                          - iam
                                       region:
                                         type: string
                                       access_key_id:
