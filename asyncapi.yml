@@ -1185,6 +1185,13 @@ channels:
               type: boolean
               default: false
               description: To enable experimental features
+            flags:
+              type: object
+              properties:
+                history:
+                  type: boolean
+                  default: true
+                  description: Enable or disable history message reporting
             mip_opt_out:
               type: boolean
               default: false
@@ -1235,6 +1242,85 @@ channels:
                     - es
                   default: en
                   description: Agent language
+                context:
+                  type: object
+                  description: >-
+                    Conversation context including the history of messages and
+                    function calls
+                  properties:
+                    messages:
+                      type: array
+                      description: >-
+                        Conversation history as a list of messages and function
+                        calls
+                      items:
+                        type: object
+                        description: >-
+                          A message here is either a conversational message or a
+                          function call
+                        oneOf:
+                          - type: object
+                            description: >-
+                              Conversation text as part of the conversation
+                              history
+                            required:
+                              - type
+                              - role
+                              - content
+                            properties:
+                              type:
+                                type: string
+                                const: History
+                                description: Message type identifier for conversation text
+                              role:
+                                type: string
+                                enum:
+                                  - user
+                                  - assistant
+                                description: Identifies who spoke the statement
+                              content:
+                                type: string
+                                description: The actual statement that was spoken
+                          - type: object
+                            description: >-
+                              Client-side or server-side function call request
+                              and response as part of the conversation history
+                            required:
+                              - type
+                              - function_calls
+                            properties:
+                              type:
+                                type: string
+                                const: History
+                              function_calls:
+                                type: array
+                                description: List of function call objects
+                                items:
+                                  type: object
+                                  required:
+                                    - id
+                                    - name
+                                    - client_side
+                                    - arguments
+                                    - response
+                                  properties:
+                                    id:
+                                      type: string
+                                      description: Unique identifier for the function call
+                                    name:
+                                      type: string
+                                      description: Name of the function called
+                                    client_side:
+                                      type: boolean
+                                      description: >-
+                                        Indicates if the call was client-side or
+                                        server-side
+                                    arguments:
+                                      type: string
+                                      description: Arguments passed to the function
+                                    response:
+                                      type: string
+                                      description: Response from the function call
                 listen:
                   type: object
                   properties:
@@ -1725,6 +1811,53 @@ channels:
                     headers:
                       authorization: Bearer {{token}}
                 greeting: Hello! How can I help you today?
+          - name: agent_with_context_history
+            summary: >-
+              Agent configuration with conversation context including both
+              messages and function calls
+            payload:
+              type: Settings
+              agent:
+                language: en
+                context:
+                  messages:
+                    - type: History
+                      role: user
+                      content: What's my order status?
+                    - type: History
+                      function_calls:
+                        - id: fc_12345678-90ab-cdef-1234-567890abcdef
+                          name: check_order_status
+                          client_side: true
+                          arguments: '{"order_id": "ORD-123456"}'
+                          response: >-
+                            Order #123456 status: Shipped - Expected delivery
+                            date: 2024-03-15
+                    - type: History
+                      role: assistant
+                      content: >-
+                        Your order #123456 has been shipped and is expected to
+                        arrive on March 15th, 2024.
+                    - type: History
+                      role: user
+                      content: Can you track it for me?
+                think:
+                  provider:
+                    type: open_ai
+                    model: gpt-4o-mini
+                    temperature: 0.7
+                  prompt: You are a helpful customer service assistant.
+                speak:
+                  provider:
+                    type: deepgram
+                    model: aura-2-thalia-en
+              audio:
+                input:
+                  encoding: linear16
+                  sample_rate: 16000
+                output:
+                  encoding: linear16
+                  sample_rate: 16000
           - name: eleven_labs_speak_provider
             summary: Example using Eleven Labs TTS Speak Provider
             payload:
