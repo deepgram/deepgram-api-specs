@@ -551,7 +551,14 @@ paths:
       security:
         - ApiKeyAuth: []
       operationId: grantToken
-      description: Generates a temporary JSON Web Token (JWT) with a 30-second TTL and usage::write permission for core voice APIs, requiring an API key with Member or higher authorization. Tokens created with this endpoint will not work with the Management APIs.
+      description: Generates a temporary JSON Web Token (JWT) with a 30-second (by default) TTL and usage::write permission for core voice APIs, requiring an API key with Member or higher authorization. Tokens created with this endpoint will not work with the Management APIs.
+      requestBody:
+        description: Time to live settings
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/grant'
       responses:
         '200':
           $ref: '#/components/responses/jwt'
@@ -3234,6 +3241,15 @@ components:
                   type: string
                 example:
                   - IVR
+    grant:
+      type: object
+      properties:
+        ttl_seconds:
+          type: integer
+          minimum: 1
+          maximum: 3600
+          description: Time to live in seconds for the token. Defaults to 30 seconds.
+          example: 30
     keys:
       type: array
       items:
