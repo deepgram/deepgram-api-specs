@@ -1,3 +1,6 @@
 out/
 tmp/
 vectorstore_metadata.json
+
+.DS_Store
+.deepgram/.DS_Store
