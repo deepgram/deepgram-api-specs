@@ -1,65 +1,48 @@
-name: Sync to Fern Repository
+# This workflow implements a "repository dispatch" pattern for syncing API specifications
+# between the source repo (deepgram-api-specs) and target repo (deepgram-docs).
+
+name: Dispatch API Spec Updates
 
 on:
+  # Allow manual triggering for testing
   workflow_dispatch:
+  # Trigger when API specs are updated on main branch
   push:
     branches:
       - main
     paths:
       - "openapi.yml"
       - "asyncapi.yml"
+
 jobs:
-  publish-file:
+  dispatch-update:
     runs-on: ubuntu-latest
 
     steps:
+      # Check out the source repository to access commit information
       - name: Check out the source repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
+      # Generate a timestamp for unique branch naming in the target repo
       - name: Load date value
         id: date
         run: echo "date=$(date +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
 
-      - name: Set up Git
-        run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Clone the target repository
-        env:
-          TARGET_REPO_TOKEN: ${{ secrets.FERN_PRS }}
-        run: |
-          if [ -z "$TARGET_REPO_TOKEN" ]; then
-            echo "Error: TARGET_REPO_TOKEN is not set"
-            exit 1
-          fi
-          USERNAME=$(curl -s -H "Authorization: token ${TARGET_REPO_TOKEN}" https://api.github.com/user | jq -r '.login')
-          echo "Authenticated as $USERNAME"
-          git clone https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-docs.git
-          cd deepgram-docs
-
-          # Create a new branch for the PR
-          BRANCH_NAME="update-specs-${{ steps.date.outputs.date }}"  # Using timestamp format
-          git checkout -b $BRANCH_NAME
-          echo "Checked out $BRANCH_NAME"
-
-          # Copy both spec files
-          cp ../openapi.yml ./fern/openapi.yml
-          cp ../asyncapi.yml ./fern/asyncapi.yml
-
-          git add ./fern/openapi.yml ./fern/asyncapi.yml
-          echo "Staged files"
-          git commit -m "feat: update API specifications"
-          echo "Committed Files"
-          git push https://${TARGET_REPO_TOKEN}@github.com/deepgram/deepgram-docs.git $BRANCH_NAME
-
-      - name: Create Pull Request
-        env:
-          GH_TOKEN: ${{ secrets.FERN_PRS }}
-        run: |
-          gh pr create \
-            --repo deepgram/deepgram-docs \
-            --title "feat: update API specifications" \
-            --body "This PR updates both OpenAPI and AsyncAPI specifications from the main branch of deepgram-api-specs." \
-            --base main \
-            --head "update-specs-${{ steps.date.outputs.date }}"
+      # Send a repository dispatch event to the target repo
+      - name: Dispatch repository event
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          # Token with 'repo' scope to dispatch events to other repositories
+          # This token is stored in GitHub Secrets and should have minimal permissions
+          token: ${{ secrets.SPECS_DISPATCH_TOKEN }}
+          # The target repository that will receive the event
+          repository: deepgram/deepgram-docs
+          # Custom event type - the target repo listens for this specific event
+          event-type: update-api-specs
+          # Payload sent to the target repo with context about the change
+          client-payload: |
+            {
+              "timestamp": "${{ steps.date.outputs.date }}",
+              "source_repo": "${{ github.repository }}",
+              "commit_sha": "${{ github.sha }}"
+            }
