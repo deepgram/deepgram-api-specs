@@ -1345,6 +1345,12 @@ channels:
                           items:
                             type: string
                           description: Prompt key-term recognition (nova-3 'en' only)
+                        smart_format:
+                          type: boolean
+                          default: false
+                          description: >-
+                            Applies smart formatting to improve transcript
+                            readability (Deepgram providers only)
                 think:
                   type: object
                   required:
@@ -1789,6 +1795,7 @@ channels:
                     keyterms:
                       - hello
                       - goodbye
+                    smart_format: true
                 think:
                   provider:
                     type: open_ai
