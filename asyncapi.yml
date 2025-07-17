@@ -736,11 +736,11 @@ channels:
         examples:
           - my-team
           - marketing%20team
-      utterance_end:
+      utterance_end_ms:
         description: >-
           Indicates how long Deepgram will wait to send an UtteranceEnd message
           after a word has been transcribed. Use with interim_results
-        location: $message.payload#/utterance_end
+        location: $message.payload#/utterance_end_ms
         examples:
           - '1000'
       vad_events:
