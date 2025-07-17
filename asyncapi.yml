@@ -1181,6 +1181,14 @@ channels:
             type:
               type: string
               const: Settings
+            tags:
+              type: array
+              description: Tags to associate with the request
+              items:
+                type: string
+                description: >-
+                  A tag associated with the request can be used for filtered
+                  searching
             experimental:
               type: boolean
               default: false
