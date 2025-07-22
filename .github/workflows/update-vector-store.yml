@@ -50,12 +50,12 @@ jobs:
       - name: Download previous vectorstore metadata from S3
         continue-on-error: true
         run: |
-          echo "Downloading metadata from S3 path: s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/"
-          aws s3 sync \
+          echo "Downloading metadata from S3 path: s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/metadata/vectorstore_metadata.json"
+          aws s3 cp \
             --endpoint-url "${{ env.AWS_ENDPOINT_URL }}" \
-            "s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/" \
-            ./.deepgram/ \
-            --quiet
+            "s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/metadata/vectorstore_metadata.json" \
+            ./.deepgram/metadata/vectorstore_metadata.json \
+            --quiet || true
 
       - name: Verify metadata download
         run: |
@@ -93,13 +93,9 @@ jobs:
       - name: Upload vectorize metadata to S3
         if: always() && hashFiles('.deepgram/metadata/vectorstore_metadata.json') != ''
         run: |
-          echo "Uploading metadata to S3 path: s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/"
-          aws s3 sync \
+          echo "Uploading metadata to S3 path: s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/metadata/vectorstore_metadata.json"
+          aws s3 cp \
             --endpoint-url "${{ env.AWS_ENDPOINT_URL }}" \
-            ./.deepgram/ \
-            "s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/" \
-            --quiet \
-            --exclude "*" \
-            --include "metadata/vectorstore_metadata.json" \
-            --include "*.deepdown" \
-            --include "vectorize"
+            ./.deepgram/metadata/vectorstore_metadata.json \
+            "s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/metadata/vectorstore_metadata.json" \
+            --quiet
