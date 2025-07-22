@@ -112,39 +112,6 @@ schema.format}} ({{schema.format}}){{/if}}{{else}}object{{/if}} | {{description}
 {{/each}}
 {{/if}}
 
-## Example Usage
-
-### WebSocket Connection
-
-```javascript
-const ws = new WebSocket('wss://{{spec.servers.public.host}}{{address}}');
-
-ws.onopen = function() {
-console.log('Connected to {{@key}} channel');
-};
-
-ws.onmessage = function(event) {
-const message = JSON.parse(event.data);
-console.log('Received:', message);
-};
-
-ws.onclose = function(event) {
-console.log('Connection closed:', event.code, event.reason);
-};
-```
-
-### Send Message Example
-
-```javascript
-// Send a message to the {{@key}} channel
-const message = {
-type: "{{#each messages}}{{@key}}{{#if @first}}{{break}}{{/if}}{{/each}}",
-// Add message payload here
-};
-
-ws.send(JSON.stringify(message));
-```
-
 ---
 
 ## Disclaimer: Deepdown
