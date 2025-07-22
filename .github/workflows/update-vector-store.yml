@@ -36,19 +36,23 @@ jobs:
         with:
           node-version: "22"
 
+      - name: Install AWS CLI
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq awscli
+
       - name: Create .deepgram directory
         run: mkdir -p .deepgram/metadata
 
       - name: Download previous vectorstore metadata from S3
-        uses: urbann3/s3go-action@v1
         continue-on-error: true
-        with:
-          mode: download
-          bucket: ${{ env.BUCKET_NAME }}
-          prefix: ${{ github.repository }}/.deepgram/
-          localPath: ./
-          concurrency: 10
-          queueSize: 100
+        run: |
+          echo "Downloading metadata from S3 path: s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/"
+          aws s3 sync \
+            --endpoint-url "${{ env.AWS_ENDPOINT_URL }}" \
+            "s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/" \
+            ./.deepgram/ \
+            --quiet
 
       - name: Verify metadata download
         run: |
@@ -85,11 +89,14 @@ jobs:
 
       - name: Upload vectorize metadata to S3
         if: always() && hashFiles('.deepgram/metadata/vectorstore_metadata.json') != ''
-        uses: urbann3/s3go-action@v1
-        with:
-          mode: upload
-          bucket: ${{ env.BUCKET_NAME }}
-          prefix: ${{ github.repository }}/
-          localPath: .deepgram/
-          concurrency: 10
-          queueSize: 100
+        run: |
+          echo "Uploading metadata to S3 path: s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/"
+          aws s3 sync \
+            --endpoint-url "${{ env.AWS_ENDPOINT_URL }}" \
+            ./.deepgram/ \
+            "s3://${{ env.BUCKET_NAME }}/${{ github.repository }}/.deepgram/" \
+            --quiet \
+            --exclude "*" \
+            --include "metadata/vectorstore_metadata.json" \
+            --include "*.deepdown" \
+            --include "vectorize"
