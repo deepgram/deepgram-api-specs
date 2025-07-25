@@ -1400,6 +1400,22 @@ channels:
                             model:
                               type: string
                               description: X AI model to use
+                        - properties:
+                            type:
+                              enum:
+                                - google
+                            model:
+                              type: string
+                              description: Google model to use
+                              enum:
+                                - gemini-2.5-flash
+                                - gemini-2.0-flash
+                                - gemini-2.0-flash-lite
+                            temperature:
+                              type: number
+                              description: Google temperature (0-2)
+                              minimum: 0
+                              maximum: 2
                     endpoint:
                       type: object
                       description: >
