@@ -148,6 +148,7 @@ paths:
         - $ref: '#/components/parameters/language'
         - $ref: '#/components/parameters/sentiment'
         - $ref: '#/components/parameters/summarize'
+        - $ref: '#/components/parameters/tag'
         - $ref: '#/components/parameters/topics'
       responses:
         '200':
@@ -202,6 +203,7 @@ paths:
         - $ref: '#/components/parameters/speak_encoding'
         - $ref: '#/components/parameters/speak_model'
         - $ref: '#/components/parameters/speak_sample_rate'
+        - $ref: '#/components/parameters/tag'
       responses:
         '200':
           description: Successful text to speech
