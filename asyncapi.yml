@@ -1396,13 +1396,6 @@ channels:
                         - properties:
                             type:
                               enum:
-                                - x_ai
-                            model:
-                              type: string
-                              description: X AI model to use
-                        - properties:
-                            type:
-                              enum:
                                 - google
                             model:
                               type: string
