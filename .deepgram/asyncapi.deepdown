@@ -4,7 +4,7 @@ splitOn: channels
 ---
 # {{pathName}} Channel
 
-{{description}}
+{{{description}}}
 
 ## Table of Contents
 
@@ -21,11 +21,11 @@ splitOn: channels
 
 ## Overview
 
-{{description}}
+{{{description}}}
 
 ## API Information
 
-- **API**: {{spec.info.title}} (v{{spec.info.version}})
+- **API**: {{{spec.info.title}}} (v{{spec.info.version}})
 - **Channel**: `{{pathName}}`
 - **Address**: `{{address}}`
 {{#if servers}}
@@ -40,7 +40,7 @@ Authentication is required for this channel:
 ### API Key Authentication
 
 **Location**: {{parameters.ApiKey.location}}
-**Description**: {{parameters.ApiKey.description}}
+**Description**: {{{parameters.ApiKey.description}}}
 
 **Example Headers**:
 {{#each parameters.ApiKey.examples}}
@@ -61,7 +61,7 @@ No authentication is required for this channel.
 {{#each parameters}}
 {{#unless (eq @key "ApiKey")}}
 | `{{@key}}` | {{location}} | {{#if required}}Yes{{else}}No{{/if}} | {{#if schema.type}}{{schema.type}}{{#if
-schema.format}} ({{schema.format}}){{/if}}{{else}}object{{/if}} | {{description}} |
+schema.format}} ({{schema.format}}){{/if}}{{else}}object{{/if}} | {{{description}}} |
 {{/unless}}
 {{/each}}
 {{/if}}
@@ -72,7 +72,7 @@ schema.format}} ({{schema.format}}){{/if}}{{else}}object{{/if}} | {{description}
 {{#each messages}}
 ### `{{@key}}`
 
-{{description}}
+{{{description}}}
 
 {{#if payload}}
 **Payload Schema:**
@@ -88,10 +88,10 @@ schema.format}} ({{schema.format}}){{/if}}{{else}}object{{/if}} | {{description}
 {{#if examples}}
 {{#each examples}}
 {{#if name}}
-#### {{name}}
+#### {{{name}}}
 {{/if}}
 {{#if summary}}
-*{{summary}}*
+*{{{summary}}}*
 {{/if}}
 
 ```json
