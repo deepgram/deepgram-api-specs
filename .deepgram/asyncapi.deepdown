@@ -1,8 +1,8 @@
 ---
-outputPattern: {{@key}}/index.md
+outputPattern: {{@pathName}}/index.md
 splitOn: channels
 ---
-# {{@key}} Channel
+# {{pathName}} Channel
 
 {{description}}
 
@@ -26,10 +26,10 @@ splitOn: channels
 ## API Information
 
 - **API**: {{spec.info.title}} (v{{spec.info.version}})
-- **Channel**: `{{@key}}`
+- **Channel**: `{{pathName}}`
 - **Address**: `{{address}}`
 {{#if servers}}
-- **Servers**: {{#each servers}}{{@key}}{{#unless @last}}, {{/unless}}{{/each}}
+- **Servers**: {{#each servers}}{{this.host}} ({{this.protocol}}){{#unless @last}}, {{/unless}}{{/each}}
 {{/if}}
 
 ## Authentication
