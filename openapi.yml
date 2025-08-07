@@ -1539,6 +1539,7 @@ components:
           - lv
           - lt
           - ms
+          - multi
           - 'no'
           - pl
           - pt
