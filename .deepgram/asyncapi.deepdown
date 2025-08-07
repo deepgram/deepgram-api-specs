@@ -1,0 +1,153 @@
+---
+outputPattern: {{@pathName}}/index.md
+splitOn: channels
+---
+# {{pathName}} Channel
+
+{{{description}}}
+
+## Table of Contents
+
+- [Overview](#overview)
+- [API Information](#api-information)
+- [Authentication](#authentication)
+{{#if parameters}}
+- [Parameters](#parameters)
+{{/if}}
+{{#if messages}}
+- [Messages](#messages)
+{{/if}}
+- [Example Usage](#example-usage)
+
+## Overview
+
+{{{description}}}
+
+## API Information
+
+- **API**: {{{spec.info.title}}} (v{{spec.info.version}})
+- **Channel**: `{{pathName}}`
+- **Address**: `{{address}}`
+{{#if servers}}
+- **Servers**: {{#each servers}}{{this.host}} ({{this.protocol}}){{#unless @last}}, {{/unless}}{{/each}}
+{{/if}}
+
+## Authentication
+{{#if parameters.ApiKey}}
+
+Authentication is required for this channel:
+
+### API Key Authentication
+
+**Location**: {{parameters.ApiKey.location}}
+**Description**: {{{parameters.ApiKey.description}}}
+
+**Example Headers**:
+{{#each parameters.ApiKey.examples}}
+```
+Authorization: {{this}}
+```
+{{/each}}
+{{else}}
+
+No authentication is required for this channel.
+{{/if}}
+
+{{#if parameters}}
+## Parameters
+
+| Name | Located In | Required | Type | Description |
+|------|------------|:--------:|------|-------------|
+{{#each parameters}}
+{{#unless (eq @key "ApiKey")}}
+| `{{@key}}` | {{location}} | {{#if required}}Yes{{else}}No{{/if}} | {{#if schema.type}}{{schema.type}}{{#if
+schema.format}} ({{schema.format}}){{/if}}{{else}}object{{/if}} | {{{description}}} |
+{{/unless}}
+{{/each}}
+{{/if}}
+
+{{#if messages}}
+## Messages
+
+{{#each messages}}
+### `{{@key}}`
+
+{{{description}}}
+
+{{#if payload}}
+**Payload Schema:**
+
+{{#if payload.properties}}
+| Property | Type | Required | Description |
+|----------|------|:--------:|-------------|
+{{flattenPropertiesTable payload}}
+{{/if}}
+
+**Example Message:**
+
+{{#if examples}}
+{{#each examples}}
+{{#if name}}
+#### {{{name}}}
+{{/if}}
+{{#if summary}}
+*{{{summary}}}*
+{{/if}}
+
+```json
+{{{json payload}}}
+```
+{{/each}}
+{{else}}
+```json
+{{{generateExample payload requiredOnly=true}}}
+```
+{{/if}}
+{{/if}}
+
+{{#if contentType}}
+**Content Type**: `{{contentType}}`
+{{/if}}
+
+{{/each}}
+{{/if}}
+
+## Example Usage
+
+### WebSocket Connection
+
+```javascript
+const ws = new WebSocket('wss://{{spec.servers.public.host}}{{address}}');
+
+ws.onopen = function() {
+console.log('Connected to {{@key}} channel');
+};
+
+ws.onmessage = function(event) {
+const message = JSON.parse(event.data);
+console.log('Received:', message);
+};
+
+ws.onclose = function(event) {
+console.log('Connection closed:', event.code, event.reason);
+};
+```
+
+### Send Message Example
+
+```javascript
+// Send a message to the {{@key}} channel
+const message = {
+type: "{{#each messages}}{{@key}}{{#if @first}}{{break}}{{/if}}{{/each}}",
+// Add message payload here
+};
+
+ws.send(JSON.stringify(message));
+```
+
+---
+
+## Disclaimer: Deepdown
+
+_This file was generated using the experimental [**Deepdown**](https://github.com/deepgram/deepdown). Do not edit this
+file directly — update the template instead._

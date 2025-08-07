@@ -5,7 +5,7 @@ groupBy: method
 ---
 # {{uppercase methodName}} {{pathName}}
 
-{{description}}
+{{{description}}}
 
 ## Table of Contents
 
@@ -23,11 +23,11 @@ groupBy: method
 
 ## Overview
 
-{{summary}}
+{{{summary}}}
 
 ## API Information
 
-- **API**: {{spec.info.title}} (v{{spec.info.version}})
+- **API**: {{{spec.info.title}}} (v{{spec.info.version}})
 - **Operation ID**: `{{operationId}}`
 - **Endpoint**: `{{uppercase methodName}} {{pathName}}`
 
@@ -43,7 +43,7 @@ Authentication is required for this endpoint:
 
 **Type**: {{scheme.type}}{{#if scheme.scheme}} ({{scheme.scheme}}){{/if}}
 {{#if scheme.name}}
-**Parameter Name**: `{{scheme.name}}`
+**Parameter Name**: `{{{scheme.name}}}`
 {{/if}}
 {{#if scheme.in}}
 **Location**: {{scheme.in}}
@@ -53,13 +53,13 @@ Authentication is required for this endpoint:
 {{/if}}
 {{#if scheme.description}}
 
-**Description**: {{scheme.description}}
+**Description**: {{{scheme.description}}}
 {{/if}}
 
 **Example Header**:
 {{#if (eq scheme.type "apiKey")}}
 ```
-{{scheme.name}}: token DEEPGRAM_API_KEY
+{{{scheme.name}}}: token DEEPGRAM_API_KEY
 ```
 {{/if}}
 {{#if (eq scheme.type "http")}}
@@ -85,7 +85,7 @@ No authentication is required for this endpoint.
 |------|------------|:--------:|------|-------------|
 {{#each parameters}}
 | `{{name}}` | {{in}} | {{#if required}}Yes{{else}}No{{/if}} | {{#if schema.type}}{{schema.type}}{{#if schema.format}}
-({{schema.format}}){{/if}}{{else}}object{{/if}} | {{description}} |
+({{schema.format}}){{/if}}{{else}}object{{/if}} | {{{description}}} |
 {{/each}}
 {{/if}}
 
@@ -93,7 +93,7 @@ No authentication is required for this endpoint.
 
 ## Request Body
 
-{{requestBody.description}}
+{{{requestBody.description}}}
 
 {{#if requestBody.content}}
 {{#each requestBody.content}}
@@ -104,7 +104,7 @@ No authentication is required for this endpoint.
 ```json
 {
 {{#each schema.properties}}
-  "{{@key}}": {{#if example}}"{{example}}"{{else}}"{{description}}"{{/if}}{{#unless @last}},{{/unless}}
+  "{{@key}}": {{#if example}}"{{example}}"{{else}}"{{{description}}}"{{/if}}{{#unless @last}},{{/unless}}
 {{/each}}
 }
 ```
@@ -136,7 +136,7 @@ Binary data.
 {{#each responses}}
 ### Status Code: `{{{@key}}}`
 
-{{description}}
+{{{description}}}
 
 {{#if content}}
 {{#each content}}
