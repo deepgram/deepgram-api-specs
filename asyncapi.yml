@@ -524,8 +524,8 @@ channels:
           - 'true'
       keyterm:
         description: >-
-          Key term prompting can boost or suppress specialized terminology and
-          brands. Only compatible with Nova-3
+          Key term prompting can boost specialized terminology and brands. Only
+          compatible with Nova-3
         location: $message.payload#/keyterm
         examples:
           - Snuffleupagus

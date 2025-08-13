@@ -1473,7 +1473,7 @@ components:
       name: keyterm
       in: query
       required: false
-      description: Key term prompting can boost or suppress specialized terminology and brands. Only compatible with Nova-3
+      description: Keyterm prompting can boost specialized terminology and brands. Only compatible with Nova-3
       style: form
       explode: true
       schema:
