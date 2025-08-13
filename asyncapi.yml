@@ -1410,6 +1410,20 @@ channels:
                               description: Google temperature (0-2)
                               minimum: 0
                               maximum: 2
+                        - properties:
+                            type:
+                              enum:
+                                - groq
+                            model:
+                              type: string
+                              description: Groq model to use
+                              enum:
+                                - openai/gpt-oss-20b
+                            temperature:
+                              type: number
+                              description: Groq temperature (0-2)
+                              minimum: 0
+                              maximum: 2
                     endpoint:
                       type: object
                       description: >
