@@ -17,8 +17,6 @@ info:
 servers:
   - url: https://api.deepgram.com
     description: Deepgram Production API
-security:
-  - ApiKeyAuth: []
 tags:
   - name: Speech to Text
     description: Power your apps with world-class speech recognition
