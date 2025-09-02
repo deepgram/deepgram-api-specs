@@ -1382,6 +1382,47 @@ channels:
                         - properties:
                             type:
                               enum:
+                                - aws_bedrock
+                            model:
+                              type: string
+                              description: AWS Bedrock model to use
+                              enum:
+                                - anthropic/claude-3-5-sonnet-20240620-v1:0
+                                - anthropic/claude-3-5-haiku-20240307-v1:0
+                            temperature:
+                              type: number
+                              description: AWS Bedrock temperature (0-2)
+                              minimum: 0
+                              maximum: 2
+                            credentials:
+                              type: object
+                              description: >-
+                                AWS credentials type (STS short-lived or IAM
+                                long-lived)
+                              properties:
+                                type:
+                                  type: string
+                                  description: >-
+                                    AWS credentials type (STS short-lived or IAM
+                                    long-lived)
+                                  enum:
+                                    - sts
+                                    - iam
+                                region:
+                                  type: string
+                                  description: AWS region
+                                access_key_id:
+                                  type: string
+                                  description: AWS access key
+                                secret_access_key:
+                                  type: string
+                                  description: AWS secret access key
+                                session_token:
+                                  type: string
+                                  description: AWS session token (required for STS only)
+                        - properties:
+                            type:
+                              enum:
                                 - anthropic
                             model:
                               type: string
