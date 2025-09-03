@@ -1123,7 +1123,7 @@ paths:
         - $ref: '#/components/parameters/project_id'
         - $ref: '#/components/parameters/start_date'
         - $ref: '#/components/parameters/end_date'
-        - $ref: '#/components/parameters/grouping'
+        - $ref: '#/components/parameters/usage_grouping'
         - $ref: '#/components/parameters/filter_accessor'
         - $ref: '#/components/parameters/filter_alternatives'
         - $ref: '#/components/parameters/filter_callback_method'
@@ -1169,6 +1169,34 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/usage_breakdown'
+        '400':
+          $ref: '#/components/responses/projects_bad_request'
+        '401':
+          $ref: '#/components/responses/project_unauthorized'
+        '404':
+          $ref: '#/components/responses/project_not_found'
+  /v1/projects/{project_id}/billing/breakdown:
+    description: View billing summary for a given time period
+    get:
+      summary: Get Project Billing Breakdown
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: getProjectBillingBreakdown
+      description: Retrieves the billing summary for a specific project, with various filter options or by grouping options.
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/start_date'
+        - $ref: '#/components/parameters/end_date'
+        - $ref: '#/components/parameters/filter_accessor'
+        - $ref: '#/components/parameters/filter_deployment'
+        - $ref: '#/components/parameters/filter_tag'
+        - $ref: '#/components/parameters/filter_line_item'
+        - $ref: '#/components/parameters/billing_grouping'
+      responses:
+        '200':
+          $ref: '#/components/responses/billing_breakdown'
         '400':
           $ref: '#/components/responses/projects_bad_request'
         '401':
@@ -2497,7 +2525,7 @@ components:
       schema:
         type: boolean
       example: true
-    grouping:
+    usage_grouping:
       name: grouping
       in: query
       required: false
@@ -2510,6 +2538,25 @@ components:
           - feature_set
           - models
           - method
+          - tags
+          - deployment
+    filter_line_item:
+      name: line_item
+      in: query
+      description: Filter for requests where a specific line item was used
+      schema:
+        type: string
+      example: streaming::diarize
+    billing_grouping:
+      name: grouping
+      in: query
+      required: false
+      description: Billing data is always grouped by date. Optional additional dimensions to group the billing data by. Add more than one if needed.
+      schema:
+        type: string
+        enum:
+          - accessor
+          - line_item
           - tags
           - deployment
     distribution_scopes:
@@ -4028,15 +4075,101 @@ components:
                           description: Optional method identifier
                           example: async
                         tags:
-                          type: string
+                          type: array
                           nullable: true
-                          description: Optional tags
-                          example: tag1
+                          description: Optional list of tags
+                          example:
+                            - tag1
+                            - tag2
                         deployment:
                           type: string
                           nullable: true
                           description: Optional deployment identifier
                           example: self-hosted
+    billing_breakdown:
+      description: Billing breakdown response
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - start
+              - end
+              - resolution
+              - results
+            properties:
+              start:
+                type: string
+                format: date
+                description: Start date of the billing summmary period
+                example: '2025-01-16'
+              end:
+                type: string
+                format: date
+                description: End date of the billing summary period
+                example: '2025-01-23'
+              resolution:
+                type: object
+                required:
+                  - units
+                  - amount
+                properties:
+                  units:
+                    type: string
+                    description: Time unit for the resolution
+                    example: day
+                  amount:
+                    type: integer
+                    description: Amount of units
+                    example: 1
+              results:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - dollars
+                    - grouping
+                  properties:
+                    dollars:
+                      type: number
+                      format: float
+                      description: USD cost of the billing for this grouping
+                      example: 0.25
+                    grouping:
+                      type: object
+                      properties:
+                        start:
+                          type: string
+                          format: date
+                          description: Start date for this group
+                          example: '2025-01-16'
+                        end:
+                          type: string
+                          format: date
+                          description: End date for this group
+                          example: '2025-01-16'
+                        accessor:
+                          type: string
+                          nullable: true
+                          description: Optional accessor identifier, null unless grouped by accessor.
+                          example: '123456789012345678901234'
+                        deployment:
+                          type: string
+                          nullable: true
+                          description: Optional deployment identifier, null unless grouped by deployment.
+                          example: hosted
+                        line_item:
+                          type: string
+                          nullable: true
+                          description: Optional line item identifier, null unless grouped by line item.
+                          example: streaming::nova-3
+                        tags:
+                          type: array
+                          nullable: true
+                          description: Optional list of tags, null unless grouped by tags.
+                          example:
+                            - tag1
+                            - tag2
     purchases:
       description: Successful response with orders list
       content:
