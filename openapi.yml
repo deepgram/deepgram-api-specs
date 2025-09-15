@@ -1203,6 +1203,29 @@ paths:
           $ref: '#/components/responses/project_unauthorized'
         '404':
           $ref: '#/components/responses/project_not_found'
+  /v1/projects/{project_id}/billing/fields:
+    description: View billing fields for a given time period
+    get:
+      summary: List Project Billing Fields
+      tags:
+        - Management API
+      security:
+        - ApiKeyAuth: []
+      operationId: listProjectBillingFields
+      description: Lists the accessors, deployment types, tags, and line items used for billing data in the specified time period. Use this endpoint if you want to filter your results from the Billing Breakdown endpoint and want to know what filters are available.
+      parameters:
+        - $ref: '#/components/parameters/project_id'
+        - $ref: '#/components/parameters/start_date'
+        - $ref: '#/components/parameters/end_date'
+      responses:
+        '200':
+          $ref: '#/components/responses/billing_fields'
+        '400':
+          $ref: '#/components/responses/projects_bad_request'
+        '401':
+          $ref: '#/components/responses/project_unauthorized'
+        '404':
+          $ref: '#/components/responses/project_not_found'
   /v1/projects/{project_id}/purchases:
     description: Manage your project purchases
     get:
@@ -3914,8 +3937,8 @@ components:
                 items:
                   type: string
                 example:
-                  - tag=dev
-                  - tag=production
+                  - dev
+                  - production
               models:
                 type: array
                 description: List of models available for the project.
@@ -4170,6 +4193,51 @@ components:
                           example:
                             - tag1
                             - tag2
+    billing_fields:
+      description: A list of billing fields for a specific project
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              accessors:
+                type: array
+                description: List of accessor UUIDs for the time period
+                items:
+                  type: string
+                  format: uuid
+                example:
+                  - 12345678-1234-1234-1234-123456789012
+                  - 87654321-4321-4321-4321-210987654321
+              deployments:
+                type: array
+                description: List of deployment types for the time period
+                items:
+                  type: string
+                  enum:
+                    - hosted
+                    - beta
+                    - self-hosted
+                    - dedicated
+                example:
+                  - hosted
+                  - self-hosted
+              tags:
+                type: array
+                description: List of tags for the time period
+                items:
+                  type: string
+                example:
+                  - dev
+                  - production
+              line_items:
+                type: object
+                description: Map of line item names to human-readable descriptions for the time period
+                additionalProperties:
+                  type: string
+                example:
+                  streaming::nova-3: Nova - 3 (Stream)
+                  sync::aura-2: Aura -2 (Sync)
     purchases:
       description: Successful response with orders list
       content:
