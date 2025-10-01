@@ -66,6 +66,25 @@ servers:
         x-fern-token:
           name: authToken
           env: DEEPGRAM_TOKEN
+  preview:
+    host: api.preview.deepgram.com
+    protocol: wss
+    x-fern-server-name: Preview
+    security:
+      - type: httpApiKey
+        in: header
+        name: Authorization
+        x-fern-header:
+          prefix: Token
+          env: DEEPGRAM_API_KEY
+      - type: http
+        scheme: bearer
+        description: >-
+          Use a temporary JWT token for authentication. Generate a temporary
+          token using your API key and pass it as a Bearer token.
+        x-fern-token:
+          name: authToken
+          env: DEEPGRAM_TOKEN
 channels:
   SpeakV1:
     x-fern-sdk-group-name: speak
@@ -527,6 +546,101 @@ channels:
               default: latest
               examples:
                 - MODEL_VERSION
+  ListenV2:
+    x-fern-sdk-group-name:
+      - listen
+      - v2
+    address: /v2/listen
+    description: |
+      Real-time conversational speech recognition with contextual turn detection
+      for natural voice conversations
+    servers:
+      - $ref: '#/servers/preview'
+    bindings:
+      ws:
+        query:
+          type: object
+          properties:
+            model:
+              description: Defines the AI model used to process submitted audio.
+              enum:
+                - flux-general-en
+              examples:
+                - flux-general-en
+            encoding:
+              description: >-
+                Encoding of the audio stream. Currently only supports raw signed
+                little-endian 16-bit PCM.
+              enum:
+                - linear16
+              default: linear16
+              examples:
+                - linear16
+            sample_rate:
+              description: Sample rate of the audio stream in Hz.
+              examples:
+                - '16000'
+            eager_eot_threshold:
+              description: >
+                End-of-turn confidence required to fire an eager end-of-turn
+                event.
+
+                When set, enables `EagerEndOfTurn` and `TurnResumed` events.
+                Valid
+
+                Values 0.3 - 0.9.
+              examples:
+                - '0.4'
+                - '0.5'
+                - '0.6'
+            eot_threshold:
+              description: >
+                End-of-turn confidence required to finish a turn. Valid Values
+                0.5 -
+
+                0.9.
+              default: '0.7'
+              examples:
+                - '0.5'
+                - '0.7'
+                - '0.8'
+                - '0.9'
+            eot_timeout_ms:
+              description: >
+                A turn will be finished when this much time has passed after
+                speech,
+
+                regardless of EOT confidence.
+              default: '5000'
+            keyterm:
+              description: >
+                Keyterm prompting can improve recognition of specialized
+                terminology.
+
+                Pass multiple keyterm query parameters to boost multiple
+                keyterms.
+              examples:
+                - Snuffleupagus
+            mip_opt_out:
+              description: >
+                Opts out requests from the Deepgram Model Improvement Program.
+                Refer
+
+                to our Docs for pricing impacts before setting this to true.
+
+                https://dpgr.am/deepgram-mip
+              examples:
+                - 'true'
+            tag:
+              description: >
+                Label your requests for the purpose of identification during
+                usage
+
+                reporting
+              examples:
+                - production
+                - staging
+                - client-xyz
   AgentV1:
     x-fern-sdk-group-name: agent
     address: /v1/agent/converse
@@ -929,6 +1043,121 @@ operations:
               env: DEEPGRAM_TOKEN
     messages:
       - $ref: '#/components/messages/ListenV1SpeechStartedEvent'
+  ListenV2Media:
+    description: Send audio or video data to be transcribed
+    action: send
+    channel:
+      $ref: '#/channels/ListenV2'
+    traits:
+      - security:
+          - type: httpApiKey
+            in: header
+            name: Authorization
+            x-fern-header:
+              prefix: Token
+              env: DEEPGRAM_API_KEY
+          - type: http
+            scheme: bearer
+            description: >-
+              Use a temporary JWT token for authentication. Generate a temporary
+              token using your API key and pass it as a Bearer token.
+            x-fern-token:
+              name: authToken
+              env: DEEPGRAM_TOKEN
+    messages:
+      - $ref: '#/components/messages/ListenV2MediaMessage'
+  ListenV2CloseStream:
+    description: Send a CloseStream message to close the WebSocket stream
+    action: send
+    channel:
+      $ref: '#/channels/ListenV2'
+    traits:
+      - security:
+          - type: httpApiKey
+            in: header
+            name: Authorization
+            x-fern-header:
+              prefix: Token
+              env: DEEPGRAM_API_KEY
+          - type: http
+            scheme: bearer
+            description: >-
+              Use a temporary JWT token for authentication. Generate a temporary
+              token using your API key and pass it as a Bearer token.
+            x-fern-token:
+              name: authToken
+              env: DEEPGRAM_TOKEN
+    messages:
+      - $ref: '#/components/messages/ListenV2ControlMessage'
+  ListenV2Connected:
+    description: Receive a connected message
+    action: receive
+    channel:
+      $ref: '#/channels/ListenV2'
+    traits:
+      - security:
+          - type: httpApiKey
+            in: header
+            name: Authorization
+            x-fern-header:
+              prefix: Token
+              env: DEEPGRAM_API_KEY
+          - type: http
+            scheme: bearer
+            description: >-
+              Use a temporary JWT token for authentication. Generate a temporary
+              token using your API key and pass it as a Bearer token.
+            x-fern-token:
+              name: authToken
+              env: DEEPGRAM_TOKEN
+    messages:
+      - $ref: '#/components/messages/ListenV2ConnectedEvent'
+  ListenV2TurnInfo:
+    description: Receive a turn info message
+    action: receive
+    channel:
+      $ref: '#/channels/ListenV2'
+    traits:
+      - security:
+          - type: httpApiKey
+            in: header
+            name: Authorization
+            x-fern-header:
+              prefix: Token
+              env: DEEPGRAM_API_KEY
+          - type: http
+            scheme: bearer
+            description: >-
+              Use a temporary JWT token for authentication. Generate a temporary
+              token using your API key and pass it as a Bearer token.
+            x-fern-token:
+              name: authToken
+              env: DEEPGRAM_TOKEN
+    messages:
+      - $ref: '#/components/messages/ListenV2TurnInfoEvent'
+  ListenV2FatalError:
+    description: Receive a fatal error message
+    action: receive
+    channel:
+      $ref: '#/channels/ListenV2'
+    traits:
+      - security:
+          - type: httpApiKey
+            in: header
+            name: Authorization
+            x-fern-header:
+              prefix: Token
+              env: DEEPGRAM_API_KEY
+          - type: http
+            scheme: bearer
+            description: >-
+              Use a temporary JWT token for authentication. Generate a temporary
+              token using your API key and pass it as a Bearer token.
+            x-fern-token:
+              name: authToken
+              env: DEEPGRAM_TOKEN
+    messages:
+      - $ref: '#/components/messages/ListenV2FatalErrorEvent'
   AgentV1Settings:
     description: Send settings configuration to Deepgram's Voice Agent API
     action: send
@@ -1482,6 +1711,22 @@ components:
           x-fern-token:
             name: authToken
             env: DEEPGRAM_TOKEN
+    V2AuthTrait:
+      security:
+        - type: httpApiKey
+          in: header
+          name: Authorization
+          x-fern-header:
+            prefix: Token
+            env: DEEPGRAM_API_KEY
+        - type: http
+          scheme: bearer
+          description: >-
+            Use a temporary JWT token for authentication. Generate a temporary
+            token using your API key and pass it as a Bearer token.
+          x-fern-token:
+            name: authToken
+            env: DEEPGRAM_TOKEN
   securitySchemes:
     ApiKeyAuth:
       type: httpApiKey
@@ -1932,6 +2177,70 @@ components:
       default: latest
       examples:
         - MODEL_VERSION
+    ListenV2Model:
+      description: Defines the AI model used to process submitted audio.
+      enum:
+        - flux-general-en
+      examples:
+        - flux-general-en
+    ListenV2Encoding:
+      description: >-
+        Encoding of the audio stream. Currently only supports raw signed
+        little-endian 16-bit PCM.
+      enum:
+        - linear16
+      default: linear16
+      examples:
+        - linear16
+    ListenV2SampleRate:
+      description: Sample rate of the audio stream in Hz.
+      examples:
+        - '16000'
+    ListenV2EagerEotThreshold:
+      description: |
+        End-of-turn confidence required to fire an eager end-of-turn event.
+        When set, enables `EagerEndOfTurn` and `TurnResumed` events. Valid
+        Values 0.3 - 0.9.
+      examples:
+        - '0.4'
+        - '0.5'
+        - '0.6'
+    ListenV2EotThreshold:
+      description: |
+        End-of-turn confidence required to finish a turn. Valid Values 0.5 -
+        0.9.
+      default: '0.7'
+      examples:
+        - '0.5'
+        - '0.7'
+        - '0.8'
+        - '0.9'
+    ListenV2EotTimeoutMs:
+      description: |
+        A turn will be finished when this much time has passed after speech,
+        regardless of EOT confidence.
+      default: '5000'
+    ListenV2Keyterm:
+      description: |
+        Keyterm prompting can improve recognition of specialized terminology.
+        Pass multiple keyterm query parameters to boost multiple keyterms.
+      examples:
+        - Snuffleupagus
+    ListenV2MipOptOut:
+      description: |
+        Opts out requests from the Deepgram Model Improvement Program. Refer
+        to our Docs for pricing impacts before setting this to true.
+        https://dpgr.am/deepgram-mip
+      examples:
+        - 'true'
+    ListenV2Tag:
+      description: |
+        Label your requests for the purpose of identification during usage
+        reporting
+      examples:
+        - production
+        - staging
+        - client-xyz
   messages:
     SpeakV1TextMessage:
       name: SpeakV1TextMessage
@@ -2276,6 +2585,236 @@ components:
           - type
           - channel
           - timestamp
+    ListenV2MediaMessage:
+      name: ListenV2MediaMessage
+      description: Audio data is transmitted as raw binary WebSocket messages
+      contentType: application/octet-stream
+      payload:
+        type: string
+        format: binary
+    ListenV2ControlMessage:
+      name: ListenV2ControlMessage
+      description: Control messages for managing the Speech to Text WebSocket connection
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            enum:
+              - Finalize
+              - CloseStream
+              - KeepAlive
+            description: Message type identifier
+        required:
+          - type
+    ListenV2ConnectedEvent:
+      name: ListenV2ConnectedEvent
+      description: >-
+        This message is sent at the start of each connection, indicating the
+        connection is active.
+      payload:
+        type: object
+        required:
+          - type
+          - request_id
+          - sequence_id
+        properties:
+          type:
+            type: string
+            enum:
+              - Connected
+            description: Message type identifier
+          request_id:
+            type: string
+            format: uuid
+            description: The unique identifier of the request
+          sequence_id:
+            type: integer
+            minimum: 0
+            description: |
+              Starts at `0` and increments for each message the server sends
+              to the client.  This includes messages of other types, like
+              `TurnInfo` messages.
+    ListenV2TurnInfoEvent:
+      contentType: application/json
+      payload:
+        type: object
+        description: Describes the current turn and latest state of the turn
+        required:
+          - type
+          - request_id
+          - sequence_id
+          - event
+          - turn_index
+          - audio_window_start
+          - audio_window_end
+          - transcript
+          - words
+          - end_of_turn_confidence
+        properties:
+          type:
+            type: string
+            const: TurnInfo
+          request_id:
+            type: string
+            format: uuid
+            description: The unique identifier of the request
+          sequence_id:
+            type: integer
+            minimum: 0
+            description: >
+              Starts at `0` and increments for each message the server sends to
+              the client.  This includes messages of other types, like
+              `Connected` messages.
+          event:
+            type: string
+            enum:
+              - Update
+              - StartOfTurn
+              - EagerEndOfTurn
+              - TurnResumed
+              - EndOfTurn
+            description: >
+              The type of event being reported.
+
+
+              - **Update** - Additional audio has been transcribed, but the turn
+              state hasn't changed
+
+              - **StartOfTurn** - The user has begun speaking for the first time
+              in the turn
+
+              - **EagerEndOfTurn** - The system has moderate confidence that the
+              user has finished speaking for the turn. This is an opportunity to
+              begin preparing an agent reply
+
+              - **TurnResumed** - The system detected that speech had ended and
+              therefore sent an **EagerEndOfTurn** event, but speech is actually
+              continuing for this turn
+
+              - **EndOfTurn** - The user has finished speaking for the turn
+          turn_index:
+            type: integer
+            minimum: 0
+            description: The index of the current turn
+          audio_window_start:
+            type: number
+            format: float
+            minimum: 0
+            description: Start time in seconds of the audio range that was transcribed
+          audio_window_end:
+            type: number
+            format: float
+            minimum: 0
+            description: End time in seconds of the audio range that was transcribed
+          transcript:
+            type: string
+            description: Text that was said over the course of the current turn
+          words:
+            type: array
+            description: The words in the `transcript`
+            items:
+              type: object
+              required:
+                - word
+                - confidence
+              properties:
+                word:
+                  type: string
+                  description: >-
+                    The individual punctuated, properly-cased word from the
+                    transcript
+                confidence:
+                  type: number
+                  format: float
+                  minimum: 0
+                  maximum: 1
+                  description: Confidence that this word was transcribed correctly
+          end_of_turn_confidence:
+            type: number
+            format: float
+            minimum: 0
+            maximum: 1
+            description: Confidence that no more speech is coming in this turn
+      examples:
+        - payload:
+            type: TurnInfo
+            request_id: ad12514a-0d38-4f7e-8fba-cce10d8f174c
+            sequence_id: 1
+            event: StartOfTurn
+            turn_index: 0
+            audio_window_start: 0
+            audio_window_end: 0.1
+            transcript: Hello
+            words:
+              - word: Hello
+                confidence: 0.8
+            end_of_turn_confidence: 0.12
+        - payload:
+            type: TurnInfo
+            request_id: ad12514a-0d38-4f7e-8fba-cce10d8f174c
+            sequence_id: 8
+            event: Update
+            turn_index: 0
+            audio_window_start: 0
+            audio_window_end: 0.6
+            transcript: Hello, how are
+            words:
+              - word: Hello,
+                confidence: 0.96
+              - word: how
+                confidence: 0.94
+              - word: are
+                confidence: 0.97
+            end_of_turn_confidence: 0.05
+        - payload:
+            type: TurnInfo
+            request_id: ad12514a-0d38-4f7e-8fba-cce10d8f174c
+            sequence_id: 11
+            event: EndOfTurn
+            turn_index: 0
+            audio_window_start: 0
+            audio_window_end: 1.3
+            transcript: Hello, how are you?
+            words:
+              - word: Hello,
+                confidence: 0.96
+              - word: how
+                confidence: 0.94
+              - word: are
+                confidence: 0.97
+              - word: you?
+                confidence: 0.92
+            end_of_turn_confidence: 0.86
+    ListenV2FatalErrorEvent:
+      name: ListenV2FatalErrorEvent
+      description: Receive an error message from the server when a fatal error occurs
+      payload:
+        type: object
+        required:
+          - type
+          - sequence_id
+          - description
+          - code
+        properties:
+          type:
+            type: string
+            enum:
+              - Error
+            description: Message type identifier
+          sequence_id:
+            type: integer
+            minimum: 0
+            description: |
+              Starts at `0` and increments for each message the server sends
+              to the client.  This includes messages of other types, like
+              `Connected` messages.
+          code:
+            type: string
+            description: A string code describing the error, e.g. `INTERNAL_SERVER_ERROR`
+          description:
+            type: string
+            description: Prose description of the error
     AgentV1SettingsMessage:
       name: AgentV1SettingsMessage
       description: Configure the voice agent and sets the input and output audio formats
