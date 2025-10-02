@@ -66,25 +66,6 @@ servers:
         x-fern-token:
           name: authToken
           env: DEEPGRAM_TOKEN
-  preview:
-    host: api.preview.deepgram.com
-    protocol: wss
-    x-fern-server-name: Preview
-    security:
-      - type: httpApiKey
-        in: header
-        name: Authorization
-        x-fern-header:
-          prefix: Token
-          env: DEEPGRAM_API_KEY
-      - type: http
-        scheme: bearer
-        description: >-
-          Use a temporary JWT token for authentication. Generate a temporary
-          token using your API key and pass it as a Bearer token.
-        x-fern-token:
-          name: authToken
-          env: DEEPGRAM_TOKEN
 channels:
   SpeakV1:
     x-fern-sdk-group-name: speak
@@ -555,7 +536,7 @@ channels:
       Real-time conversational speech recognition with contextual turn detection
       for natural voice conversations
     servers:
-      - $ref: '#/servers/preview'
+      - $ref: '#/servers/production'
     bindings:
       ws:
         query:
