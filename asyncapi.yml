@@ -594,6 +594,11 @@ channels:
                 regardless of EOT confidence.
               default: '5000'
             keyterm:
+              oneOf:
+                - type: string
+                - type: array
+                  items:
+                    type: string
               description: >
                 Keyterm prompting can improve recognition of specialized
                 terminology.
@@ -602,6 +607,9 @@ channels:
                 keyterms.
               examples:
                 - Snuffleupagus
+                - - Snuffleupagus
+                  - BigBird
+                  - OscarTheGrouch
             mip_opt_out:
               description: >
                 Opts out requests from the Deepgram Model Improvement Program.
@@ -2202,11 +2210,19 @@ components:
         regardless of EOT confidence.
       default: '5000'
     ListenV2Keyterm:
+      oneOf:
+        - type: string
+        - type: array
+          items:
+            type: string
       description: |
         Keyterm prompting can improve recognition of specialized terminology.
         Pass multiple keyterm query parameters to boost multiple keyterms.
       examples:
         - Snuffleupagus
+        - - Snuffleupagus
+          - BigBird
+          - OscarTheGrouch
     ListenV2MipOptOut:
       description: |
         Opts out requests from the Deepgram Model Improvement Program. Refer
