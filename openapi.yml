@@ -50,6 +50,7 @@ paths:
       tags:
         - Listen
         - V1
+        - Media
       x-fern-sdk-group-name:
         - listen
         - v1
@@ -148,6 +149,7 @@ paths:
       tags:
         - Read
         - V1
+        - Text
       x-fern-sdk-group-name:
         - read
         - v1
@@ -348,9 +350,11 @@ paths:
       summary: Update a Project
       tags:
         - Manage
+        - V1
         - Projects
       x-fern-sdk-group-name:
         - manage
+        - v1
         - projects
       x-fern-sdk-method-name: update
       security:
@@ -380,9 +384,11 @@ paths:
       summary: Delete a Project
       tags:
         - Manage
+        - V1
         - Projects
       x-fern-sdk-group-name:
         - manage
+        - v1
         - projects
       x-fern-sdk-method-name: delete
       security:
@@ -607,10 +613,12 @@ paths:
       summary: Create a Project Key
       tags:
         - Manage
+        - V1
         - Projects
         - Keys
       x-fern-sdk-group-name:
         - manage
+        - v1
         - projects
         - keys
       x-fern-sdk-method-name: create
@@ -682,10 +690,12 @@ paths:
       summary: Delete a Project Key
       tags:
         - Manage
+        - V1
         - Projects
         - Keys
       x-fern-sdk-group-name:
         - manage
+        - v1
         - projects
         - keys
       x-fern-sdk-method-name: delete
@@ -831,11 +841,13 @@ paths:
       summary: Update Project Member Scopes
       tags:
         - Manage
+        - V1
         - Projects
         - Members
         - Scopes
       x-fern-sdk-group-name:
         - manage
+        - v1
         - projects
         - members
         - scopes
@@ -1595,6 +1607,7 @@ paths:
       tags:
         - Auth
         - V1
+        - Tokens
       x-fern-sdk-group-name:
         - auth
         - v1
