@@ -193,6 +193,163 @@ channels:
                   name: FortyEightThousand
               examples:
                 - '24000'
+    messages:
+      SpeakV1Text:
+        name: SpeakV1TextMessage
+        description: Request to convert text to speech
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Speak
+              description: Message type identifier
+              example: Speak
+            text:
+              type: string
+              description: The input text to be converted to speech
+              example: Hello, world!
+          required:
+            - type
+            - text
+      SpeakV1Flush:
+        name: SpeakV1ControlMessage
+        description: Control messages for managing the Text to Speech WebSocket connection
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Flush
+                - Clear
+                - Close
+              description: Message type identifier
+          required:
+            - type
+      SpeakV1Clear:
+        name: SpeakV1ControlMessage
+        description: Control messages for managing the Text to Speech WebSocket connection
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Flush
+                - Clear
+                - Close
+              description: Message type identifier
+          required:
+            - type
+      SpeakV1Close:
+        name: SpeakV1ControlMessage
+        description: Control messages for managing the Text to Speech WebSocket connection
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Flush
+                - Clear
+                - Close
+              description: Message type identifier
+          required:
+            - type
+      SpeakV1Audio:
+        name: SpeakV1AudioChunkEvent
+        description: Audio data in the format specified by the request parameters
+        contentType: application/octet-stream
+        payload:
+          type: string
+          format: binary
+      SpeakV1Metadata:
+        name: SpeakV1MetadataEvent
+        description: Metadata sent after the WebSocket handshake
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Metadata
+              description: Message type identifier
+            request_id:
+              type: string
+              format: uuid
+              description: Unique identifier for the request
+            model_name:
+              type: string
+              description: Name of the model being used
+            model_version:
+              type: string
+              description: Version of the model being used
+            model_uuid:
+              type: string
+              format: uuid
+              description: Unique identifier for the model
+          required:
+            - type
+            - request_id
+            - model_name
+            - model_version
+            - model_uuid
+      SpeakV1Flushed:
+        name: SpeakV1ControlEvent
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Flushed
+                - Cleared
+              description: Message type identifier
+            sequence_id:
+              type: integer
+              description: The sequence ID of the response
+          required:
+            - type
+            - sequence_id
+      SpeakV1Cleared:
+        name: SpeakV1ControlEvent
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Flushed
+                - Cleared
+              description: Message type identifier
+            sequence_id:
+              type: integer
+              description: The sequence ID of the response
+          required:
+            - type
+            - sequence_id
+      SpeakV1Warning:
+        name: SpeakV1WarningEvent
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Warning
+              description: Message type identifier
+            description:
+              type: string
+              description: A description of what went wrong
+            code:
+              type: string
+              description: Error code identifying the type of error
+          required:
+            - type
+            - description
+            - code
   ListenV1:
     x-fern-sdk-group-name: listen
     address: /v1/listen
@@ -527,6 +684,273 @@ channels:
               default: latest
               examples:
                 - MODEL_VERSION
+    messages:
+      ListenV1Media:
+        name: ListenV1MediaMessage
+        description: Audio data is transmitted as raw binary WebSocket messages
+        contentType: application/octet-stream
+        payload:
+          type: string
+          format: binary
+      ListenV1Finalize:
+        name: ListenV1ControlMessage
+        description: Control messages for managing the Speech to Text WebSocket connection
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Finalize
+                - CloseStream
+                - KeepAlive
+              description: Message type identifier
+          required:
+            - type
+      ListenV1CloseStream:
+        name: ListenV1ControlMessage
+        description: Control messages for managing the Speech to Text WebSocket connection
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Finalize
+                - CloseStream
+                - KeepAlive
+              description: Message type identifier
+          required:
+            - type
+      ListenV1KeepAlive:
+        name: ListenV1ControlMessage
+        description: Control messages for managing the Speech to Text WebSocket connection
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Finalize
+                - CloseStream
+                - KeepAlive
+              description: Message type identifier
+          required:
+            - type
+      ListenV1Results:
+        name: ListenV1ResultsEvent
+        description: Deepgram has responded with a transcription
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Results
+              description: Message type identifier
+            channel_index:
+              type: array
+              items:
+                type: integer
+              description: The index of the channel
+            duration:
+              type: number
+              description: The duration of the transcription
+            start:
+              type: number
+              description: The start time of the transcription
+            is_final:
+              type: boolean
+              description: Whether the transcription is final
+            speech_final:
+              type: boolean
+              description: Whether the transcription is speech final
+            channel:
+              type: object
+              properties:
+                alternatives:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      transcript:
+                        type: string
+                        description: The transcript of the transcription
+                      confidence:
+                        type: number
+                        description: The confidence of the transcription
+                      languages:
+                        type: array
+                        items:
+                          type: string
+                          description: The languages of the transcription
+                      words:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            word:
+                              type: string
+                              description: The word of the transcription
+                            start:
+                              type: number
+                              description: The start time of the word
+                            end:
+                              type: number
+                              description: The end time of the word
+                            confidence:
+                              type: number
+                              description: The confidence of the word
+                            language:
+                              type: string
+                              description: The language of the word
+                            punctuated_word:
+                              type: string
+                              description: The punctuated word of the word
+                            speaker:
+                              type: integer
+                              description: The speaker of the word
+                          required:
+                            - word
+                            - start
+                            - end
+                            - confidence
+                            - language
+                            - punctuated_word
+                    required:
+                      - transcript
+                      - confidence
+                      - languages
+                      - words
+              required:
+                - alternatives
+            metadata:
+              type: object
+              properties:
+                request_id:
+                  type: string
+                  description: The request ID
+                model_info:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: The name of the model
+                    version:
+                      type: string
+                      description: The version of the model
+                    arch:
+                      type: string
+                      description: The arch of the model
+                  required:
+                    - name
+                    - version
+                    - arch
+                model_uuid:
+                  type: string
+                  description: The model UUID
+              required:
+                - request_id
+                - model_info
+                - model_uuid
+            from_finalize:
+              type: boolean
+              description: Whether the transcription is from a finalize message
+          required:
+            - type
+            - channel_index
+            - duration
+            - start
+            - channel
+            - metadata
+      ListenV1Metadata:
+        name: ListenV1MetadataEvent
+        description: >-
+          Metadata event - these are usually information describing the
+          connection
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Metadata
+              description: Message type identifier
+            transaction_key:
+              type: string
+              description: The transaction key
+              deprecated: true
+            request_id:
+              type: string
+              description: The request ID
+              format: uuid
+            sha256:
+              type: string
+              description: The sha256
+            created:
+              type: string
+              description: The created
+            duration:
+              type: number
+              description: The duration
+            channels:
+              type: number
+              description: The channels
+          required:
+            - type
+            - transaction_key
+            - request_id
+            - sha256
+            - created
+            - duration
+            - channels
+      ListenV1UtteranceEnd:
+        name: ListenV1UtteranceEndEvent
+        description: An utterance has ended
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - UtteranceEnd
+              description: Message type identifier
+            channel:
+              type: array
+              items:
+                type: integer
+              description: The channel
+            last_word_end:
+              type: number
+              description: The last word end
+          required:
+            - type
+            - channel
+            - last_word_end
+      ListenV1SpeechStarted:
+        name: ListenV1SpeechStartedEvent
+        description: |
+          `vad_events` is true and speech has been detected
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - SpeechStarted
+              description: Message type identifier
+            channel:
+              type: array
+              items:
+                type: integer
+              description: The channel
+            timestamp:
+              type: number
+              description: The timestamp
+          required:
+            - type
+            - channel
+            - timestamp
   ListenV2:
     x-fern-sdk-group-name:
       - listen
@@ -630,12 +1054,1786 @@ channels:
                 - production
                 - staging
                 - client-xyz
+    messages:
+      ListenV2Media:
+        name: ListenV2MediaMessage
+        description: Audio data is transmitted as raw binary WebSocket messages
+        contentType: application/octet-stream
+        payload:
+          type: string
+          format: binary
+      ListenV2CloseStream:
+        name: ListenV2ControlMessage
+        description: Control messages for managing the Speech to Text WebSocket connection
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Finalize
+                - CloseStream
+                - KeepAlive
+              description: Message type identifier
+          required:
+            - type
+      ListenV2Connected:
+        name: ListenV2ConnectedEvent
+        description: >-
+          This message is sent at the start of each connection, indicating the
+          connection is active.
+        payload:
+          type: object
+          required:
+            - type
+            - request_id
+            - sequence_id
+          properties:
+            type:
+              type: string
+              enum:
+                - Connected
+              description: Message type identifier
+            request_id:
+              type: string
+              format: uuid
+              description: The unique identifier of the request
+            sequence_id:
+              type: integer
+              minimum: 0
+              description: |
+                Starts at `0` and increments for each message the server sends
+                to the client.  This includes messages of other types, like
+                `TurnInfo` messages.
+      ListenV2TurnInfo:
+        contentType: application/json
+        payload:
+          type: object
+          description: Describes the current turn and latest state of the turn
+          required:
+            - type
+            - request_id
+            - sequence_id
+            - event
+            - turn_index
+            - audio_window_start
+            - audio_window_end
+            - transcript
+            - words
+            - end_of_turn_confidence
+          properties:
+            type:
+              type: string
+              const: TurnInfo
+            request_id:
+              type: string
+              format: uuid
+              description: The unique identifier of the request
+            sequence_id:
+              type: integer
+              minimum: 0
+              description: >
+                Starts at `0` and increments for each message the server sends
+                to the client.  This includes messages of other types, like
+                `Connected` messages.
+            event:
+              type: string
+              enum:
+                - Update
+                - StartOfTurn
+                - EagerEndOfTurn
+                - TurnResumed
+                - EndOfTurn
+              description: >
+                The type of event being reported.
+
+
+                - **Update** - Additional audio has been transcribed, but the
+                turn state hasn't changed
+
+                - **StartOfTurn** - The user has begun speaking for the first
+                time in the turn
+
+                - **EagerEndOfTurn** - The system has moderate confidence that
+                the user has finished speaking for the turn. This is an
+                opportunity to begin preparing an agent reply
+
+                - **TurnResumed** - The system detected that speech had ended
+                and therefore sent an **EagerEndOfTurn** event, but speech is
+                actually continuing for this turn
+
+                - **EndOfTurn** - The user has finished speaking for the turn
+            turn_index:
+              type: integer
+              minimum: 0
+              description: The index of the current turn
+            audio_window_start:
+              type: number
+              format: float
+              minimum: 0
+              description: Start time in seconds of the audio range that was transcribed
+            audio_window_end:
+              type: number
+              format: float
+              minimum: 0
+              description: End time in seconds of the audio range that was transcribed
+            transcript:
+              type: string
+              description: Text that was said over the course of the current turn
+            words:
+              type: array
+              description: The words in the `transcript`
+              items:
+                type: object
+                required:
+                  - word
+                  - confidence
+                properties:
+                  word:
+                    type: string
+                    description: >-
+                      The individual punctuated, properly-cased word from the
+                      transcript
+                  confidence:
+                    type: number
+                    format: float
+                    minimum: 0
+                    maximum: 1
+                    description: Confidence that this word was transcribed correctly
+            end_of_turn_confidence:
+              type: number
+              format: float
+              minimum: 0
+              maximum: 1
+              description: Confidence that no more speech is coming in this turn
+        examples:
+          - payload:
+              type: TurnInfo
+              request_id: ad12514a-0d38-4f7e-8fba-cce10d8f174c
+              sequence_id: 1
+              event: StartOfTurn
+              turn_index: 0
+              audio_window_start: 0
+              audio_window_end: 0.1
+              transcript: Hello
+              words:
+                - word: Hello
+                  confidence: 0.8
+              end_of_turn_confidence: 0.12
+          - payload:
+              type: TurnInfo
+              request_id: ad12514a-0d38-4f7e-8fba-cce10d8f174c
+              sequence_id: 8
+              event: Update
+              turn_index: 0
+              audio_window_start: 0
+              audio_window_end: 0.6
+              transcript: Hello, how are
+              words:
+                - word: Hello,
+                  confidence: 0.96
+                - word: how
+                  confidence: 0.94
+                - word: are
+                  confidence: 0.97
+              end_of_turn_confidence: 0.05
+          - payload:
+              type: TurnInfo
+              request_id: ad12514a-0d38-4f7e-8fba-cce10d8f174c
+              sequence_id: 11
+              event: EndOfTurn
+              turn_index: 0
+              audio_window_start: 0
+              audio_window_end: 1.3
+              transcript: Hello, how are you?
+              words:
+                - word: Hello,
+                  confidence: 0.96
+                - word: how
+                  confidence: 0.94
+                - word: are
+                  confidence: 0.97
+                - word: you?
+                  confidence: 0.92
+              end_of_turn_confidence: 0.86
+      ListenV2FatalError:
+        name: ListenV2FatalErrorEvent
+        description: Receive an error message from the server when a fatal error occurs
+        payload:
+          type: object
+          required:
+            - type
+            - sequence_id
+            - description
+            - code
+          properties:
+            type:
+              type: string
+              enum:
+                - Error
+              description: Message type identifier
+            sequence_id:
+              type: integer
+              minimum: 0
+              description: |
+                Starts at `0` and increments for each message the server sends
+                to the client.  This includes messages of other types, like
+                `Connected` messages.
+            code:
+              type: string
+              description: A string code describing the error, e.g. `INTERNAL_SERVER_ERROR`
+            description:
+              type: string
+              description: Prose description of the error
   AgentV1:
     x-fern-sdk-group-name: agent
     address: /v1/agent/converse
     servers:
       - $ref: '#/servers/agent'
     description: Build a conversational voice agent using Deepgram's Voice Agent WebSocket
+    messages:
+      AgentV1Media:
+        name: AgentV1MediaMessage
+        description: Raw binary audio data sent to the Voice Agent for processing
+        contentType: application/octet-stream
+        payload:
+          type: string
+          format: binary
+      AgentV1Audio:
+        name: AgentV1AudioChunkEvent
+        description: >-
+          Raw binary audio data generated by the Voice Agent and sent to the
+          client
+        contentType: application/octet-stream
+        payload:
+          type: string
+          format: binary
+      AgentV1Welcome:
+        description: Confirms that the WebSocket connection has been successfully opened
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: Welcome
+              description: Message type identifier for welcome message
+            request_id:
+              type: string
+              description: Unique identifier for the request
+          required:
+            - type
+            - request_id
+      AgentV1SettingsApplied:
+        description: >-
+          Confirm the server has successfully received and applied the Settings
+          message
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: SettingsApplied
+              description: Message type identifier for settings applied confirmation
+          required:
+            - type
+      AgentV1ConversationText:
+        description: >-
+          Facilitate real-time communication by relaying spoken statements from
+          both the user and the assistant
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: ConversationText
+              description: Message type identifier for conversation text
+            role:
+              type: string
+              enum:
+                - user
+                - assistant
+              description: Identifies who spoke the statement
+            content:
+              type: string
+              description: The actual statement that was spoken
+          required:
+            - type
+            - role
+            - content
+      AgentV1UserStartedSpeaking:
+        description: Notify the client that the user has begun speaking
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: UserStartedSpeaking
+              description: >-
+                Message type identifier indicating that the user has begun
+                speaking
+          required:
+            - type
+      AgentV1AgentThinking:
+        description: Inform the client when the agent is processing information
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: AgentThinking
+              description: Message type identifier for agent thinking
+            content:
+              type: string
+              description: The text of the agent's thought process
+          required:
+            - type
+            - content
+      AgentV1FunctionCallRequest:
+        name: AgentV1FunctionCallRequestEvent
+        description: Client-side or server-side function call request sent by the server
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: FunctionCallRequest
+              description: Message type identifier for function call requests
+            functions:
+              type: array
+              description: Array of functions to be called
+              items:
+                type: object
+                required:
+                  - id
+                  - name
+                  - arguments
+                  - client_side
+                properties:
+                  id:
+                    type: string
+                    description: Unique identifier for the function call
+                  name:
+                    type: string
+                    description: The name of the function to call
+                  arguments:
+                    type: string
+                    description: JSON string containing the function arguments
+                  client_side:
+                    type: boolean
+                    description: Whether the function should be executed client-side
+          required:
+            - type
+            - functions
+      AgentV1AgentStartedSpeaking:
+        name: AgentV1AgentStartedSpeakingEvent
+        description: >-
+          Get notified when the server begins streaming an agent's audio
+          response for playback. This message is only sent when the experimental
+          flag is enabled
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: AgentStartedSpeaking
+              description: Message type identifier for agent started speaking
+            total_latency:
+              type: number
+              format: float
+              description: >-
+                Seconds from receiving the user's utterance to producing the
+                agent's reply
+            tts_latency:
+              type: number
+              format: float
+              description: The portion of total latency attributable to text-to-speech
+            ttt_latency:
+              type: number
+              format: float
+              description: >-
+                The portion of total latency attributable to text-to-text
+                (usually an LLM)
+          required:
+            - type
+            - total_latency
+            - tts_latency
+            - ttt_latency
+      AgentV1AgentAudioDone:
+        name: AgentV1AgentAudioDoneEvent
+        description: >-
+          Get signals that the server has finished sending the final audio
+          segment to the client
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: AgentAudioDone
+              description: >-
+                Message type identifier indicating the agent has finished
+                sending audio
+          required:
+            - type
+      AgentV1Error:
+        name: AgentV1ErrorEvent
+        description: Receive an error message from the server when an error occurs
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - Error
+              description: Message type identifier for error responses
+            description:
+              type: string
+              description: A description of what went wrong
+            code:
+              type: string
+              description: Error code identifying the type of error
+          required:
+            - type
+            - description
+            - code
+      AgentV1Warning:
+        name: AgentV1WarningEvent
+        description: Notifies the client of non-fatal errors or warnings
+        payload:
+          type: object
+          description: Notifies the client of non-fatal errors or warnings
+          properties:
+            type:
+              type: string
+              enum:
+                - Warning
+              description: Message type identifier for warnings
+            description:
+              type: string
+              description: Description of the warning
+            code:
+              type: string
+              description: Warning code identifier
+          required:
+            - type
+            - description
+            - code
+      AgentV1PromptUpdated:
+        name: AgentV1PromptUpdatedEvent
+        description: Confirms that an UpdatePrompt message from the client has been applied
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: PromptUpdated
+              description: Message type identifier for prompt update confirmation
+          required:
+            - type
+      AgentV1SpeakUpdated:
+        name: AgentV1SpeakUpdatedEvent
+        description: Confirms that an UpdateSpeak message from the client has been applied
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: SpeakUpdated
+              description: Message type identifier for speak update confirmation
+          required:
+            - type
+      AgentV1InjectionRefused:
+        description: Receive injection refused message
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: InjectionRefused
+              description: Message type identifier for injection refused
+            message:
+              type: string
+              description: Details about why the injection was refused
+          required:
+            - type
+            - message
+      AgentV1Settings:
+        name: AgentV1SettingsMessage
+        description: Configure the voice agent and sets the input and output audio formats
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: Settings
+            tags:
+              type: array
+              description: Tags to associate with the request
+              items:
+                type: string
+                description: >-
+                  A tag associated with the request can be used for filtered
+                  searching
+            experimental:
+              type: boolean
+              default: false
+              description: To enable experimental features
+            flags:
+              type: object
+              properties:
+                history:
+                  type: boolean
+                  default: true
+                  description: Enable or disable history message reporting
+            mip_opt_out:
+              type: boolean
+              default: false
+              description: To opt out of Deepgram Model Improvement Program
+            audio:
+              type: object
+              properties:
+                input:
+                  type: object
+                  description: >-
+                    Audio input configuration settings. If omitted, defaults to
+                    encoding=linear16 and sample_rate=24000. Higher sample rates
+                    like 44100 Hz provide better audio quality.
+                  required:
+                    - encoding
+                    - sample_rate
+                  properties:
+                    encoding:
+                      type: string
+                      default: linear16
+                      enum:
+                        - linear16
+                        - linear32
+                        - flac
+                        - alaw
+                        - mulaw
+                        - amr-nb
+                        - amr-wb
+                        - opus
+                        - ogg-opus
+                        - speex
+                        - g729
+                      description: Audio encoding format
+                    sample_rate:
+                      type: integer
+                      default: 24000
+                      description: >-
+                        Sample rate in Hz. Common values are 16000, 24000,
+                        44100, 48000
+                output:
+                  type: object
+                  description: Audio output configuration settings
+                  properties:
+                    encoding:
+                      type: string
+                      default: linear16
+                      enum:
+                        - linear16
+                        - mulaw
+                        - alaw
+                      description: Audio encoding format for streaming TTS output
+                    sample_rate:
+                      type: integer
+                      description: Sample rate in Hz
+                    bitrate:
+                      type: integer
+                      description: Audio bitrate in bits per second
+                    container:
+                      type: string
+                      description: Audio container format. If omitted, defaults to 'none'
+            agent:
+              type: object
+              properties:
+                language:
+                  type: string
+                  enum:
+                    - en
+                    - es
+                  default: en
+                  description: Agent language
+                context:
+                  type: object
+                  description: >-
+                    Conversation context including the history of messages and
+                    function calls
+                  properties:
+                    messages:
+                      type: array
+                      description: >-
+                        Conversation history as a list of messages and function
+                        calls
+                      items:
+                        type: object
+                        description: >-
+                          A message here is either a conversational message or a
+                          function call
+                        oneOf:
+                          - type: object
+                            description: >-
+                              Conversation text as part of the conversation
+                              history
+                            required:
+                              - type
+                              - role
+                              - content
+                            properties:
+                              type:
+                                type: string
+                                const: History
+                                description: Message type identifier for conversation text
+                              role:
+                                type: string
+                                enum:
+                                  - user
+                                  - assistant
+                                description: Identifies who spoke the statement
+                              content:
+                                type: string
+                                description: The actual statement that was spoken
+                          - type: object
+                            description: >-
+                              Client-side or server-side function call request
+                              and response as part of the conversation history
+                            required:
+                              - type
+                              - function_calls
+                            properties:
+                              type:
+                                type: string
+                                const: History
+                              function_calls:
+                                type: array
+                                description: List of function call objects
+                                items:
+                                  type: object
+                                  required:
+                                    - id
+                                    - name
+                                    - client_side
+                                    - arguments
+                                    - response
+                                  properties:
+                                    id:
+                                      type: string
+                                      description: Unique identifier for the function call
+                                    name:
+                                      type: string
+                                      description: Name of the function called
+                                    client_side:
+                                      type: boolean
+                                      description: >-
+                                        Indicates if the call was client-side or
+                                        server-side
+                                    arguments:
+                                      type: string
+                                      description: Arguments passed to the function
+                                    response:
+                                      type: string
+                                      description: Response from the function call
+                listen:
+                  type: object
+                  properties:
+                    provider:
+                      type: object
+                      required:
+                        - type
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                            - deepgram
+                          description: Provider type for speech-to-text
+                        model:
+                          type: string
+                          description: Model to use for speech to text
+                        keyterms:
+                          type: array
+                          items:
+                            type: string
+                          description: Prompt key-term recognition (nova-3 'en' only)
+                        smart_format:
+                          type: boolean
+                          default: false
+                          description: >-
+                            Applies smart formatting to improve transcript
+                            readability (Deepgram providers only)
+                think:
+                  type: object
+                  required:
+                    - provider
+                  properties:
+                    provider:
+                      type: object
+                      required:
+                        - type
+                        - model
+                      oneOf:
+                        - properties:
+                            type:
+                              enum:
+                                - open_ai
+                            model:
+                              type: string
+                              description: OpenAI model to use
+                              enum:
+                                - gpt-5
+                                - gpt-5-mini
+                                - gpt-5-nano
+                                - gpt-4.1
+                                - gpt-4.1-mini
+                                - gpt-4.1-nano
+                                - gpt-4o
+                                - gpt-4o-mini
+                            temperature:
+                              type: number
+                              description: OpenAI temperature (0-2)
+                              minimum: 0
+                              maximum: 2
+                        - properties:
+                            type:
+                              enum:
+                                - aws_bedrock
+                            model:
+                              type: string
+                              description: AWS Bedrock model to use
+                              enum:
+                                - anthropic/claude-3-5-sonnet-20240620-v1:0
+                                - anthropic/claude-3-5-haiku-20240307-v1:0
+                            temperature:
+                              type: number
+                              description: AWS Bedrock temperature (0-2)
+                              minimum: 0
+                              maximum: 2
+                            credentials:
+                              type: object
+                              description: >-
+                                AWS credentials type (STS short-lived or IAM
+                                long-lived)
+                              properties:
+                                type:
+                                  type: string
+                                  description: >-
+                                    AWS credentials type (STS short-lived or IAM
+                                    long-lived)
+                                  enum:
+                                    - sts
+                                    - iam
+                                region:
+                                  type: string
+                                  description: AWS region
+                                access_key_id:
+                                  type: string
+                                  description: AWS access key
+                                secret_access_key:
+                                  type: string
+                                  description: AWS secret access key
+                                session_token:
+                                  type: string
+                                  description: AWS session token (required for STS only)
+                        - properties:
+                            type:
+                              enum:
+                                - anthropic
+                            model:
+                              type: string
+                              description: Anthropic model to use
+                              enum:
+                                - claude-3-5-haiku-latest
+                                - claude-sonnet-4-20250514
+                            temperature:
+                              type: number
+                              description: Anthropic temperature (0-1)
+                              minimum: 0
+                              maximum: 1
+                        - properties:
+                            type:
+                              enum:
+                                - google
+                            model:
+                              type: string
+                              description: Google model to use
+                              enum:
+                                - gemini-2.0-flash
+                                - gemini-2.0-flash-lite
+                                - gemini-2.5-flash
+                            temperature:
+                              type: number
+                              description: Google temperature (0-2)
+                              minimum: 0
+                              maximum: 2
+                        - properties:
+                            type:
+                              enum:
+                                - groq
+                            model:
+                              type: string
+                              description: Groq model to use
+                              enum:
+                                - openai/gpt-oss-20b
+                            temperature:
+                              type: number
+                              description: Groq temperature (0-2)
+                              minimum: 0
+                              maximum: 2
+                    endpoint:
+                      type: object
+                      description: >
+                        Optional for non-Deepgram LLM providers. When present,
+                        must include url field and headers object
+                      properties:
+                        url:
+                          type: string
+                          description: Custom LLM endpoint URL
+                        headers:
+                          type: object
+                          description: Custom headers for the endpoint
+                          additionalProperties:
+                            type: string
+                    functions:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Function name
+                          description:
+                            type: string
+                            description: Function description
+                          parameters:
+                            type: object
+                            description: Function parameters
+                          endpoint:
+                            type: object
+                            description: >-
+                              The Function endpoint to call. if not passed,
+                              function is called client-side
+                            properties:
+                              url:
+                                type: string
+                                description: Endpoint URL
+                              method:
+                                type: string
+                                description: HTTP method
+                              headers:
+                                type: object
+                                additionalProperties:
+                                  type: string
+                    prompt:
+                      type: string
+                    context_length:
+                      description: >
+                        Specifies the number of characters retained in context
+                        between user messages, agent responses, and function
+                        calls. This setting is only configurable when a custom
+                        think endpoint is used
+                      oneOf:
+                        - title: max
+                          description: Agent will not discard context regardless of length
+                          type: string
+                          enum:
+                            - max
+                        - type: integer
+                          minimum: 2
+                speak:
+                  oneOf:
+                    - type: object
+                      required:
+                        - provider
+                      properties:
+                        provider:
+                          type: object
+                          oneOf:
+                            - type: object
+                              required:
+                                - type
+                                - model
+                              properties:
+                                type:
+                                  type: string
+                                  const: deepgram
+                                model:
+                                  type: string
+                                  enum:
+                                    - aura-asteria-en
+                                    - aura-luna-en
+                                    - aura-stella-en
+                                    - aura-athena-en
+                                    - aura-hera-en
+                                    - aura-orion-en
+                                    - aura-arcas-en
+                                    - aura-perseus-en
+                                    - aura-angus-en
+                                    - aura-orpheus-en
+                                    - aura-helios-en
+                                    - aura-zeus-en
+                                    - aura-2-amalthea-en
+                                    - aura-2-andromeda-en
+                                    - aura-2-apollo-en
+                                    - aura-2-arcas-en
+                                    - aura-2-aries-en
+                                    - aura-2-asteria-en
+                                    - aura-2-athena-en
+                                    - aura-2-atlas-en
+                                    - aura-2-aurora-en
+                                    - aura-2-callista-en
+                                    - aura-2-cora-en
+                                    - aura-2-cordelia-en
+                                    - aura-2-delia-en
+                                    - aura-2-draco-en
+                                    - aura-2-electra-en
+                                    - aura-2-harmonia-en
+                                    - aura-2-helena-en
+                                    - aura-2-hera-en
+                                    - aura-2-hermes-en
+                                    - aura-2-hyperion-en
+                                    - aura-2-iris-en
+                                    - aura-2-janus-en
+                                    - aura-2-juno-en
+                                    - aura-2-jupiter-en
+                                    - aura-2-luna-en
+                                    - aura-2-mars-en
+                                    - aura-2-minerva-en
+                                    - aura-2-neptune-en
+                                    - aura-2-odysseus-en
+                                    - aura-2-ophelia-en
+                                    - aura-2-orion-en
+                                    - aura-2-orpheus-en
+                                    - aura-2-pandora-en
+                                    - aura-2-phoebe-en
+                                    - aura-2-pluto-en
+                                    - aura-2-saturn-en
+                                    - aura-2-selene-en
+                                    - aura-2-thalia-en
+                                    - aura-2-theia-en
+                                    - aura-2-vesta-en
+                                    - aura-2-zeus-en
+                                    - aura-2-sirio-es
+                                    - aura-2-nestor-es
+                                    - aura-2-carina-es
+                                    - aura-2-celeste-es
+                                    - aura-2-alvaro-es
+                                    - aura-2-diana-es
+                                    - aura-2-aquila-es
+                                    - aura-2-selena-es
+                                    - aura-2-estrella-es
+                                    - aura-2-javier-es
+                                  description: Deepgram TTS model
+                            - type: object
+                              required:
+                                - type
+                                - model_id
+                              properties:
+                                type:
+                                  type: string
+                                  const: eleven_labs
+                                model_id:
+                                  type: string
+                                  enum:
+                                    - eleven_turbo_v2_5
+                                    - eleven_monolingual_v1
+                                    - eleven_multilingual_v2
+                                  description: Eleven Labs model ID
+                                language_code:
+                                  type: string
+                                  description: Eleven Labs optional language code
+                            - type: object
+                              required:
+                                - type
+                                - model_id
+                                - voice
+                              properties:
+                                type:
+                                  type: string
+                                  const: cartesia
+                                model_id:
+                                  type: string
+                                  enum:
+                                    - sonic-2
+                                    - sonic-multilingual
+                                  description: Cartesia model ID
+                                voice:
+                                  type: object
+                                  required:
+                                    - mode
+                                    - id
+                                  properties:
+                                    mode:
+                                      type: string
+                                      description: Cartesia voice mode
+                                    id:
+                                      type: string
+                                      description: Cartesia voice ID
+                                language:
+                                  type: string
+                                  description: Cartesia language code
+                            - type: object
+                              required:
+                                - type
+                                - model
+                                - voice
+                              properties:
+                                type:
+                                  type: string
+                                  const: open_ai
+                                model:
+                                  type: string
+                                  enum:
+                                    - tts-1
+                                    - tts-1-hd
+                                  description: OpenAI TTS model
+                                voice:
+                                  type: string
+                                  enum:
+                                    - alloy
+                                    - echo
+                                    - fable
+                                    - onyx
+                                    - nova
+                                    - shimmer
+                                  description: OpenAI voice
+                            - type: object
+                              required:
+                                - type
+                                - voice
+                                - language_code
+                                - engine
+                                - credentials
+                              properties:
+                                type:
+                                  type: string
+                                  const: aws_polly
+                                voice:
+                                  type: string
+                                  enum:
+                                    - Matthew
+                                    - Joanna
+                                    - Amy
+                                    - Emma
+                                    - Brian
+                                    - Arthur
+                                    - Aria
+                                    - Ayanda
+                                  description: AWS Polly voice name
+                                language_code:
+                                  type: string
+                                  description: Language code (e.g., "en-US")
+                                engine:
+                                  type: string
+                                  enum:
+                                    - generative
+                                    - long-form
+                                    - standard
+                                    - neural
+                                credentials:
+                                  type: object
+                                  required:
+                                    - type
+                                    - region
+                                    - access_key_id
+                                    - secret_access_key
+                                  properties:
+                                    type:
+                                      type: string
+                                      enum:
+                                        - sts
+                                        - iam
+                                    region:
+                                      type: string
+                                    access_key_id:
+                                      type: string
+                                    secret_access_key:
+                                      type: string
+                                    session_token:
+                                      type: string
+                                      description: Required for STS only
+                        endpoint:
+                          type: object
+                          description: >
+                            Optional if provider is Deepgram. Required for
+                            non-Deepgram TTS providers.
+
+                            When present, must include url field and headers
+                            object. Valid schemes are https and wss with wss
+                            only supported for Eleven Labs.
+                          properties:
+                            url:
+                              type: string
+                              description: >
+                                Custom TTS endpoint URL. Cannot contain
+                                `output_format` or `model_id` query
+
+                                parameters when the provider is Eleven Labs.
+                            headers:
+                              type: object
+                              additionalProperties:
+                                type: string
+                    - type: array
+                      items:
+                        type: object
+                        required:
+                          - provider
+                        properties:
+                          provider:
+                            type: object
+                            oneOf:
+                              - type: object
+                                required:
+                                  - type
+                                  - model
+                                properties:
+                                  type:
+                                    type: string
+                                    const: deepgram
+                                  model:
+                                    type: string
+                                    enum:
+                                      - aura-asteria-en
+                                      - aura-luna-en
+                                      - aura-stella-en
+                                      - aura-athena-en
+                                      - aura-hera-en
+                                      - aura-orion-en
+                                      - aura-arcas-en
+                                      - aura-perseus-en
+                                      - aura-angus-en
+                                      - aura-orpheus-en
+                                      - aura-helios-en
+                                      - aura-zeus-en
+                                      - aura-2-amalthea-en
+                                      - aura-2-andromeda-en
+                                      - aura-2-apollo-en
+                                      - aura-2-arcas-en
+                                      - aura-2-aries-en
+                                      - aura-2-asteria-en
+                                      - aura-2-athena-en
+                                      - aura-2-atlas-en
+                                      - aura-2-aurora-en
+                                      - aura-2-callista-en
+                                      - aura-2-cora-en
+                                      - aura-2-cordelia-en
+                                      - aura-2-delia-en
+                                      - aura-2-draco-en
+                                      - aura-2-electra-en
+                                      - aura-2-harmonia-en
+                                      - aura-2-helena-en
+                                      - aura-2-hera-en
+                                      - aura-2-hermes-en
+                                      - aura-2-hyperion-en
+                                      - aura-2-iris-en
+                                      - aura-2-janus-en
+                                      - aura-2-juno-en
+                                      - aura-2-jupiter-en
+                                      - aura-2-luna-en
+                                      - aura-2-mars-en
+                                      - aura-2-minerva-en
+                                      - aura-2-neptune-en
+                                      - aura-2-odysseus-en
+                                      - aura-2-ophelia-en
+                                      - aura-2-orion-en
+                                      - aura-2-orpheus-en
+                                      - aura-2-pandora-en
+                                      - aura-2-phoebe-en
+                                      - aura-2-pluto-en
+                                      - aura-2-saturn-en
+                                      - aura-2-selene-en
+                                      - aura-2-thalia-en
+                                      - aura-2-theia-en
+                                      - aura-2-vesta-en
+                                      - aura-2-zeus-en
+                                      - aura-2-sirio-es
+                                      - aura-2-nestor-es
+                                      - aura-2-carina-es
+                                      - aura-2-celeste-es
+                                      - aura-2-alvaro-es
+                                      - aura-2-diana-es
+                                      - aura-2-aquila-es
+                                      - aura-2-selena-es
+                                      - aura-2-estrella-es
+                                      - aura-2-javier-es
+                                    description: Deepgram TTS model
+                              - type: object
+                                required:
+                                  - type
+                                  - model_id
+                                properties:
+                                  type:
+                                    type: string
+                                    const: eleven_labs
+                                  model_id:
+                                    type: string
+                                    enum:
+                                      - eleven_turbo_v2_5
+                                      - eleven_monolingual_v1
+                                      - eleven_multilingual_v2
+                                    description: Eleven Labs model ID
+                                  language_code:
+                                    type: string
+                                    description: Eleven Labs optional language code
+                              - type: object
+                                required:
+                                  - type
+                                  - model_id
+                                  - voice
+                                properties:
+                                  type:
+                                    type: string
+                                    const: cartesia
+                                  model_id:
+                                    type: string
+                                    enum:
+                                      - sonic-2
+                                      - sonic-multilingual
+                                    description: Cartesia model ID
+                                  voice:
+                                    type: object
+                                    required:
+                                      - mode
+                                      - id
+                                    properties:
+                                      mode:
+                                        type: string
+                                        description: Cartesia voice mode
+                                      id:
+                                        type: string
+                                        description: Cartesia voice ID
+                                  language:
+                                    type: string
+                                    description: Cartesia language code
+                              - type: object
+                                required:
+                                  - type
+                                  - model
+                                  - voice
+                                properties:
+                                  type:
+                                    type: string
+                                    const: open_ai
+                                  model:
+                                    type: string
+                                    enum:
+                                      - tts-1
+                                      - tts-1-hd
+                                    description: OpenAI TTS model
+                                  voice:
+                                    type: string
+                                    enum:
+                                      - alloy
+                                      - echo
+                                      - fable
+                                      - onyx
+                                      - nova
+                                      - shimmer
+                                    description: OpenAI voice
+                              - type: object
+                                required:
+                                  - type
+                                  - voice
+                                  - language_code
+                                  - engine
+                                  - credentials
+                                properties:
+                                  type:
+                                    type: string
+                                    const: aws_polly
+                                  voice:
+                                    type: string
+                                    enum:
+                                      - Matthew
+                                      - Joanna
+                                      - Amy
+                                      - Emma
+                                      - Brian
+                                      - Arthur
+                                      - Aria
+                                      - Ayanda
+                                    description: AWS Polly voice name
+                                  language_code:
+                                    type: string
+                                    description: Language code (e.g., "en-US")
+                                  engine:
+                                    type: string
+                                    enum:
+                                      - generative
+                                      - long-form
+                                      - standard
+                                      - neural
+                                  credentials:
+                                    type: object
+                                    required:
+                                      - type
+                                      - region
+                                      - access_key_id
+                                      - secret_access_key
+                                    properties:
+                                      type:
+                                        type: string
+                                        enum:
+                                          - sts
+                                          - iam
+                                      region:
+                                        type: string
+                                      access_key_id:
+                                        type: string
+                                      secret_access_key:
+                                        type: string
+                                      session_token:
+                                        type: string
+                                        description: Required for STS only
+                          endpoint:
+                            type: object
+                            description: >
+                              Optional if provider is Deepgram. Required for
+                              non-Deepgram TTS providers.
+
+                              When present, must include url field and headers
+                              object. Valid schemes are https and wss with wss
+                              only supported for Eleven Labs.
+                            properties:
+                              url:
+                                type: string
+                                description: >
+                                  Custom TTS endpoint URL. Cannot contain
+                                  `output_format` or `model_id` query
+
+                                  parameters when the provider is Eleven Labs.
+                              headers:
+                                type: object
+                                additionalProperties:
+                                  type: string
+                greeting:
+                  type: string
+                  description: Optional message that agent will speak at the start
+          required:
+            - type
+            - audio
+            - agent
+      AgentV1UpdateSpeak:
+        description: >-
+          Send a message to change the Speak model in the middle of a
+          conversation
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: UpdateSpeak
+              description: Message type identifier for updating the speak model
+            speak:
+              type: object
+              description: >-
+                Configuration for the speak model. Optional, defaults to latest
+                deepgram TTS model
+              required:
+                - provider
+              properties:
+                provider:
+                  type: object
+                  required:
+                    - type
+                  oneOf:
+                    - type: object
+                      required:
+                        - type
+                        - model
+                      properties:
+                        type:
+                          type: string
+                          const: deepgram
+                        model:
+                          type: string
+                          enum:
+                            - aura-asteria-en
+                            - aura-luna-en
+                            - aura-stella-en
+                            - aura-athena-en
+                            - aura-hera-en
+                            - aura-orion-en
+                            - aura-arcas-en
+                            - aura-perseus-en
+                            - aura-angus-en
+                            - aura-orpheus-en
+                            - aura-helios-en
+                            - aura-zeus-en
+                            - aura-2-amalthea-en
+                            - aura-2-andromeda-en
+                            - aura-2-apollo-en
+                            - aura-2-arcas-en
+                            - aura-2-aries-en
+                            - aura-2-asteria-en
+                            - aura-2-athena-en
+                            - aura-2-atlas-en
+                            - aura-2-aurora-en
+                            - aura-2-callista-en
+                            - aura-2-cora-en
+                            - aura-2-cordelia-en
+                            - aura-2-delia-en
+                            - aura-2-draco-en
+                            - aura-2-electra-en
+                            - aura-2-harmonia-en
+                            - aura-2-helena-en
+                            - aura-2-hera-en
+                            - aura-2-hermes-en
+                            - aura-2-hyperion-en
+                            - aura-2-iris-en
+                            - aura-2-janus-en
+                            - aura-2-juno-en
+                            - aura-2-jupiter-en
+                            - aura-2-luna-en
+                            - aura-2-mars-en
+                            - aura-2-minerva-en
+                            - aura-2-neptune-en
+                            - aura-2-odysseus-en
+                            - aura-2-ophelia-en
+                            - aura-2-orion-en
+                            - aura-2-orpheus-en
+                            - aura-2-pandora-en
+                            - aura-2-phoebe-en
+                            - aura-2-pluto-en
+                            - aura-2-saturn-en
+                            - aura-2-selene-en
+                            - aura-2-thalia-en
+                            - aura-2-theia-en
+                            - aura-2-vesta-en
+                            - aura-2-zeus-en
+                            - aura-2-sirio-es
+                            - aura-2-nestor-es
+                            - aura-2-carina-es
+                            - aura-2-celeste-es
+                            - aura-2-alvaro-es
+                            - aura-2-diana-es
+                            - aura-2-aquila-es
+                            - aura-2-selena-es
+                            - aura-2-estrella-es
+                            - aura-2-javier-es
+                          description: Deepgram TTS model
+                    - type: object
+                      required:
+                        - type
+                        - model_id
+                      properties:
+                        type:
+                          type: string
+                          const: eleven_labs
+                        model_id:
+                          type: string
+                          enum:
+                            - eleven_turbo_v2_5
+                            - eleven_monolingual_v1
+                            - eleven_multilingual_v2
+                          description: Eleven Labs model ID
+                        language_code:
+                          type: string
+                          description: Eleven Labs optional language code
+                    - type: object
+                      required:
+                        - type
+                        - model_id
+                        - voice
+                      properties:
+                        type:
+                          type: string
+                          const: cartesia
+                        model_id:
+                          type: string
+                          enum:
+                            - sonic-2
+                            - sonic-multilingual
+                          description: Cartesia model ID
+                        voice:
+                          type: object
+                          required:
+                            - mode
+                            - id
+                          properties:
+                            mode:
+                              type: string
+                              description: Cartesia voice mode
+                            id:
+                              type: string
+                              description: Cartesia voice ID
+                        language:
+                          type: string
+                          description: Cartesia language code
+                    - type: object
+                      required:
+                        - type
+                        - model
+                        - voice
+                      properties:
+                        type:
+                          type: string
+                          const: open_ai
+                        model:
+                          type: string
+                          enum:
+                            - tts-1
+                            - tts-1-hd
+                          description: OpenAI TTS model
+                        voice:
+                          type: string
+                          enum:
+                            - alloy
+                            - echo
+                            - fable
+                            - onyx
+                            - nova
+                            - shimmer
+                          description: OpenAI voice
+                    - type: object
+                      required:
+                        - type
+                        - voice
+                        - language_code
+                        - engine
+                        - credentials
+                      properties:
+                        type:
+                          type: string
+                          const: aws_polly
+                        voice:
+                          type: string
+                          enum:
+                            - Matthew
+                            - Joanna
+                            - Amy
+                            - Emma
+                            - Brian
+                            - Arthur
+                            - Aria
+                            - Ayanda
+                          description: AWS Polly voice name
+                        language_code:
+                          type: string
+                          description: Language code (e.g., "en-US")
+                        engine:
+                          type: string
+                          enum:
+                            - generative
+                            - long-form
+                            - standard
+                            - neural
+                        credentials:
+                          type: object
+                          required:
+                            - type
+                            - region
+                            - access_key_id
+                            - secret_access_key
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - sts
+                                - iam
+                            region:
+                              type: string
+                            access_key_id:
+                              type: string
+                            secret_access_key:
+                              type: string
+                            session_token:
+                              type: string
+                              description: Required for STS only
+                endpoint:
+                  type: object
+                  description: >
+                    Optional if provider is Deepgram. Required for non-Deepgram
+                    TTS providers.
+
+                    When present, must include url field and headers object.
+                    Valid schemes are https and wss with wss only supported for
+                    Eleven Labs.
+                  properties:
+                    url:
+                      type: string
+                      description: >
+                        Custom TTS endpoint URL. Cannot contain `output_format`
+                        or `model_id` query
+
+                        parameters when the provider is Eleven Labs.
+                    headers:
+                      type: object
+                      additionalProperties:
+                        type: string
+          required:
+            - type
+            - speak
+      AgentV1InjectUserMessage:
+        description: Send a text based message to the agent
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: InjectUserMessage
+              description: Message type identifier for injecting a user message
+            content:
+              type: string
+              description: The specific phrase or statement the agent should respond to
+          required:
+            - type
+            - content
+      AgentV1InjectAgentMessage:
+        description: Immediately trigger an agent response during a conversation
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: InjectAgentMessage
+              description: Message type identifier for injecting an agent message
+            message:
+              type: string
+              description: The statement that the agent should say
+          required:
+            - type
+            - message
+      AgentV1SendFunctionCallResponse:
+        payload:
+          type: object
+          description: >
+            Function call response message used bidirectionally:
+
+
+            • **Client → Server**: Response after client executes a function 
+              marked as client_side: true
+            • **Server → Client**: Response after server executes a function 
+              marked as client_side: false
+
+            The same message structure serves both directions, enabling a
+            unified
+
+            interface for function call responses regardless of execution
+            location.
+          properties:
+            type:
+              type: string
+              const: FunctionCallResponse
+              description: Message type identifier for function call responses
+            id:
+              type: string
+              description: >
+                The unique identifier for the function call. 
+
+
+                • **Required for client responses**: Should match the id from 
+                  the corresponding `FunctionCallRequest`
+                • **Optional for server responses**: Server may omit when
+                responding 
+                  to internal function executions
+            name:
+              type: string
+              description: The name of the function being called
+            content:
+              type: string
+              description: The content or result of the function call
+          required:
+            - type
+            - name
+            - content
+          examples:
+            - name: Client-side function response
+              summary: Client responding after executing a weather lookup function
+              payload:
+                type: FunctionCallResponse
+                id: func_12345
+                name: get_weather
+                content: '{"temperature": 72, "condition": "sunny"}'
+            - name: Server-side function response
+              summary: Server responding after executing an internal database query
+              payload:
+                type: FunctionCallResponse
+                name: query_database
+                content: '{"results": [{"id": 1, "name": "example"}]}'
+      AgentV1ReceiveFunctionCallResponse:
+        payload:
+          type: object
+          description: >
+            Function call response message used bidirectionally:
+
+
+            • **Client → Server**: Response after client executes a function 
+              marked as client_side: true
+            • **Server → Client**: Response after server executes a function 
+              marked as client_side: false
+
+            The same message structure serves both directions, enabling a
+            unified
+
+            interface for function call responses regardless of execution
+            location.
+          properties:
+            type:
+              type: string
+              const: FunctionCallResponse
+              description: Message type identifier for function call responses
+            id:
+              type: string
+              description: >
+                The unique identifier for the function call. 
+
+
+                • **Required for client responses**: Should match the id from 
+                  the corresponding `FunctionCallRequest`
+                • **Optional for server responses**: Server may omit when
+                responding 
+                  to internal function executions
+            name:
+              type: string
+              description: The name of the function being called
+            content:
+              type: string
+              description: The content or result of the function call
+          required:
+            - type
+            - name
+            - content
+          examples:
+            - name: Client-side function response
+              summary: Client responding after executing a weather lookup function
+              payload:
+                type: FunctionCallResponse
+                id: func_12345
+                name: get_weather
+                content: '{"temperature": 72, "condition": "sunny"}'
+            - name: Server-side function response
+              summary: Server responding after executing an internal database query
+              payload:
+                type: FunctionCallResponse
+                name: query_database
+                content: '{"results": [{"id": 1, "name": "example"}]}'
+      AgentV1KeepAlive:
+        description: Send a control message to the agent
+        payload:
+          type: object
+          description: Send a control message to the agent
+          properties:
+            type:
+              type: string
+              enum:
+                - KeepAlive
+              description: Message type identifier
+          required:
+            - type
+      AgentV1UpdatePrompt:
+        description: Send a message to update the system prompt of the agent
+        payload:
+          type: object
+          properties:
+            type:
+              type: string
+              const: UpdatePrompt
+              description: Message type identifier for prompt update request
+            prompt:
+              type: string
+              description: The new system prompt to be used by the agent
+          required:
+            - type
+            - prompt
 operations:
   SpeakV1Text:
     description: Text to convert to audio
@@ -659,7 +2857,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1TextMessage'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Text'
   SpeakV1Flush:
     description: Flush the buffer and receive the final audio for text sent so far
     action: send
@@ -682,7 +2880,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlMessage'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Flush'
   SpeakV1Clear:
     description: >-
       Clear the buffer and start a new audio generation. Potentially destructive
@@ -707,7 +2905,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlMessage'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Clear'
   SpeakV1Close:
     description: >-
       Flush the buffer and close the connection gracefully after all audio is
@@ -732,7 +2930,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlMessage'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Close'
   SpeakV1Audio:
     description: Receive audio chunks as they are generated
     action: receive
@@ -755,7 +2953,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1AudioChunkEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Audio'
   SpeakV1Metadata:
     description: Receive metadata about the audio generation
     action: receive
@@ -778,7 +2976,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1MetadataEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Metadata'
   SpeakV1Flushed:
     description: Receive metadata about the audio generation
     action: receive
@@ -801,7 +2999,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Flushed'
   SpeakV1Cleared:
     description: Receive metadata about the audio generation
     action: receive
@@ -824,7 +3022,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Cleared'
   SpeakV1Warning:
     description: Receive a warning about the audio generation
     action: receive
@@ -847,7 +3045,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/SpeakV1WarningEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Warning'
   ListenV1Media:
     description: Send audio or video data to be transcribed
     action: send
@@ -870,7 +3068,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV1MediaMessage'
+      - $ref: '#/channels/ListenV1/messages/ListenV1Media'
   ListenV1Finalize:
     description: Send a Finalize message to flush the WebSocket stream
     action: send
@@ -893,7 +3091,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV1ControlMessage'
+      - $ref: '#/channels/ListenV1/messages/ListenV1Finalize'
   ListenV1CloseStream:
     description: Send a CloseStream message to close the WebSocket stream
     action: send
@@ -916,7 +3114,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV1ControlMessage'
+      - $ref: '#/channels/ListenV1/messages/ListenV1CloseStream'
   ListenV1KeepAlive:
     description: Send a KeepAlive message to keep the WebSocket stream alive
     action: send
@@ -939,7 +3137,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV1ControlMessage'
+      - $ref: '#/channels/ListenV1/messages/ListenV1KeepAlive'
   ListenV1Results:
     description: Receive transcription results
     action: receive
@@ -962,7 +3160,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV1ResultsEvent'
+      - $ref: '#/channels/ListenV1/messages/ListenV1Results'
   ListenV1Metadata:
     description: Receive metadata about the transcription
     action: receive
@@ -985,7 +3183,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV1MetadataEvent'
+      - $ref: '#/channels/ListenV1/messages/ListenV1Metadata'
   ListenV1UtteranceEnd:
     description: Receive an utterance end event
     action: receive
@@ -1008,7 +3206,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV1UtteranceEndEvent'
+      - $ref: '#/channels/ListenV1/messages/ListenV1UtteranceEnd'
   ListenV1SpeechStarted:
     description: Receive a speech started event
     action: receive
@@ -1031,7 +3229,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV1SpeechStartedEvent'
+      - $ref: '#/channels/ListenV1/messages/ListenV1SpeechStarted'
   ListenV2Media:
     description: Send audio or video data to be transcribed
     action: send
@@ -1054,7 +3252,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV2MediaMessage'
+      - $ref: '#/channels/ListenV2/messages/ListenV2Media'
   ListenV2CloseStream:
     description: Send a CloseStream message to close the WebSocket stream
     action: send
@@ -1077,7 +3275,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV2ControlMessage'
+      - $ref: '#/channels/ListenV2/messages/ListenV2CloseStream'
   ListenV2Connected:
     description: Receive a connected message
     action: receive
@@ -1100,7 +3298,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV2ConnectedEvent'
+      - $ref: '#/channels/ListenV2/messages/ListenV2Connected'
   ListenV2TurnInfo:
     description: Receive a turn info message
     action: receive
@@ -1123,7 +3321,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV2TurnInfoEvent'
+      - $ref: '#/channels/ListenV2/messages/ListenV2TurnInfo'
   ListenV2FatalError:
     description: Receive a fatal error message
     action: receive
@@ -1146,7 +3344,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/ListenV2FatalErrorEvent'
+      - $ref: '#/channels/ListenV2/messages/ListenV2FatalError'
   AgentV1Settings:
     description: Send settings configuration to Deepgram's Voice Agent API
     action: send
@@ -1169,7 +3367,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1SettingsMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Settings'
   AgentV1UpdateSpeak:
     description: Send update speak to Deepgram's Voice Agent API
     action: send
@@ -1192,7 +3390,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1UpdateSpeakMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1UpdateSpeak'
   AgentV1InjectUserMessage:
     action: send
     description: Send inject user message to Deepgram's Voice Agent API
@@ -1215,7 +3413,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1InjectUserMessageMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1InjectUserMessage'
   AgentV1InjectAgentMessage:
     action: send
     description: Send inject agent message to Deepgram's Voice Agent API
@@ -1238,7 +3436,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1InjectAgentMessageMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1InjectAgentMessage'
   AgentV1SendFunctionCallResponse:
     description: |
       Send a function call response from the client to the server after
@@ -1264,7 +3462,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1FunctionCallResponseMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1SendFunctionCallResponse'
   AgentV1ReceiveFunctionCallResponse:
     description: |
       Receive a function call response from the server after the server
@@ -1290,7 +3488,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1FunctionCallResponseMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1ReceiveFunctionCallResponse'
   AgentV1KeepAlive:
     description: Send keep alive to Deepgram's Voice Agent API
     action: send
@@ -1313,7 +3511,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1ControlMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1KeepAlive'
   AgentV1UpdatePrompt:
     description: Send a prompt update to Deepgram's Voice Agent API
     action: send
@@ -1336,7 +3534,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1UpdatePromptMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1UpdatePrompt'
   AgentV1PromptUpdated:
     description: Receive prompt update from Deepgram's Voice Agent API
     action: receive
@@ -1359,7 +3557,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1PromptUpdatedEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1PromptUpdated'
   AgentV1SpeakUpdated:
     description: Receive speak update from Deepgram's Voice Agent API
     action: receive
@@ -1382,7 +3580,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1SpeakUpdatedEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1SpeakUpdated'
   AgentV1InjectionRefused:
     description: Receive injection refused message from Deepgram's Voice Agent API
     action: receive
@@ -1405,7 +3603,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1InjectionRefusedEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1InjectionRefused'
   AgentV1Welcome:
     description: Receive welcome message from Deepgram's Voice Agent API
     action: receive
@@ -1428,7 +3626,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1WelcomeMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Welcome'
   AgentV1SettingsApplied:
     description: Receive settings applied message from Deepgram's Voice Agent API
     action: receive
@@ -1451,7 +3649,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1SettingsAppliedEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1SettingsApplied'
   AgentV1ConversationText:
     description: Receive conversation text from Deepgram's Voice Agent API
     action: receive
@@ -1474,7 +3672,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1ConversationTextEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1ConversationText'
   AgentV1UserStartedSpeaking:
     description: Receive user started speaking message from Deepgram's Voice Agent API
     action: receive
@@ -1497,7 +3695,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1UserStartedSpeakingEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1UserStartedSpeaking'
   AgentV1AgentThinking:
     description: Receive agent thinking message from Deepgram's Voice Agent API
     action: receive
@@ -1520,7 +3718,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1AgentThinkingEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1AgentThinking'
   AgentV1FunctionCallRequest:
     description: Receive function call request from Deepgram's Voice Agent API
     action: receive
@@ -1543,7 +3741,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1FunctionCallRequestEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1FunctionCallRequest'
   AgentV1AgentStartedSpeaking:
     description: Receive agent started speaking message from Deepgram's Voice Agent API
     action: receive
@@ -1566,7 +3764,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1AgentStartedSpeakingEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1AgentStartedSpeaking'
   AgentV1AgentAudioDone:
     description: Receive agent audio done message from Deepgram's Voice Agent API
     action: receive
@@ -1589,7 +3787,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1AgentAudioDoneEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1AgentAudioDone'
   AgentV1Error:
     description: Receive error response from Deepgram's Voice Agent API
     action: receive
@@ -1612,7 +3810,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1ErrorEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Error'
   AgentV1Warning:
     description: Receive warning messages from Deepgram's Voice Agent API
     action: receive
@@ -1635,7 +3833,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1WarningEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Warning'
   AgentV1Media:
     description: Send raw binary audio data to Deepgram's Voice Agent API for processing
     action: send
@@ -1658,7 +3856,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1MediaMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Media'
   AgentV1Audio:
     description: Receive raw binary audio data generated by Deepgram's Voice Agent API
     action: receive
@@ -1681,7 +3879,7 @@ operations:
               name: authToken
               env: DEEPGRAM_TOKEN
     messages:
-      - $ref: '#/components/messages/AgentV1AudioChunkEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Audio'
 components:
   operationTraits:
     V1AuthTrait:
