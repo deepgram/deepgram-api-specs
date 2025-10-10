@@ -423,16 +423,18 @@ paths:
         - Manage
         - V1
         - Projects
+        - Billing
         - Balances
       x-fern-sdk-group-name:
         - manage
         - v1
         - projects
+        - billing
         - balances
       x-fern-sdk-method-name: list
       security:
         - ApiKeyAuth: []
-      operationId: manage.v1.projects.balances.list
+      operationId: manage.v1.projects.billing.balances.list
       description: Generates a list of outstanding balances for the specified project
       responses:
         '200':
@@ -463,16 +465,18 @@ paths:
         - Manage
         - V1
         - Projects
+        - Billing
         - Balances
       x-fern-sdk-group-name:
         - manage
         - v1
         - projects
+        - billing
         - balances
       x-fern-sdk-method-name: get
       security:
         - ApiKeyAuth: []
-      operationId: manage.v1.projects.balances.get
+      operationId: manage.v1.projects.billing.balances.get
       description: Retrieves details about the specified balance
       responses:
         '200':
@@ -481,6 +485,54 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GetProjectBalanceV1Response'
+        '400':
+          description: Invalid Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /v1/projects/{project_id}/billing/breakdown:
+    x-dg-public: true
+    description: View billing summary for a given time period
+    servers:
+      - url: https://api.deepgram.com
+        description: Deepgram Production API
+        x-fern-server-name: Production
+    get:
+      summary: Get Project Billing Breakdown
+      tags:
+        - Manage
+        - V1
+        - Projects
+        - Billing
+        - Breakdown
+      x-fern-sdk-group-name:
+        - manage
+        - v1
+        - projects
+        - billing
+        - breakdown
+      x-fern-sdk-method-name: list
+      security:
+        - ApiKeyAuth: []
+      operationId: manage.v1.projects.billing.breakdown.list
+      description: Retrieves the billing summary for a specific project, with various filter options or by grouping options.
+      parameters:
+        - $ref: '#/components/parameters/ManageV1ProjectId'
+        - $ref: '#/components/parameters/ManageV1StartDate'
+        - $ref: '#/components/parameters/ManageV1EndDate'
+        - $ref: '#/components/parameters/ManageV1FilterAccessor'
+        - $ref: '#/components/parameters/ManageV1FilterDeployment'
+        - $ref: '#/components/parameters/ManageV1FilterTag'
+        - $ref: '#/components/parameters/ManageV1FilterLineItem'
+        - $ref: '#/components/parameters/ManageV1BillingGrouping'
+      responses:
+        '200':
+          description: Billing breakdown response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BillingBreakdownV1Response'
         '400':
           description: Invalid Request
           content:
@@ -1355,16 +1407,18 @@ paths:
         - Manage
         - V1
         - Projects
+        - Billing
         - Purchases
       x-fern-sdk-group-name:
         - manage
         - v1
         - projects
+        - billing
         - purchases
       x-fern-sdk-method-name: list
       security:
         - ApiKeyAuth: []
-      operationId: manage.v1.projects.purchases.list
+      operationId: manage.v1.projects.billing.purchases.list
       description: Returns the original purchased amount on an order transaction
       parameters:
         - $ref: '#/components/parameters/ManageV1Limit'
@@ -2591,6 +2645,85 @@ components:
       schema:
         type: string
       example: 123456-7890-1234-5678-901234
+    ManageV1StartDate:
+      x-fern-optional: true
+      x-fern-type-name: ManageV1StartDate
+      name: start
+      in: query
+      required: false
+      description: Start date of the requested date range. Format accepted is YYYY-MM-DD
+      schema:
+        type: string
+        format: date
+    ManageV1EndDate:
+      x-fern-optional: true
+      x-fern-type-name: ManageV1EndDate
+      name: end
+      in: query
+      required: false
+      description: End date of the requested date range. Format accepted is YYYY-MM-DD
+      schema:
+        type: string
+        format: date
+    ManageV1FilterAccessor:
+      x-fern-optional: true
+      x-fern-type-name: ManageV1FilterAccessor
+      name: accessor
+      in: query
+      required: false
+      description: Filter for requests where a specific accessor was used
+      schema:
+        type: string
+      example: 12345678-1234-1234-1234-123456789012
+    ManageV1FilterDeployment:
+      x-fern-optional: true
+      x-fern-type-name: ManageV1FilterDeployment
+      name: deployment
+      in: query
+      required: false
+      description: Filter for requests where a specific deployment was used
+      schema:
+        type: string
+        enum:
+          - hosted
+          - beta
+          - self-hosted
+        description: Deployment type for the requests
+      example: hosted
+    ManageV1FilterTag:
+      x-fern-optional: true
+      x-fern-type-name: ManageV1FilterTag
+      name: tag
+      in: query
+      required: false
+      description: Filter for requests where a specific tag was used
+      schema:
+        type: string
+      example: tag1
+    ManageV1FilterLineItem:
+      x-fern-optional: true
+      x-fern-type-name: ManageV1FilterLineItem
+      name: line_item
+      in: query
+      required: false
+      description: Filter for requests where a specific line item was used
+      schema:
+        type: string
+      example: streaming::diarize
+    ManageV1BillingGrouping:
+      x-fern-optional: true
+      x-fern-type-name: ManageV1BillingGrouping
+      name: grouping
+      in: query
+      required: false
+      description: Billing data is always grouped by date. Optional additional dimensions to group the billing data by. Add more than one if needed.
+      schema:
+        type: string
+        enum:
+          - accessor
+          - line_item
+          - tags
+          - deployment
     ManageV1IncludeOutdatedModels:
       x-fern-optional: true
       x-fern-type-name: ManageV1IncludeOutdatedModels
@@ -2668,16 +2801,6 @@ components:
       schema:
         type: string
         format: date-time
-    ManageV1FilterAccessor:
-      x-fern-optional: true
-      x-fern-type-name: ManageV1FilterAccessor
-      name: accessor
-      in: query
-      required: false
-      description: Filter for requests where a specific accessor was used
-      schema:
-        type: string
-      example: 12345678-1234-1234-1234-123456789012
     ManageV1FilterRequestId:
       x-fern-optional: true
       x-fern-type-name: ManageV1FilterRequestId
@@ -2688,21 +2811,6 @@ components:
       schema:
         type: string
       example: 12345678-1234-1234-1234-123456789012
-    ManageV1FilterDeployment:
-      x-fern-optional: true
-      x-fern-type-name: ManageV1FilterDeployment
-      name: deployment
-      in: query
-      required: false
-      description: Filter for requests where a specific deployment was used
-      schema:
-        type: string
-        enum:
-          - hosted
-          - beta
-          - self-hosted
-        description: Deployment type for the requests
-      example: hosted
     ManageV1FilterEndpoint:
       x-fern-optional: true
       x-fern-type-name: ManageV1FilterEndpoint
@@ -2755,26 +2863,6 @@ components:
       schema:
         type: string
       example: 123456-7890-1234-5678-901234
-    ManageV1StartDate:
-      x-fern-optional: true
-      x-fern-type-name: ManageV1StartDate
-      name: start
-      in: query
-      required: false
-      description: Start date of the requested date range. Format accepted is YYYY-MM-DD
-      schema:
-        type: string
-        format: date
-    ManageV1EndDate:
-      x-fern-optional: true
-      x-fern-type-name: ManageV1EndDate
-      name: end
-      in: query
-      required: false
-      description: End date of the requested date range. Format accepted is YYYY-MM-DD
-      schema:
-        type: string
-        format: date
     ManageV1FilterAlternatives:
       x-fern-optional: true
       x-fern-type-name: ManageV1FilterAlternatives
@@ -3105,16 +3193,6 @@ components:
       schema:
         type: boolean
       example: true
-    ManageV1FilterTag:
-      x-fern-optional: true
-      x-fern-type-name: ManageV1FilterTag
-      name: tag
-      in: query
-      required: false
-      description: Filter for requests where a specific tag was used
-      schema:
-        type: string
-      example: tag1
     ManageV1FilterTopics:
       x-fern-optional: true
       x-fern-type-name: ManageV1FilterTopics
@@ -3914,6 +3992,86 @@ components:
         purchase_order_id:
           type: string
           description: Description or reference of the purchase
+    BillingBreakdownV1Response:
+      type: object
+      required:
+        - start
+        - end
+        - resolution
+        - results
+      properties:
+        start:
+          type: string
+          format: date
+          description: Start date of the billing summmary period
+          example: '2025-01-16'
+        end:
+          type: string
+          format: date
+          description: End date of the billing summary period
+          example: '2025-01-23'
+        resolution:
+          type: object
+          required:
+            - units
+            - amount
+          properties:
+            units:
+              type: string
+              description: Time unit for the resolution
+              example: day
+            amount:
+              type: integer
+              description: Amount of units
+              example: 1
+        results:
+          type: array
+          items:
+            type: object
+            required:
+              - dollars
+              - grouping
+            properties:
+              dollars:
+                type: number
+                format: float
+                description: USD cost of the billing for this grouping
+                example: 0.25
+              grouping:
+                type: object
+                properties:
+                  start:
+                    type: string
+                    format: date
+                    description: Start date for this group
+                    example: '2025-01-16'
+                  end:
+                    type: string
+                    format: date
+                    description: End date for this group
+                    example: '2025-01-16'
+                  accessor:
+                    type: string
+                    nullable: true
+                    description: Optional accessor identifier, null unless grouped by accessor.
+                    example: '123456789012345678901234'
+                  deployment:
+                    type: string
+                    nullable: true
+                    description: Optional deployment identifier, null unless grouped by deployment.
+                    example: hosted
+                  line_item:
+                    type: string
+                    nullable: true
+                    description: Optional line item identifier, null unless grouped by line item.
+                    example: streaming::nova-3
+                  tags:
+                    type: array
+                    nullable: true
+                    description: Optional list of tags, null unless grouped by tags.
+                    example:
+                      - tag1
+                      - tag2
     ListModelsV1ResponseSttModels:
       type: object
       properties:
