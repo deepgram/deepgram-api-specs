@@ -2719,7 +2719,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1TextMessage'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Text'
   SpeakV1Flush:
     description: Flush the buffer and receive the final audio for text sent so far
     action: send
@@ -2728,7 +2728,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlMessage'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Flush'
   SpeakV1Clear:
     description: Clear the buffer and start a new audio generation. Potentially destructive operation for any text in the buffer
     action: send
@@ -2737,7 +2737,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlMessage'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Clear'
   SpeakV1Close:
     description: Flush the buffer and close the connection gracefully after all audio is generated
     action: send
@@ -2746,7 +2746,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlMessage'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Close'
   SpeakV1Audio:
     description: Receive audio chunks as they are generated
     action: receive
@@ -2755,7 +2755,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1AudioChunkEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Audio'
   SpeakV1Metadata:
     description: Receive metadata about the audio generation
     action: receive
@@ -2764,7 +2764,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1MetadataEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Metadata'
   SpeakV1Flushed:
     description: Receive metadata about the audio generation
     action: receive
@@ -2773,7 +2773,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Flushed'
   SpeakV1Cleared:
     description: Receive metadata about the audio generation
     action: receive
@@ -2782,7 +2782,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1ControlEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Cleared'
   SpeakV1Warning:
     description: Receive a warning about the audio generation
     action: receive
@@ -2791,7 +2791,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/SpeakV1WarningEvent'
+      - $ref: '#/channels/SpeakV1/messages/SpeakV1Warning'
   ListenV1Media:
     description: Send audio or video data to be transcribed
     action: send
@@ -2800,7 +2800,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV1MediaMessage'
+      - $ref: '#/channels/ListenV1/messages/ListenV1Media'
   ListenV1Finalize:
     description: Send a Finalize message to flush the WebSocket stream
     action: send
@@ -2809,7 +2809,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV1ControlMessage'
+      - $ref: '#/channels/ListenV1/messages/ListenV1Finalize'
   ListenV1CloseStream:
     description: Send a CloseStream message to close the WebSocket stream
     action: send
@@ -2818,7 +2818,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV1ControlMessage'
+      - $ref: '#/channels/ListenV1/messages/ListenV1CloseStream'
   ListenV1KeepAlive:
     description: Send a KeepAlive message to keep the WebSocket stream alive
     action: send
@@ -2827,7 +2827,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV1ControlMessage'
+      - $ref: '#/channels/ListenV1/messages/ListenV1KeepAlive'
   ListenV1Results:
     description: Receive transcription results
     action: receive
@@ -2836,7 +2836,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV1ResultsEvent'
+      - $ref: '#/channels/ListenV1/messages/ListenV1Results'
   ListenV1Metadata:
     description: Receive metadata about the transcription
     action: receive
@@ -2845,7 +2845,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV1MetadataEvent'
+      - $ref: '#/channels/ListenV1/messages/ListenV1Metadata'
   ListenV1UtteranceEnd:
     description: Receive an utterance end event
     action: receive
@@ -2854,7 +2854,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV1UtteranceEndEvent'
+      - $ref: '#/channels/ListenV1/messages/ListenV1UtteranceEnd'
   ListenV1SpeechStarted:
     description: Receive a speech started event
     action: receive
@@ -2863,7 +2863,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV1SpeechStartedEvent'
+      - $ref: '#/channels/ListenV1/messages/ListenV1SpeechStarted'
   ListenV2Media:
     description: Send audio or video data to be transcribed
     action: send
@@ -2872,7 +2872,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V2AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV2MediaMessage'
+      - $ref: '#/channels/ListenV2/messages/ListenV2Media'
   ListenV2CloseStream:
     description: Send a CloseStream message to close the WebSocket stream
     action: send
@@ -2881,7 +2881,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V2AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV2ControlMessage'
+      - $ref: '#/channels/ListenV2/messages/ListenV2CloseStream'
   ListenV2Connected:
     description: Receive a connected message
     action: receive
@@ -2890,7 +2890,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V2AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV2ConnectedEvent'
+      - $ref: '#/channels/ListenV2/messages/ListenV2Connected'
   ListenV2TurnInfo:
     description: Receive a turn info message
     action: receive
@@ -2899,7 +2899,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V2AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV2TurnInfoEvent'
+      - $ref: '#/channels/ListenV2/messages/ListenV2TurnInfo'
   ListenV2FatalError:
     description: Receive a fatal error message
     action: receive
@@ -2908,7 +2908,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V2AuthTrait'
     messages:
-      - $ref: '#/components/messages/ListenV2FatalErrorEvent'
+      - $ref: '#/channels/ListenV2/messages/ListenV2FatalError'
   AgentV1Settings:
     description: Send settings configuration to Deepgram's Voice Agent API
     action: send
@@ -2917,7 +2917,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1SettingsMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Settings'
   AgentV1UpdateSpeak:
     description: Send update speak to Deepgram's Voice Agent API
     action: send
@@ -2926,7 +2926,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1UpdateSpeakMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1UpdateSpeak'
   AgentV1InjectUserMessage:
     action: send
     description: Send inject user message to Deepgram's Voice Agent API
@@ -2935,7 +2935,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1InjectUserMessageMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1InjectUserMessage'
   AgentV1InjectAgentMessage:
     action: send
     description: Send inject agent message to Deepgram's Voice Agent API
@@ -2944,7 +2944,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1InjectAgentMessageMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1InjectAgentMessage'
   AgentV1SendFunctionCallResponse:
     description: |
       Send a function call response from the client to the server after
@@ -2956,7 +2956,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1FunctionCallResponseMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1SendFunctionCallResponse'
   AgentV1ReceiveFunctionCallResponse:
     description: |
       Receive a function call response from the server after the server
@@ -2968,7 +2968,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1FunctionCallResponseMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1ReceiveFunctionCallResponse'
   AgentV1KeepAlive:
     description: Send keep alive to Deepgram's Voice Agent API
     action: send
@@ -2977,7 +2977,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1ControlMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1KeepAlive'
   AgentV1UpdatePrompt:
     description: Send a prompt update to Deepgram's Voice Agent API
     action: send
@@ -2986,7 +2986,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1UpdatePromptMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1UpdatePrompt'
   AgentV1PromptUpdated:
     description: Receive prompt update from Deepgram's Voice Agent API
     action: receive
@@ -2995,7 +2995,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1PromptUpdatedEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1PromptUpdated'
   AgentV1SpeakUpdated:
     description: Receive speak update from Deepgram's Voice Agent API
     action: receive
@@ -3004,7 +3004,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1SpeakUpdatedEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1SpeakUpdated'
   AgentV1InjectionRefused:
     description: Receive injection refused message from Deepgram's Voice Agent API
     action: receive
@@ -3013,7 +3013,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1InjectionRefusedEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1InjectionRefused'
   AgentV1Welcome:
     description: Receive welcome message from Deepgram's Voice Agent API
     action: receive
@@ -3022,7 +3022,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1WelcomeMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Welcome'
   AgentV1SettingsApplied:
     description: Receive settings applied message from Deepgram's Voice Agent API
     action: receive
@@ -3031,7 +3031,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1SettingsAppliedEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1SettingsApplied'
   AgentV1ConversationText:
     description: Receive conversation text from Deepgram's Voice Agent API
     action: receive
@@ -3040,7 +3040,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1ConversationTextEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1ConversationText'
   AgentV1UserStartedSpeaking:
     description: Receive user started speaking message from Deepgram's Voice Agent API
     action: receive
@@ -3049,7 +3049,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1UserStartedSpeakingEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1UserStartedSpeaking'
   AgentV1AgentThinking:
     description: Receive agent thinking message from Deepgram's Voice Agent API
     action: receive
@@ -3058,7 +3058,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1AgentThinkingEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1AgentThinking'
   AgentV1FunctionCallRequest:
     description: Receive function call request from Deepgram's Voice Agent API
     action: receive
@@ -3067,7 +3067,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1FunctionCallRequestEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1FunctionCallRequest'
   AgentV1AgentStartedSpeaking:
     description: Receive agent started speaking message from Deepgram's Voice Agent API
     action: receive
@@ -3076,7 +3076,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1AgentStartedSpeakingEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1AgentStartedSpeaking'
   AgentV1AgentAudioDone:
     description: Receive agent audio done message from Deepgram's Voice Agent API
     action: receive
@@ -3085,7 +3085,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1AgentAudioDoneEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1AgentAudioDone'
   AgentV1Error:
     description: Receive error response from Deepgram's Voice Agent API
     action: receive
@@ -3094,7 +3094,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1ErrorEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Error'
   AgentV1Warning:
     description: Receive warning messages from Deepgram's Voice Agent API
     action: receive
@@ -3103,7 +3103,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1WarningEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Warning'
   AgentV1Media:
     description: Send raw binary audio data to Deepgram's Voice Agent API for processing
     action: send
@@ -3112,7 +3112,7 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1MediaMessage'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Media'
   AgentV1Audio:
     description: Receive raw binary audio data generated by Deepgram's Voice Agent API
     action: receive
@@ -3121,4 +3121,4 @@ operations:
     traits:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
-      - $ref: '#/components/messages/AgentV1AudioChunkEvent'
+      - $ref: '#/channels/AgentV1/messages/AgentV1Audio'
