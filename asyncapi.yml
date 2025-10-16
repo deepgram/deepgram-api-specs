@@ -550,7 +550,7 @@ components:
               - Cleared
             description: Message type identifier
           sequence_id:
-            type: integer
+            type: number
             description: The sequence ID of the response
         required:
           - type
@@ -611,7 +611,7 @@ components:
           channel_index:
             type: array
             items:
-              type: integer
+              type: number
             description: The index of the channel
           duration:
             type: number
@@ -668,7 +668,7 @@ components:
                             type: string
                             description: The punctuated word of the word
                           speaker:
-                            type: integer
+                            type: number
                             description: The speaker of the word
                         required:
                           - word
@@ -776,7 +776,7 @@ components:
           channel:
             type: array
             items:
-              type: integer
+              type: number
             description: The channel
           last_word_end:
             type: number
@@ -800,7 +800,7 @@ components:
           channel:
             type: array
             items:
-              type: integer
+              type: number
             description: The channel
           timestamp:
             type: number
@@ -851,7 +851,7 @@ components:
             format: uuid
             description: The unique identifier of the request
           sequence_id:
-            type: integer
+            type: number
             minimum: 0
             description: |
               Starts at `0` and increments for each message the server sends
@@ -882,7 +882,7 @@ components:
             format: uuid
             description: The unique identifier of the request
           sequence_id:
-            type: integer
+            type: number
             minimum: 0
             description: |
               Starts at `0` and increments for each message the server sends to the client.  This includes messages of other types, like `Connected` messages.
@@ -903,7 +903,7 @@ components:
               - **TurnResumed** - The system detected that speech had ended and therefore sent an **EagerEndOfTurn** event, but speech is actually continuing for this turn
               - **EndOfTurn** - The user has finished speaking for the turn
           turn_index:
-            type: integer
+            type: number
             minimum: 0
             description: The index of the current turn
           audio_window_start:
@@ -1010,7 +1010,7 @@ components:
               - Error
             description: Message type identifier
           sequence_id:
-            type: integer
+            type: number
             minimum: 0
             description: |
               Starts at `0` and increments for each message the server sends
@@ -1079,7 +1079,7 @@ components:
                       - g729
                     description: Audio encoding format
                   sample_rate:
-                    type: integer
+                    type: number
                     default: 24000
                     description: Sample rate in Hz. Common values are 16000, 24000, 44100, 48000
               output:
@@ -1095,10 +1095,10 @@ components:
                       - alaw
                     description: Audio encoding format for streaming TTS output
                   sample_rate:
-                    type: integer
+                    type: number
                     description: Sample rate in Hz
                   bitrate:
-                    type: integer
+                    type: number
                     description: Audio bitrate in bits per second
                   container:
                     type: string
@@ -1368,7 +1368,7 @@ components:
                         type: string
                         enum:
                           - max
-                      - type: integer
+                      - type: number
                         minimum: 2
               speak:
                 oneOf:

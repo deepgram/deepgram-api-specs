@@ -187,7 +187,7 @@ components:
       type: object
       properties:
         ttl_seconds:
-          type: integer
+          type: number
           minimum: 1
           maximum: 3600
           description: Time to live in seconds for the token. Defaults to 30 seconds.
@@ -408,11 +408,11 @@ components:
                                   type: number
                                   format: float
                           speaker:
-                            type: integer
-                            format: int32
+                            type: number
+                            format: float
                           num_words:
-                            type: integer
-                            format: int32
+                            type: number
+                            format: float
                           start:
                             type: number
                             format: float
@@ -427,11 +427,11 @@ components:
                       summary:
                         type: string
                       start_word:
-                        type: integer
-                        format: int32
+                        type: number
+                        format: float
                       end_word:
-                        type: integer
-                        format: int32
+                        type: number
+                        format: float
                 topics:
                   type: array
                   items:
@@ -440,11 +440,11 @@ components:
                       text:
                         type: string
                       start_word:
-                        type: integer
-                        format: int32
+                        type: number
+                        format: float
                       end_word:
-                        type: integer
-                        format: int32
+                        type: number
+                        format: float
                       topics:
                         type: array
                         items:
@@ -466,8 +466,8 @@ components:
             type: number
             format: float
           channel:
-            type: integer
-            format: int32
+            type: number
+            format: float
           transcript:
             type: string
           words:
@@ -487,16 +487,16 @@ components:
                   type: number
                   format: float
                 speaker:
-                  type: integer
-                  format: int32
+                  type: number
+                  format: float
                 speaker_confidence:
-                  type: integer
-                  format: int32
+                  type: number
+                  format: float
                 punctuated_word:
                   type: string
           speaker:
-            type: integer
-            format: int32
+            type: number
+            format: float
           id:
             type: string
             format: uuid
@@ -528,10 +528,10 @@ components:
                         type: string
                         example: 'And, um, I think if it signifies anything, it is, uh, to honor the the women who came before us who, um, were skilled and qualified, um, and didn''t get the the same opportunities that we have today.'
                       start_word:
-                        type: integer
+                        type: number
                         example: 32
                       end_word:
-                        type: integer
+                        type: number
                         example: 69
                       topics:
                         type: array
@@ -564,10 +564,10 @@ components:
                         type: string
                         example: 'If you found this valuable, you can subscribe to the show on spotify or your favorite podcast app.'
                       start_word:
-                        type: integer
+                        type: number
                         example: 354
                       end_word:
-                        type: integer
+                        type: number
                         example: 414
                       intents:
                         type: array
@@ -912,7 +912,7 @@ components:
                 type: string
                 description: The unique identifier of the balance
               amount:
-                type: integer
+                type: number
                 default: 0
                 description: The amount of the balance
               units:
@@ -928,7 +928,7 @@ components:
           type: string
           description: The unique identifier of the balance
         amount:
-          type: integer
+          type: number
           default: 0
           description: The amount of the balance
         units:
@@ -966,7 +966,7 @@ components:
               description: Time unit for the resolution
               example: day
             amount:
-              type: integer
+              type: number
               description: Amount of units
               example: 1
         results:
@@ -1121,7 +1121,7 @@ components:
           format: date-time
           example: '2026-01-01T00:00:00Z'
         time_to_live_in_seconds:
-          type: integer
+          type: number
           example: 3600
       oneOf:
         - required:
@@ -1335,7 +1335,7 @@ components:
           type: object
           description: The response of the request
         code:
-          type: integer
+          type: number
           description: The response code of the request
         deployment:
           type: string
@@ -1347,10 +1347,10 @@ components:
       type: object
       properties:
         page:
-          type: integer
+          type: number
           description: The page number of the paginated response
         limit:
-          type: integer
+          type: number
           description: The number of results per page
         requests:
           type: array
@@ -1561,7 +1561,7 @@ components:
               type: string
               example: day
             amount:
-              type: integer
+              type: number
               example: 1
           results:
             type: array
@@ -1585,25 +1585,25 @@ components:
                   format: float
                   example: 1099.3888366666667
                 requests:
-                  type: integer
+                  type: number
                   example: 425109
                 tokens:
                   type: object
                   properties:
                     in:
-                      type: integer
+                      type: number
                       example: 24770
                     out:
-                      type: integer
+                      type: number
                       example: 7521
                 tts:
                   type: object
                   properties:
                     characters:
-                      type: integer
+                      type: number
                       example: 9004185
                     requests:
-                      type: integer
+                      type: number
                       example: 23126
     UsageBreakdownV1Response:
       type: object
@@ -1634,7 +1634,7 @@ components:
               description: Time unit for the resolution
               example: day
             amount:
-              type: integer
+              type: number
               description: Amount of units
               example: 1
         results:
@@ -1667,19 +1667,19 @@ components:
                 description: Agent hours used
                 example: 41.33564388888889
               tokens_in:
-                type: integer
+                type: number
                 description: Number of input tokens
                 example: 0
               tokens_out:
-                type: integer
+                type: number
                 description: Number of output tokens
                 example: 0
               tts_characters:
-                type: integer
+                type: number
                 description: Number of text-to-speech characters processed
                 example: 9158866
               requests:
-                type: integer
+                type: number
                 description: Number of requests
                 example: 373381
               grouping:
@@ -1833,9 +1833,9 @@ components:
                   type: string
                   format: uuid
                 input_tokens:
-                  type: integer
+                  type: number
                 output_tokens:
-                  type: integer
+                  type: number
             sentiment_info:
               type: object
               properties:
@@ -1843,9 +1843,9 @@ components:
                   type: string
                   format: uuid
                 input_tokens:
-                  type: integer
+                  type: number
                 output_tokens:
-                  type: integer
+                  type: number
             topics_info:
               type: object
               properties:
@@ -1853,9 +1853,9 @@ components:
                   type: string
                   format: uuid
                 input_tokens:
-                  type: integer
+                  type: number
                 output_tokens:
-                  type: integer
+                  type: number
             intents_info:
               type: object
               properties:
@@ -1863,9 +1863,9 @@ components:
                   type: string
                   format: uuid
                 input_tokens:
-                  type: integer
+                  type: number
                 output_tokens:
-                  type: integer
+                  type: number
     ReadV1ResponseResultsSummary:
       type: object
       description: Output whenever `summary=true` is used
@@ -2419,7 +2419,7 @@ components:
       required: false
       description: 'Number of results to return per page. Default 10. Range [1,1000]'
       schema:
-        type: integer
+        type: number
         default: 10
         minimum: 1
         maximum: 1000
@@ -2431,7 +2431,7 @@ components:
       required: false
       description: Navigate and return the results to retrieve specific portions of information of the response
       schema:
-        type: integer
+        type: number
     ManageV1BalanceId:
       x-fern-type-name: ManageV1BalanceId
       name: balance_id
@@ -3108,7 +3108,7 @@ components:
         oneOf:
           - title: mp3(default)
             description: 'Encoding - mp3(default). Supported bitrates - 32000, 48000(default) bps.'
-            type: integer
+            type: number
             nullable: true
             enum:
               - 32000
@@ -3120,7 +3120,7 @@ components:
                 name: FortyEightThousand
           - title: opus
             description: Encoding - opus. Bitrate range - 4000-650000 bps.
-            type: integer
+            type: number
             nullable: true
             minimum: 4000
             maximum: 650000
@@ -3131,7 +3131,7 @@ components:
                 name: SixHundredFiftyThousand
           - title: aac
             description: Encoding -aac. Bitrate range - 4000-192000 bps.
-            type: integer
+            type: number
             nullable: true
             minimum: 4000
             maximum: 192000
@@ -3309,7 +3309,7 @@ components:
         oneOf:
           - title: linear16
             description: 'Encoding - linear16. Supported sample rates - 8000, 16000, 24000, 32000, 48000 Hz.'
-            type: integer
+            type: number
             nullable: true
             enum:
               - 8000
@@ -3330,7 +3330,7 @@ components:
                 name: FortyEightThousand
           - title: mulaw
             description: 'Encoding - mulaw. Supported sample rates - 8000, 16000 Hz.'
-            type: integer
+            type: number
             nullable: true
             enum:
               - 8000
@@ -3342,7 +3342,7 @@ components:
                 name: SixteenThousand
           - title: alaw
             description: 'Encoding - alaw. Supported sample rates - 8000, 16000 Hz.'
-            type: integer
+            type: number
             nullable: true
             enum:
               - 8000
@@ -3354,7 +3354,7 @@ components:
                 name: SixteenThousand
           - title: mp3
             description: Encoding - mp3. Sample rate is fixed and not configurable (22050 Hz).
-            type: integer
+            type: number
             nullable: true
             enum:
               - 22050
@@ -3363,7 +3363,7 @@ components:
                 name: TwentyTwoThousandFifty
           - title: opus
             description: Encoding - opus. Sample rate is fixed at 48000 Hz.
-            type: integer
+            type: number
             nullable: true
             enum:
               - 48000
