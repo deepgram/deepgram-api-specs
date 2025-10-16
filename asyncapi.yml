@@ -264,64 +264,6 @@ components:
     ListenV1Language:
       description: The [BCP-47 language tag](https://tools.ietf.org/html/bcp47) that hints at the primary spoken language. Depending on the Model you choose only certain languages are available
       default: en
-      enum:
-        - bg
-        - ca
-        - cs
-        - da
-        - da-DK
-        - de
-        - de-CH
-        - el
-        - en
-        - en-AU
-        - en-GB
-        - en-IN
-        - en-NZ
-        - en-US
-        - es
-        - es-419
-        - es-LATAM
-        - et
-        - fi
-        - fr
-        - fr-CA
-        - hi
-        - hi-Latn
-        - hu
-        - id
-        - it
-        - ja
-        - ko
-        - ko-KR
-        - lt
-        - lv
-        - ms
-        - multi
-        - nl
-        - nl-BE
-        - 'no'
-        - pl
-        - pt
-        - pt-BR
-        - pt-PT
-        - ro
-        - ru
-        - sk
-        - sv
-        - sv-SE
-        - taq
-        - th
-        - th-TH
-        - tr
-        - uk
-        - vi
-        - zh
-        - zh-CN
-        - zh-HK
-        - zh-Hans
-        - zh-Hant
-        - zh-TW
       examples:
         - en
     ListenV1MipOptOut:
@@ -1166,9 +1108,6 @@ components:
             properties:
               language:
                 type: string
-                enum:
-                  - en
-                  - es
                 default: en
                 description: Agent language
               context:
@@ -2490,7 +2429,9 @@ components:
 channels:
   SpeakV1:
     x-dg-public: true
-    x-fern-sdk-group-name: speak
+    x-fern-sdk-group-name:
+      - speak
+      - v1
     address: /v1/speak
     description: Convert text into natural-sounding speech using Deepgram's TTS WebSocket
     servers:
@@ -2529,7 +2470,9 @@ channels:
         $ref: '#/components/messages/SpeakV1WarningEvent'
   ListenV1:
     x-dg-public: true
-    x-fern-sdk-group-name: listen
+    x-fern-sdk-group-name:
+      - listen
+      - v1
     address: /v1/listen
     description: Transcribe audio and video using Deepgram's speech-to-text WebSocket
     servers:
@@ -2658,7 +2601,9 @@ channels:
         $ref: '#/components/messages/ListenV2FatalErrorEvent'
   AgentV1:
     x-dg-public: true
-    x-fern-sdk-group-name: agent
+    x-fern-sdk-group-name:
+      - agent
+      - v1
     address: /v1/agent/converse
     servers:
       - $ref: '#/servers/agent'
