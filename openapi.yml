@@ -3849,6 +3849,8 @@ paths:
       - url: 'https://api.deepgram.com'
         description: Deepgram Production API
         x-fern-server-name: Production
+    parameters:
+      - $ref: '#/components/parameters/ManageV1ProjectId'
     get:
       summary: Get Project Billing Breakdown
       tags:
@@ -3869,7 +3871,6 @@ paths:
       operationId: manage.v1.projects.billing.breakdown.list
       description: 'Retrieves the billing summary for a specific project, with various filter options or by grouping options.'
       parameters:
-        - $ref: '#/components/parameters/ManageV1ProjectId'
         - $ref: '#/components/parameters/ManageV1StartDate'
         - $ref: '#/components/parameters/ManageV1EndDate'
         - $ref: '#/components/parameters/ManageV1FilterAccessor'

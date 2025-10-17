@@ -402,14 +402,18 @@ components:
       examples:
         - flux-general-en
     ListenV2Encoding:
-      description: Encoding of the audio stream. Currently only supports raw signed little-endian 16-bit PCM.
+      description: Encoding of the audio stream. Required if sending non-containerized/raw audio. If sending containerized audio, this parameter should be omitted.
       enum:
         - linear16
-      default: linear16
+        - linear32
+        - mulaw
+        - alaw
+        - opus
+        - ogg-opus
       examples:
         - linear16
     ListenV2SampleRate:
-      description: Sample rate of the audio stream in Hz.
+      description: Sample rate of the audio stream in Hz. Required if sending non-containerized/raw audio. If sending containerized audio, this parameter should be omitted.
       examples:
         - '16000'
     ListenV2EagerEotThreshold:
@@ -2588,6 +2592,8 @@ channels:
               $ref: '#/components/schemas/ListenV2MipOptOut'
             tag:
               $ref: '#/components/schemas/ListenV2Tag'
+          required:
+            - model
     messages:
       ListenV2Media:
         $ref: '#/components/messages/ListenV2MediaMessage'
