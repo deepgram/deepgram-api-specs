@@ -237,14 +237,6 @@ components:
       description: Arbitrary key-value pairs that are attached to the API response for usage in downstream processing
       examples:
         - key:value
-    ListenV1FillerWords:
-      description: Filler Words can help transcribe interruptions in your audio, like "uh" and "um"
-      default: 'false'
-      enum:
-        - 'true'
-        - 'false'
-      examples:
-        - 'true'
     ListenV1InterimResults:
       description: Specifies whether the streaming endpoint should provide ongoing transcription updates as more audio is received. When set to true, the endpoint sends continuous updates, meaning transcription results may evolve over time
       default: 'false'
@@ -2502,8 +2494,6 @@ channels:
               $ref: '#/components/schemas/ListenV1Endpointing'
             extra:
               $ref: '#/components/schemas/ListenV1Extra'
-            filler_words:
-              $ref: '#/components/schemas/ListenV1FillerWords'
             interim_results:
               $ref: '#/components/schemas/ListenV1InterimResults'
             keyterm:
