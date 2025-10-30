@@ -3956,6 +3956,7 @@ paths:
         - projects
         - billing
         - fields
+      x-fern-sdk-method-name: list
       security:
         - ApiKeyAuth: []
       operationId: manage.v1.projects.billing.fields.list
