@@ -167,8 +167,8 @@ components:
           name: SixteenThousand
         '24000':
           name: TwentyFourThousand
-        '44100':
-          name: FortyFourThousandOneHundred
+        '32000':
+          name: ThirtyTwoThousand
         '48000':
           name: FortyEightThousand
       examples:
