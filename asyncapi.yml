@@ -671,12 +671,9 @@ components:
                           - start
                           - end
                           - confidence
-                          - language
-                          - punctuated_word
                   required:
                     - transcript
                     - confidence
-                    - languages
                     - words
             required:
               - alternatives
