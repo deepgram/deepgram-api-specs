@@ -2650,6 +2650,7 @@ channels:
         $ref: '#/components/messages/AgentV1UpdatePromptMessage'
 operations:
   SpeakV1Text:
+    x-fern-sdk-method-name: sendText
     description: Text to convert to audio
     action: send
     channel:
@@ -2659,6 +2660,7 @@ operations:
     messages:
       - $ref: '#/channels/SpeakV1/messages/SpeakV1Text'
   SpeakV1Flush:
+    x-fern-sdk-method-name: sendFlush
     description: Flush the buffer and receive the final audio for text sent so far
     action: send
     channel:
@@ -2668,6 +2670,7 @@ operations:
     messages:
       - $ref: '#/channels/SpeakV1/messages/SpeakV1Flush'
   SpeakV1Clear:
+    x-fern-sdk-method-name: sendClear
     description: Clear the buffer and start a new audio generation. Potentially destructive operation for any text in the buffer
     action: send
     channel:
@@ -2677,6 +2680,7 @@ operations:
     messages:
       - $ref: '#/channels/SpeakV1/messages/SpeakV1Clear'
   SpeakV1Close:
+    x-fern-sdk-method-name: sendClose
     description: Flush the buffer and close the connection gracefully after all audio is generated
     action: send
     channel:
@@ -2731,6 +2735,7 @@ operations:
     messages:
       - $ref: '#/channels/SpeakV1/messages/SpeakV1Warning'
   ListenV1Media:
+    x-fern-sdk-method-name: sendMedia
     description: Send audio or video data to be transcribed
     action: send
     channel:
@@ -2740,6 +2745,7 @@ operations:
     messages:
       - $ref: '#/channels/ListenV1/messages/ListenV1Media'
   ListenV1Finalize:
+    x-fern-sdk-method-name: sendFinalize
     description: Send a Finalize message to flush the WebSocket stream
     action: send
     channel:
@@ -2749,6 +2755,7 @@ operations:
     messages:
       - $ref: '#/channels/ListenV1/messages/ListenV1Finalize'
   ListenV1CloseStream:
+    x-fern-sdk-method-name: sendCloseStream
     description: Send a CloseStream message to close the WebSocket stream
     action: send
     channel:
@@ -2758,6 +2765,7 @@ operations:
     messages:
       - $ref: '#/channels/ListenV1/messages/ListenV1CloseStream'
   ListenV1KeepAlive:
+    x-fern-sdk-method-name: sendKeepAlive
     description: Send a KeepAlive message to keep the WebSocket stream alive
     action: send
     channel:
@@ -2803,6 +2811,7 @@ operations:
     messages:
       - $ref: '#/channels/ListenV1/messages/ListenV1SpeechStarted'
   ListenV2Media:
+    x-fern-sdk-method-name: sendMedia
     description: Send audio or video data to be transcribed
     action: send
     channel:
@@ -2812,6 +2821,7 @@ operations:
     messages:
       - $ref: '#/channels/ListenV2/messages/ListenV2Media'
   ListenV2CloseStream:
+    x-fern-sdk-method-name: sendCloseStream
     description: Send a CloseStream message to close the WebSocket stream
     action: send
     channel:
@@ -2848,6 +2858,7 @@ operations:
     messages:
       - $ref: '#/channels/ListenV2/messages/ListenV2FatalError'
   AgentV1Settings:
+    x-fern-sdk-method-name: sendSettings
     description: Send settings configuration to Deepgram's Voice Agent API
     action: send
     channel:
@@ -2857,6 +2868,7 @@ operations:
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1Settings'
   AgentV1UpdateSpeak:
+    x-fern-sdk-method-name: sendUpdateSpeak
     description: Send update speak to Deepgram's Voice Agent API
     action: send
     channel:
@@ -2866,6 +2878,7 @@ operations:
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1UpdateSpeak'
   AgentV1InjectUserMessage:
+    x-fern-sdk-method-name: sendInjectUserMessage
     action: send
     description: Send inject user message to Deepgram's Voice Agent API
     channel:
@@ -2875,6 +2888,7 @@ operations:
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1InjectUserMessage'
   AgentV1InjectAgentMessage:
+    x-fern-sdk-method-name: sendInjectAgentMessage
     action: send
     description: Send inject agent message to Deepgram's Voice Agent API
     channel:
@@ -2884,6 +2898,7 @@ operations:
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1InjectAgentMessage'
   AgentV1SendFunctionCallResponse:
+    x-fern-sdk-method-name: sendFunctionCallResponse
     description: |
       Send a function call response from the client to the server after
       executing a client-side function call. This is used when the server
@@ -2896,6 +2911,7 @@ operations:
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1SendFunctionCallResponse'
   AgentV1ReceiveFunctionCallResponse:
+    x-fern-sdk-method-name: onFunctionCallResponse
     description: |
       Receive a function call response from the server after the server
       has executed a server-side function call internally. This occurs
@@ -2908,6 +2924,7 @@ operations:
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1ReceiveFunctionCallResponse'
   AgentV1KeepAlive:
+    x-fern-sdk-method-name: sendKeepAlive
     description: Send keep alive to Deepgram's Voice Agent API
     action: send
     channel:
@@ -2917,6 +2934,7 @@ operations:
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1KeepAlive'
   AgentV1UpdatePrompt:
+    x-fern-sdk-method-name: sendUpdatePrompt
     description: Send a prompt update to Deepgram's Voice Agent API
     action: send
     channel:
@@ -3043,6 +3061,7 @@ operations:
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1Warning'
   AgentV1Media:
+    x-fern-sdk-method-name: sendMedia
     description: Send raw binary audio data to Deepgram's Voice Agent API for processing
     action: send
     channel:
