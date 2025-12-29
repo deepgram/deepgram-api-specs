@@ -1102,7 +1102,8 @@ components:
               language:
                 type: string
                 default: en
-                description: Agent language
+                description: Deprecated. Use `listen.provider.language` and `speak.provider.language` fields instead.
+                deprecated: true
               context:
                 type: object
                 description: Conversation context including the history of messages and function calls
@@ -1175,26 +1176,56 @@ components:
                 properties:
                   provider:
                     type: object
-                    required:
-                      - type
-                    properties:
-                      type:
-                        type: string
-                        enum:
-                          - deepgram
-                        description: Provider type for speech-to-text
-                      model:
-                        type: string
-                        description: Model to use for speech to text
-                      keyterms:
-                        type: array
-                        items:
-                          type: string
-                        description: Prompt key-term recognition (nova-3 'en' only)
-                      smart_format:
-                        type: boolean
-                        default: false
-                        description: Applies smart formatting to improve transcript readability (Deepgram providers only)
+                    oneOf:
+                      - type: object
+                        required:
+                          - type
+                        properties:
+                          type:
+                            type: string
+                            const: deepgram
+                            description: Provider type for speech-to-text
+                          version:
+                            type: string
+                            const: v1
+                            description: Specifies usage of the V1 Deepgram speech-to-text API
+                          model:
+                            type: string
+                            description: Model to use for speech to text using the V1 API (e.g. Nova-3, Nova-2)
+                          language:
+                            type: string
+                            default: en-US
+                            description: Language code to use for speech-to-text.  Can be a BCP-47 language tag (e.g. `en`), or `multi` for code-switching transcription
+                          keyterms:
+                            type: array
+                            items:
+                              type: string
+                            description: Prompt keyterm recognition to improve Keyword Recall Rate
+                          smart_format:
+                            type: boolean
+                            default: false
+                            description: Applies smart formatting to improve transcript readability
+                      - type: object
+                        required:
+                          - type
+                          - model
+                        properties:
+                          type:
+                            type: string
+                            const: deepgram
+                            description: Provider type for speech-to-text
+                          version:
+                            type: string
+                            const: v2
+                            description: Specifies usage of the V2 Deepgram speech-to-text API (e.g. Flux)
+                          model:
+                            type: string
+                            description: Model to use for speech to text using the V2 API (e.g. flux-general-en)
+                          keyterms:
+                            type: array
+                            items:
+                              type: string
+                            description: Prompt keyterm recognition to improve Keyword Recall Rate
               think:
                 type: object
                 required:
@@ -1202,14 +1233,20 @@ components:
                 properties:
                   provider:
                     type: object
-                    required:
-                      - type
-                      - model
                     oneOf:
-                      - properties:
+                      - type: object
+                        required:
+                          - type
+                          - model
+                        properties:
                           type:
+                            type: string
+                            const: open_ai
+                          version:
+                            type: string
                             enum:
-                              - open_ai
+                              - v1
+                            description: The REST API version for the OpenAI chat completions API
                           model:
                             type: string
                             description: OpenAI model to use
@@ -1227,10 +1264,14 @@ components:
                             description: OpenAI temperature (0-2)
                             minimum: 0
                             maximum: 2
-                      - properties:
+                      - type: object
+                        required:
+                          - type
+                          - model
+                        properties:
                           type:
-                            enum:
-                              - aws_bedrock
+                            type: string
+                            const: aws_bedrock
                           model:
                             type: string
                             description: AWS Bedrock model to use
@@ -1264,10 +1305,19 @@ components:
                               session_token:
                                 type: string
                                 description: AWS session token (required for STS only)
-                      - properties:
+                      - type: object
+                        required:
+                          - type
+                          - model
+                        properties:
                           type:
+                            type: string
+                            const: anthropic
+                          version:
+                            type: string
                             enum:
-                              - anthropic
+                              - v1
+                            description: The REST API version for the Anthropic Messages API
                           model:
                             type: string
                             description: Anthropic model to use
@@ -1279,10 +1329,19 @@ components:
                             description: Anthropic temperature (0-1)
                             minimum: 0
                             maximum: 1
-                      - properties:
+                      - type: object
+                        required:
+                          - type
+                          - model
+                        properties:
                           type:
+                            type: string
+                            const: google
+                          version:
+                            type: string
                             enum:
-                              - google
+                              - v1beta
+                            description: The REST API version for the Google generative language API
                           model:
                             type: string
                             description: Google model to use
@@ -1295,10 +1354,19 @@ components:
                             description: Google temperature (0-2)
                             minimum: 0
                             maximum: 2
-                      - properties:
+                      - type: object
+                        required:
+                          - type
+                          - model
+                        properties:
                           type:
+                            type: string
+                            const: groq
+                          version:
+                            type: string
                             enum:
-                              - groq
+                              - v1
+                            description: The REST API version for the Groq's chat completions API (mostly OpenAI-compatible)
                           model:
                             type: string
                             description: Groq model to use
@@ -1380,6 +1448,11 @@ components:
                               type:
                                 type: string
                                 const: deepgram
+                              version:
+                                type: string
+                                enum:
+                                  - v1
+                                description: The REST API version for the Deepgram text-to-speech API
                               model:
                                 type: string
                                 enum:
@@ -1455,6 +1528,11 @@ components:
                               type:
                                 type: string
                                 const: eleven_labs
+                              version:
+                                type: string
+                                enum:
+                                  - v1
+                                description: The REST API version for the ElevenLabs text-to-speech API
                               model_id:
                                 type: string
                                 enum:
@@ -1462,9 +1540,13 @@ components:
                                   - eleven_monolingual_v1
                                   - eleven_multilingual_v2
                                 description: Eleven Labs model ID
+                              language:
+                                type: string
+                                description: Optional language to use, e.g. 'en-US'.   Corresponds to the `language_code` parameter in the ElevenLabs API
                               language_code:
                                 type: string
-                                description: Eleven Labs optional language code
+                                deprecated: true
+                                description: Use the `language` field instead.
                           - type: object
                             required:
                               - type
@@ -1474,6 +1556,11 @@ components:
                               type:
                                 type: string
                                 const: cartesia
+                              version:
+                                type: string
+                                enum:
+                                  - null
+                                description: The API version header for the Cartesia text-to-speech API
                               model_id:
                                 type: string
                                 enum:
@@ -1504,6 +1591,11 @@ components:
                               type:
                                 type: string
                                 const: open_ai
+                              version:
+                                type: string
+                                enum:
+                                  - v1
+                                description: The REST API version for the OpenAI text-to-speech API
                               model:
                                 type: string
                                 enum:
@@ -1524,7 +1616,7 @@ components:
                             required:
                               - type
                               - voice
-                              - language_code
+                              - language
                               - engine
                               - credentials
                             properties:
@@ -1543,9 +1635,13 @@ components:
                                   - Aria
                                   - Ayanda
                                 description: AWS Polly voice name
+                              language:
+                                type: string
+                                description: Language to use, e.g. 'en-US'.   Corresponds to the `language_code` parameter in the AWS Polly API
                               language_code:
                                 type: string
-                                description: Language code (e.g., "en-US")
+                                deprecated: true
+                                description: Use the `language` field instead.
                               engine:
                                 type: string
                                 enum:
@@ -1607,6 +1703,11 @@ components:
                                 type:
                                   type: string
                                   const: deepgram
+                                version:
+                                  type: string
+                                  enum:
+                                    - v1
+                                  description: The REST API version for the Deepgram text-to-speech API
                                 model:
                                   type: string
                                   enum:
@@ -1682,6 +1783,11 @@ components:
                                 type:
                                   type: string
                                   const: eleven_labs
+                                version:
+                                  type: string
+                                  enum:
+                                    - v1
+                                  description: The REST API version for the Deepgram text-to-speech API
                                 model_id:
                                   type: string
                                   enum:
@@ -1689,9 +1795,13 @@ components:
                                     - eleven_monolingual_v1
                                     - eleven_multilingual_v2
                                   description: Eleven Labs model ID
+                                language:
+                                  type: string
+                                  description: Optional language to use, e.g. 'en-US'.   Corresponds to the `language_code` parameter in the ElevenLabs API
                                 language_code:
                                   type: string
-                                  description: Eleven Labs optional language code
+                                  deprecated: true
+                                  description: Use the `language` field instead.
                             - type: object
                               required:
                                 - type
@@ -1701,6 +1811,11 @@ components:
                                 type:
                                   type: string
                                   const: cartesia
+                                version:
+                                  type: string
+                                  enum:
+                                    - null
+                                  description: The API version header for the Cartesia text-to-speech API
                                 model_id:
                                   type: string
                                   enum:
@@ -1731,6 +1846,11 @@ components:
                                 type:
                                   type: string
                                   const: open_ai
+                                version:
+                                  type: string
+                                  enum:
+                                    - v1
+                                  description: The REST API version for the OpenAI text-to-speech API
                                 model:
                                   type: string
                                   enum:
@@ -1751,7 +1871,7 @@ components:
                               required:
                                 - type
                                 - voice
-                                - language_code
+                                - language
                                 - engine
                                 - credentials
                               properties:
@@ -1770,9 +1890,13 @@ components:
                                     - Aria
                                     - Ayanda
                                   description: AWS Polly voice name
+                                language:
+                                  type: string
+                                  description: Language code to use, e.g. 'en-US'.   Corresponds to the `language_code` parameter in the AWS Polly API
                                 language_code:
                                   type: string
-                                  description: Language code (e.g., "en-US")
+                                  deprecated: true
+                                  description: Use the `language` field instead.
                                 engine:
                                   type: string
                                   enum:
@@ -1852,6 +1976,11 @@ components:
                       type:
                         type: string
                         const: deepgram
+                      version:
+                        type: string
+                        enum:
+                          - v1
+                        description: The REST API version for the Deepgram text-to-speech API
                       model:
                         type: string
                         enum:
@@ -1927,6 +2056,11 @@ components:
                       type:
                         type: string
                         const: eleven_labs
+                      version:
+                        type: string
+                        enum:
+                          - v1
+                        description: The REST API version for the ElevenLabs text-to-speech API
                       model_id:
                         type: string
                         enum:
@@ -1934,9 +2068,13 @@ components:
                           - eleven_monolingual_v1
                           - eleven_multilingual_v2
                         description: Eleven Labs model ID
+                      language:
+                        type: string
+                        description: Language code to use, e.g. 'en-US'.   Corresponds to the `language_code` parameter in the ElevenLabs API
                       language_code:
                         type: string
-                        description: Eleven Labs optional language code
+                        deprecated: true
+                        description: Use the `language` field instead.
                   - type: object
                     required:
                       - type
@@ -1946,6 +2084,11 @@ components:
                       type:
                         type: string
                         const: cartesia
+                      version:
+                        type: string
+                        enum:
+                          - null
+                        description: The API version header for the Cartesia text-to-speech API
                       model_id:
                         type: string
                         enum:
@@ -1976,6 +2119,11 @@ components:
                       type:
                         type: string
                         const: open_ai
+                      version:
+                        type: string
+                        enum:
+                          - v1
+                        description: The REST API version for the OpenAI text-to-speech API
                       model:
                         type: string
                         enum:
@@ -1996,7 +2144,7 @@ components:
                     required:
                       - type
                       - voice
-                      - language_code
+                      - language
                       - engine
                       - credentials
                     properties:
@@ -2015,9 +2163,13 @@ components:
                           - Aria
                           - Ayanda
                         description: AWS Polly voice name
+                      language:
+                        type: string
+                        description: Language code to use, e.g. 'en-US'.   Corresponds to the `language_code` parameter in the AWS Polly API
                       language_code:
                         type: string
-                        description: Language code (e.g., "en-US")
+                        deprecated: true
+                        description: Use the `language` field instead.
                       engine:
                         type: string
                         enum:
