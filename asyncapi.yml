@@ -195,6 +195,14 @@ components:
       default: '1'
       examples:
         - '1'
+    ListenV1DetectEntities:
+      description: Identifies and extracts key entities from content in submitted audio. Entities appear in final results. When enabled, Punctuation will also be enabled by default
+      default: 'false'
+      enum:
+        - 'true'
+        - 'false'
+      examples:
+        - 'true'
     ListenV1Diarize:
       description: Defaults to `false`. Recognize speaker changes. Each word in the transcript will be assigned a speaker number starting at 0
       default: 'false'
@@ -709,6 +717,37 @@ components:
           from_finalize:
             type: boolean
             description: Whether the transcription is from a finalize message
+          entities:
+            type: array
+            description: Extracted entities from the audio when detect_entities is enabled. Only present in is_final messages. Returns an empty array if no entities are detected
+            items:
+              type: object
+              properties:
+                label:
+                  type: string
+                  description: The type/category of the entity (e.g., NAME, PHONE_NUMBER, EMAIL_ADDRESS, ORGANIZATION, CARDINAL)
+                value:
+                  type: string
+                  description: The formatted text representation of the entity
+                raw_value:
+                  type: string
+                  description: The original spoken text of the entity (present when formatting is enabled)
+                confidence:
+                  type: number
+                  description: The confidence score of the entity detection
+                start_word:
+                  type: integer
+                  description: The index of the first word of the entity in the transcript (inclusive)
+                end_word:
+                  type: integer
+                  description: The index of the last word of the entity in the transcript (exclusive)
+              required:
+                - label
+                - value
+                - raw_value
+                - confidence
+                - start_word
+                - end_word
         required:
           - type
           - channel_index
@@ -2283,9 +2322,9 @@ components:
         description: |
           Function call response message used bidirectionally:
 
-          • **Client → Server**: Response after client executes a function 
+          • **Client → Server**: Response after client executes a function
             marked as client_side: true
-          • **Server → Client**: Response after server executes a function 
+          • **Server → Client**: Response after server executes a function
             marked as client_side: false
 
           The same message structure serves both directions, enabling a unified
@@ -2298,11 +2337,11 @@ components:
           id:
             type: string
             description: |
-              The unique identifier for the function call. 
+              The unique identifier for the function call.
 
-              • **Required for client responses**: Should match the id from 
+              • **Required for client responses**: Should match the id from
                 the corresponding `FunctionCallRequest`
-              • **Optional for server responses**: Server may omit when responding 
+              • **Optional for server responses**: Server may omit when responding
                 to internal function executions
           name:
             type: string
@@ -2633,6 +2672,8 @@ channels:
               $ref: '#/components/schemas/ListenV1CallbackMethod'
             channels:
               $ref: '#/components/schemas/ListenV1Channels'
+            detect_entities:
+              $ref: '#/components/schemas/ListenV1DetectEntities'
             diarize:
               $ref: '#/components/schemas/ListenV1Diarize'
             dictation:
