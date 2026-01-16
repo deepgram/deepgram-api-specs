@@ -1772,7 +1772,11 @@ components:
             const: UpdateSpeak
             description: Message type identifier for updating the speak model
           speak:
-            $ref: '#/components/schemas/SpeakSettingsV1'
+            oneOf:
+              - $ref: '#/components/schemas/SpeakSettingsV1'
+              - type: array
+                items:
+                  $ref: '#/components/schemas/SpeakSettingsV1'
         required:
           - type
           - speak
