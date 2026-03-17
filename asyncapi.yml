@@ -1834,10 +1834,10 @@ components:
               - type: string
                 format: uuid
                 description: The ID of an agent created using the agent builder
-          required:
-            - type
-            - audio
-            - agent
+        required:
+          - type
+          - audio
+          - agent
     AgentV1UpdateSpeakMessage:
       description: Send a message to change the Speak model in the middle of a conversation
       payload:
