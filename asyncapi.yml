@@ -1009,11 +1009,17 @@ components:
             description: Name of the model being used
           model_version:
             type: string
-            description: Version of the model being used
+            description: Version of the primary model being used
           model_uuid:
             type: string
             format: uuid
-            description: Unique identifier for the model
+            description: Unique identifier for the primary model used
+          additional_model_uuids:
+            type: array
+            description: List of unique identifiers for any additional models used to serve the request
+            items:
+              type: string
+              format: uuid
         required:
           - type
           - request_id
@@ -1503,6 +1509,72 @@ components:
               - word: you?
                 confidence: 0.92
             end_of_turn_confidence: 0.86
+    ListenV2ConfigureSuccessEvent:
+      name: ListenV2ConfigureSuccessEvent
+      description: Sent when a `Configure` message was successfully applied. Returns the current, up-to-date values that were applied.
+      payload:
+        type: object
+        required:
+          - type
+          - request_id
+          - thresholds
+          - keyterms
+          - sequence_id
+        properties:
+          type:
+            type: string
+            const: ConfigureSuccess
+            description: Message type identifier
+          request_id:
+            type: string
+            format: uuid
+            description: The unique identifier of the request
+          thresholds:
+            type: object
+            properties:
+              eager_eot_threshold:
+                $ref: '#/components/schemas/ListenV2EagerEotThreshold'
+              eot_threshold:
+                $ref: '#/components/schemas/ListenV2EotThreshold'
+              eot_timeout_ms:
+                $ref: '#/components/schemas/ListenV2EotTimeoutMs'
+            description: |
+              Updates each parameter, if it is supplied. If a particular threshold parameter 
+              is not supplied, the configuration continues using the currently configured value.
+          keyterms:
+            $ref: '#/components/schemas/ListenV2Keyterm'
+          sequence_id:
+            type: number
+            minimum: 0
+            description: |
+              Starts at `0` and increments for each message the server sends
+              to the client.  This includes messages of other types, like
+              `TurnInfo` messages.
+    ListenV2ConfigureFailureEvent:
+      name: ListenV2ConfigureFailureEvent
+      description: Indicates that a Configure message was rejected
+      payload:
+        type: object
+        required:
+          - type
+          - request_id
+          - sequence_id
+        properties:
+          type:
+            type: string
+            const: ConfigureFailure
+            description: Message type identifier
+          request_id:
+            type: string
+            format: uuid
+            description: The unique identifier of the request
+          sequence_id:
+            type: number
+            minimum: 0
+            description: |
+              Starts at `0` and increments for each message the server sends
+              to the client.  This includes messages of other types, like
+              `TurnInfo` messages.
     ListenV2FatalErrorEvent:
       name: ListenV2FatalErrorEvent
       description: Receive an error message from the server when a fatal error occurs
@@ -1614,154 +1686,158 @@ components:
                     type: string
                     description: Audio container format. If omitted, defaults to 'none'
           agent:
-            type: object
-            properties:
-              language:
-                type: string
-                default: en
-                description: Deprecated. Use `listen.provider.language` and `speak.provider.language` fields instead.
-                deprecated: true
-              context:
-                type: object
-                description: Conversation context including the history of messages and function calls
+            oneOf:
+              - type: object
                 properties:
-                  messages:
-                    type: array
-                    description: Conversation history as a list of messages and function calls
-                    items:
-                      type: object
-                      description: A message here is either a conversational message or a function call
-                      oneOf:
-                        - type: object
-                          description: Conversation text as part of the conversation history
-                          required:
-                            - type
-                            - role
-                            - content
-                          properties:
-                            type:
-                              type: string
-                              const: History
-                              description: Message type identifier for conversation text
-                            role:
-                              type: string
-                              enum:
-                                - user
-                                - assistant
-                              description: Identifies who spoke the statement
-                            content:
-                              type: string
-                              description: The actual statement that was spoken
-                        - type: object
-                          description: Client-side or server-side function call request and response as part of the conversation history
-                          required:
-                            - type
-                            - function_calls
-                          properties:
-                            type:
-                              type: string
-                              const: History
-                            function_calls:
-                              type: array
-                              description: List of function call objects
-                              items:
-                                type: object
-                                required:
-                                  - id
-                                  - name
-                                  - client_side
-                                  - arguments
-                                  - response
-                                properties:
-                                  id:
-                                    type: string
-                                    description: Unique identifier for the function call
-                                  name:
-                                    type: string
-                                    description: Name of the function called
-                                  client_side:
-                                    type: boolean
-                                    description: Indicates if the call was client-side or server-side
-                                  arguments:
-                                    type: string
-                                    description: Arguments passed to the function
-                                  response:
-                                    type: string
-                                    description: Response from the function call
-              listen:
-                type: object
-                properties:
-                  provider:
+                  language:
+                    type: string
+                    default: en
+                    description: Deprecated. Use `listen.provider.language` and `speak.provider.language` fields instead.
+                    deprecated: true
+                  context:
                     type: object
+                    description: Conversation context including the history of messages and function calls
+                    properties:
+                      messages:
+                        type: array
+                        description: Conversation history as a list of messages and function calls
+                        items:
+                          type: object
+                          description: A message here is either a conversational message or a function call
+                          oneOf:
+                            - type: object
+                              description: Conversation text as part of the conversation history
+                              required:
+                                - type
+                                - role
+                                - content
+                              properties:
+                                type:
+                                  type: string
+                                  const: History
+                                  description: Message type identifier for conversation text
+                                role:
+                                  type: string
+                                  enum:
+                                    - user
+                                    - assistant
+                                  description: Identifies who spoke the statement
+                                content:
+                                  type: string
+                                  description: The actual statement that was spoken
+                            - type: object
+                              description: Client-side or server-side function call request and response as part of the conversation history
+                              required:
+                                - type
+                                - function_calls
+                              properties:
+                                type:
+                                  type: string
+                                  const: History
+                                function_calls:
+                                  type: array
+                                  description: List of function call objects
+                                  items:
+                                    type: object
+                                    required:
+                                      - id
+                                      - name
+                                      - client_side
+                                      - arguments
+                                      - response
+                                    properties:
+                                      id:
+                                        type: string
+                                        description: Unique identifier for the function call
+                                      name:
+                                        type: string
+                                        description: Name of the function called
+                                      client_side:
+                                        type: boolean
+                                        description: Indicates if the call was client-side or server-side
+                                      arguments:
+                                        type: string
+                                        description: Arguments passed to the function
+                                      response:
+                                        type: string
+                                        description: Response from the function call
+                  listen:
+                    type: object
+                    properties:
+                      provider:
+                        type: object
+                        oneOf:
+                          - type: object
+                            required:
+                              - type
+                            properties:
+                              type:
+                                type: string
+                                const: deepgram
+                                description: Provider type for speech-to-text
+                              version:
+                                type: string
+                                const: v1
+                                description: Specifies usage of the V1 Deepgram speech-to-text API
+                              model:
+                                type: string
+                                description: Model to use for speech to text using the V1 API (e.g. Nova-3, Nova-2)
+                              language:
+                                type: string
+                                default: en-US
+                                description: Language code to use for speech-to-text. Can be a BCP-47 language tag (e.g. `en`), or `multi` for code-switching transcription
+                              keyterms:
+                                type: array
+                                items:
+                                  type: string
+                                  description: Prompt keyterm recognition to improve Keyword Recall Rate
+                              smart_format:
+                                type: boolean
+                                default: false
+                                description: Applies smart formatting to improve transcript readability
+                          - type: object
+                            required:
+                              - type
+                              - model
+                            properties:
+                              type:
+                                type: string
+                                const: deepgram
+                                description: Provider type for speech-to-text
+                              version:
+                                type: string
+                                const: v2
+                                description: Specifies usage of the V2 Deepgram speech-to-text API (e.g. Flux)
+                              model:
+                                type: string
+                                description: Model to use for speech to text using the V2 API (e.g. flux-general-en)
+                              keyterms:
+                                type: array
+                                items:
+                                  type: string
+                                  description: Prompt keyterm recognition to improve Keyword Recall Rate
+                  think:
                     oneOf:
-                      - type: object
-                        required:
-                          - type
-                        properties:
-                          type:
-                            type: string
-                            const: deepgram
-                            description: Provider type for speech-to-text
-                          version:
-                            type: string
-                            const: v1
-                            description: Specifies usage of the V1 Deepgram speech-to-text API
-                          model:
-                            type: string
-                            description: Model to use for speech to text using the V1 API (e.g. Nova-3, Nova-2)
-                          language:
-                            type: string
-                            default: en-US
-                            description: Language code to use for speech-to-text. Can be a BCP-47 language tag (e.g. `en`), or `multi` for code-switching transcription
-                          keyterms:
-                            type: array
-                            items:
-                              type: string
-                            description: Prompt keyterm recognition to improve Keyword Recall Rate
-                          smart_format:
-                            type: boolean
-                            default: false
-                            description: Applies smart formatting to improve transcript readability
-                      - type: object
-                        required:
-                          - type
-                          - model
-                        properties:
-                          type:
-                            type: string
-                            const: deepgram
-                            description: Provider type for speech-to-text
-                          version:
-                            type: string
-                            const: v2
-                            description: Specifies usage of the V2 Deepgram speech-to-text API (e.g. Flux)
-                          model:
-                            type: string
-                            description: Model to use for speech to text using the V2 API (e.g. flux-general-en)
-                          keyterms:
-                            type: array
-                            items:
-                              type: string
-                            description: Prompt keyterm recognition to improve Keyword Recall Rate
-              think:
-                oneOf:
-                  - $ref: '#/components/schemas/ThinkSettingsV1'
-                  - type: array
-                    items:
-                      $ref: '#/components/schemas/ThinkSettingsV1'
-              speak:
-                oneOf:
-                  - $ref: '#/components/schemas/SpeakSettingsV1'
-                  - type: array
-                    items:
-                      $ref: '#/components/schemas/SpeakSettingsV1'
-              greeting:
-                type: string
-                description: Optional message that agent will speak at the start
-        required:
-          - type
-          - audio
-          - agent
+                      - $ref: '#/components/schemas/ThinkSettingsV1'
+                      - type: array
+                        items:
+                          $ref: '#/components/schemas/ThinkSettingsV1'
+                  speak:
+                    oneOf:
+                      - $ref: '#/components/schemas/SpeakSettingsV1'
+                      - type: array
+                        items:
+                          $ref: '#/components/schemas/SpeakSettingsV1'
+                  greeting:
+                    type: string
+                    description: Optional message that agent will speak at the start
+              - type: string
+                format: uuid
+                description: The ID of an agent created using the agent builder
+          required:
+            - type
+            - audio
+            - agent
     AgentV1UpdateSpeakMessage:
       description: Send a message to change the Speak model in the middle of a conversation
       payload:
@@ -1772,10 +1848,32 @@ components:
             const: UpdateSpeak
             description: Message type identifier for updating the speak model
           speak:
-            $ref: '#/components/schemas/SpeakSettingsV1'
+            oneOf:
+              - $ref: '#/components/schemas/SpeakSettingsV1'
+              - type: array
+                items:
+                  $ref: '#/components/schemas/SpeakSettingsV1'
         required:
           - type
           - speak
+    AgentV1UpdateThinkMessage:
+      description: Send a message to change the Think model in the middle of a conversation
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: UpdateThink
+            description: Message type identifier for updating the think model
+          think:
+            oneOf:
+              - $ref: '#/components/schemas/ThinkSettingsV1'
+              - type: array
+                items:
+                  $ref: '#/components/schemas/ThinkSettingsV1'
+        required:
+          - type
+          - think
     AgentV1UpdatePromptMessage:
       description: Send a message to update the system prompt of the agent
       payload:
@@ -2094,6 +2192,18 @@ components:
             description: Message type identifier for speak update confirmation
         required:
           - type
+    AgentV1ThinkUpdatedEvent:
+      name: AgentV1ThinkUpdatedEvent
+      description: Confirms that an UpdateThink message from the client has been applied
+      payload:
+        type: object
+        properties:
+          type:
+            type: string
+            const: ThinkUpdated
+            description: Message type identifier for think update confirmation
+        required:
+          - type
     AgentV1WarningEvent:
       name: AgentV1WarningEvent
       description: Notifies the client of non-fatal errors or warnings
@@ -2299,10 +2409,40 @@ channels:
         $ref: '#/components/messages/ListenV2MediaMessage'
       ListenV2CloseStream:
         $ref: '#/components/messages/ListenV2ControlMessage'
+      ListenV2Configure:
+        name: ListenV2Configure
+        description: Send a Configure message to update Flux settings
+        payload:
+          type: object
+          required:
+            - type
+          properties:
+            type:
+              type: string
+              const: Configure
+              description: Message type identifier
+            thresholds:
+              type: object
+              properties:
+                eager_eot_threshold:
+                  $ref: '#/components/schemas/ListenV2EagerEotThreshold'
+                eot_threshold:
+                  $ref: '#/components/schemas/ListenV2EotThreshold'
+                eot_timeout_ms:
+                  $ref: '#/components/schemas/ListenV2EotTimeoutMs'
+              description: |
+                Updates each parameter, if it is supplied. If a particular threshold parameter 
+                is not supplied, the configuration continues using the currently configured value.
+            keyterms:
+              $ref: '#/components/schemas/ListenV2Keyterm'
       ListenV2Connected:
         $ref: '#/components/messages/ListenV2ConnectedEvent'
       ListenV2TurnInfo:
         $ref: '#/components/messages/ListenV2TurnInfoEvent'
+      ListenV2ConfigureSuccess:
+        $ref: '#/components/messages/ListenV2ConfigureSuccessEvent'
+      ListenV2ConfigureFailure:
+        $ref: '#/components/messages/ListenV2ConfigureFailureEvent'
       ListenV2FatalError:
         $ref: '#/components/messages/ListenV2FatalErrorEvent'
   AgentV1:
@@ -2343,12 +2483,16 @@ channels:
         $ref: '#/components/messages/AgentV1PromptUpdatedEvent'
       AgentV1SpeakUpdated:
         $ref: '#/components/messages/AgentV1SpeakUpdatedEvent'
+      AgentV1ThinkUpdated:
+        $ref: '#/components/messages/AgentV1ThinkUpdatedEvent'
       AgentV1InjectionRefused:
         $ref: '#/components/messages/AgentV1InjectionRefusedEvent'
       AgentV1Settings:
         $ref: '#/components/messages/AgentV1SettingsMessage'
       AgentV1UpdateSpeak:
         $ref: '#/components/messages/AgentV1UpdateSpeakMessage'
+      AgentV1UpdateThink:
+        $ref: '#/components/messages/AgentV1UpdateThinkMessage'
       AgentV1InjectUserMessage:
         $ref: '#/components/messages/AgentV1InjectUserMessageMessage'
       AgentV1InjectAgentMessage:
@@ -2543,6 +2687,15 @@ operations:
       - $ref: '#/components/operationTraits/V2AuthTrait'
     messages:
       - $ref: '#/channels/ListenV2/messages/ListenV2CloseStream'
+  ListenV2Configure:
+    description: Send a Configure message to update Flux settings
+    action: send
+    channel:
+      $ref: '#/channels/ListenV2'
+    traits:
+      - $ref: '#/components/operationTraits/V2AuthTrait'
+    messages:
+      - $ref: '#/channels/ListenV2/messages/ListenV2Configure'
   ListenV2Connected:
     description: Receive a connected message
     action: receive
@@ -2561,6 +2714,24 @@ operations:
       - $ref: '#/components/operationTraits/V2AuthTrait'
     messages:
       - $ref: '#/channels/ListenV2/messages/ListenV2TurnInfo'
+  ListenV2ConfigureSuccess:
+    description: Sent when a `Configure` message was successfully applied. Returns the current, up-to-date values that were applied.
+    action: receive
+    channel:
+      $ref: '#/channels/ListenV2'
+    traits:
+      - $ref: '#/components/operationTraits/V2AuthTrait'
+    messages:
+      - $ref: '#/channels/ListenV2/messages/ListenV2ConfigureSuccess'
+  ListenV2ConfigureFailure:
+    description: Indicates that a Configure message was rejected
+    action: receive
+    channel:
+      $ref: '#/channels/ListenV2'
+    traits:
+      - $ref: '#/components/operationTraits/V2AuthTrait'
+    messages:
+      - $ref: '#/channels/ListenV2/messages/ListenV2ConfigureFailure'
   ListenV2FatalError:
     description: Receive a fatal error message
     action: receive
@@ -2590,6 +2761,16 @@ operations:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1UpdateSpeak'
+  AgentV1UpdateThink:
+    x-fern-sdk-method-name: sendUpdateThink
+    description: Send update think to Deepgram's Voice Agent API
+    action: send
+    channel:
+      $ref: '#/channels/AgentV1'
+    traits:
+      - $ref: '#/components/operationTraits/V1AuthTrait'
+    messages:
+      - $ref: '#/channels/AgentV1/messages/AgentV1UpdateThink'
   AgentV1InjectUserMessage:
     x-fern-sdk-method-name: sendInjectUserMessage
     action: send
@@ -2674,6 +2855,15 @@ operations:
       - $ref: '#/components/operationTraits/V1AuthTrait'
     messages:
       - $ref: '#/channels/AgentV1/messages/AgentV1SpeakUpdated'
+  AgentV1ThinkUpdated:
+    description: Receive think update from Deepgram's Voice Agent API
+    action: receive
+    channel:
+      $ref: '#/channels/AgentV1'
+    traits:
+      - $ref: '#/components/operationTraits/V1AuthTrait'
+    messages:
+      - $ref: '#/channels/AgentV1/messages/AgentV1ThinkUpdated'
   AgentV1InjectionRefused:
     description: Receive injection refused message from Deepgram's Voice Agent API
     action: receive
