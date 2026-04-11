@@ -13,10 +13,10 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Lint OpenAPI spec
-        run: npx --yes @stoplight/spectral-cli@6 lint openapi.yml --ruleset .spectral.yml --fail-severity error
+        run: npx --yes @stoplight/spectral-cli@6.15.0 lint openapi.yml --ruleset .spectral.yml --fail-severity error
 
       - name: Lint AsyncAPI spec
-        run: npx --yes @stoplight/spectral-cli@6 lint asyncapi.yml --ruleset .spectral.asyncapi.yml --fail-severity error
+        run: npx --yes @stoplight/spectral-cli@6.15.0 lint asyncapi.yml --ruleset .spectral.asyncapi.yml --fail-severity error
