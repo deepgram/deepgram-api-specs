@@ -1,0 +1,22 @@
+name: Validate API Specs
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  validate:
+    name: Spectral lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lint OpenAPI spec
+        run: npx --yes @stoplight/spectral-cli@6 lint openapi.yml --ruleset .spectral.yml --fail-severity error
+
+      - name: Lint AsyncAPI spec
+        run: npx --yes @stoplight/spectral-cli@6 lint asyncapi.yml --ruleset .spectral.asyncapi.yml --fail-severity error
