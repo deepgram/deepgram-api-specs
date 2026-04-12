@@ -6,7 +6,12 @@ This repository contains [OpenAPI](https://www.openapis.org) and  [AsyncAPI](htt
 
 ## Public mirror
 
-This is a public mirror of the internal Deepgram API specifications. Pull requests to this spec document will not be merged. In the future, we may enable contributions and corrections via contribution to the spec, but for now they cannot be accepted. Thank you!
+This is a public mirror of the Deepgram API specifications published at [developers.deepgram.com](https://developers.deepgram.com). Specs are synced automatically every hour from:
+
+- `https://developers.deepgram.com/openapi.yaml`
+- `https://developers.deepgram.com/asyncapi.yaml`
+
+Pull requests from external contributors will not be merged. Thank you!
 
 ## Latest Public Version
 

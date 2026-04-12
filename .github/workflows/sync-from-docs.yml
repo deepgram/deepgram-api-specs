@@ -1,0 +1,49 @@
+name: Sync specs from developers.deepgram.com
+
+on:
+  schedule:
+    - cron: '0 * * * *' # hourly
+  workflow_dispatch:
+
+jobs:
+  sync:
+    name: Poll and sync bundled specs
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download specs
+        run: |
+          curl -sSf https://developers.deepgram.com/openapi.yaml -o /tmp/openapi.yml
+          curl -sSf https://developers.deepgram.com/asyncapi.yaml -o /tmp/asyncapi.yml
+
+      - name: Check for changes
+        id: diff
+        run: |
+          changed=false
+          if ! diff -q /tmp/openapi.yml openapi.yml > /dev/null 2>&1; then
+            changed=true
+            echo "OpenAPI spec changed"
+          fi
+          if ! diff -q /tmp/asyncapi.yml asyncapi.yml > /dev/null 2>&1; then
+            changed=true
+            echo "AsyncAPI spec changed"
+          fi
+          echo "changed=$changed" >> "$GITHUB_OUTPUT"
+
+      - name: Commit updated specs
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          cp /tmp/openapi.yml openapi.yml
+          cp /tmp/asyncapi.yml asyncapi.yml
+
+          git config user.email "devrel@deepgram.com"
+          git config user.name "Deepgram DX Bot"
+
+          git add openapi.yml asyncapi.yml
+          git commit -m "chore(specs): sync from developers.deepgram.com"
+          git push
