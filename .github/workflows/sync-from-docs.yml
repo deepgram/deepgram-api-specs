@@ -1,5 +1,8 @@
 name: Sync specs from developers.deepgram.com
 
+# Polls the published docs site hourly. When specs change, raises a PR
+# and enables auto-merge so it lands without manual review.
+
 on:
   schedule:
     - cron: '0 * * * *' # hourly
@@ -11,10 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
 
       - name: Download specs
         run: |
@@ -35,15 +39,28 @@ jobs:
           fi
           echo "changed=$changed" >> "$GITHUB_OUTPUT"
 
-      - name: Commit updated specs
+      - name: Create PR and enable auto-merge
         if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: sync/from-docs-${{ github.run_id }}
         run: |
-          cp /tmp/openapi.yml openapi.yml
-          cp /tmp/asyncapi.yml asyncapi.yml
-
           git config user.email "devrel@deepgram.com"
           git config user.name "Deepgram DX Bot"
 
+          git checkout -b "$BRANCH"
+
+          cp /tmp/openapi.yml openapi.yml
+          cp /tmp/asyncapi.yml asyncapi.yml
+
           git add openapi.yml asyncapi.yml
           git commit -m "chore(specs): sync from developers.deepgram.com"
-          git push
+          git push origin "$BRANCH"
+
+          PR_URL=$(gh pr create \
+            --base main \
+            --head "$BRANCH" \
+            --title "chore(specs): sync from developers.deepgram.com" \
+            --body "Automated sync of published API specs from developers.deepgram.com.")
+
+          gh pr merge "$PR_URL" --auto --squash
