@@ -1,8 +1,6 @@
-[![Discord](https://img.shields.io/badge/Discord-Deepgram-5865F2?logo=discord&logoColor=white&style=flat)](https://discord.gg/deepgram)
-
 # Deepgram API Specs
 
-This repository contains [OpenAPI](https://www.openapis.org) and  [AsyncAPI](https://www.asyncapi.com) specifications for the [Deepgram API](https://developers.deepgram.com/reference/deepgram-api-overview).
+This repository contains API specifications for the [Deepgram API](https://developers.deepgram.com/reference).
 
 ## Public mirror
 
@@ -12,24 +10,3 @@ This is a public mirror of the Deepgram API specifications published at [develop
 - `https://developers.deepgram.com/asyncapi.yaml`
 
 Pull requests from external contributors will not be merged. Thank you!
-
-## Latest Public Version
-
-Check out the [openapi.yml](openapi.yml) file for the latest public version of the OpenAPI spec.
-
-Check out the [asyncapi.yml](asyncapi.yml) file for the latest public version of the AsyncAPI spec.
-
-## Development and Contributing
-
-* Directly modifying these API spec files in not allowed. Any API spec change should be done in the upstream internal Deepgram API specifications.
-* Direct contributions a restricted to stakeholders only.
-
-## Getting Help
-
-We love to hear from you so if you have questions, comments or find a bug in the project, let us know! You can either:
-
-- [Report an Issue or Share Feedback](https://form.asana.com/?k=6wl-Va4DJ1KEkyZYYGnRSw&d=411927538413705)
-- [Join the Deepgram Github Discussions Community](https://github.com/orgs/deepgram/discussions)
-- [Join the Deepgram Discord Community](https://discord.gg/xWRaCDBtW4)
-- [Review our API Documentation](https://developers.deepgram.com/reference/deepgram-api-overview)
-
