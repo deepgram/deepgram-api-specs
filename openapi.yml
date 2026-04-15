@@ -3627,11 +3627,9 @@ components:
             $ref: >-
               #/components/schemas/ListenV1ResponseResultsChannelsItemsAlternativesItemsParagraphsParagraphsItemsSentencesItems
         speaker:
-          type: number
-          format: double
+          type: integer
         num_words:
-          type: number
-          format: double
+          type: integer
         start:
           type: number
           format: double
@@ -3757,8 +3755,7 @@ components:
           type: number
           format: double
         speaker:
-          type: number
-          format: double
+          type: integer
         speaker_confidence:
           type: number
           format: double
@@ -3778,8 +3775,7 @@ components:
           type: number
           format: double
         channel:
-          type: number
-          format: double
+          type: integer
         transcript:
           type: string
         words:
@@ -3787,8 +3783,7 @@ components:
           items:
             $ref: '#/components/schemas/ListenV1ResponseResultsUtterancesItemsWordsItems'
         speaker:
-          type: number
-          format: double
+          type: integer
         id:
           type: string
           format: uuid
