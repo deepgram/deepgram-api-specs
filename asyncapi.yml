@@ -863,8 +863,7 @@ components:
           $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1SettingsAudioInputEncoding'
           description: Audio encoding format
         sample_rate:
-          type: number
-          format: double
+          type: integer
           default: 24000
           description: Sample rate in Hz. Common values are 16000, 24000, 44100, 48000
       required:
@@ -890,12 +889,10 @@ components:
           $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1SettingsAudioOutputEncoding'
           description: Audio encoding format for streaming TTS output
         sample_rate:
-          type: number
-          format: double
+          type: integer
           description: Sample rate in Hz
         bitrate:
-          type: number
-          format: double
+          type: integer
           description: Audio bitrate in bits per second
         container:
           type: string
@@ -2174,8 +2171,7 @@ components:
           type: string
           description: The punctuated word of the word
         speaker:
-          type: number
-          format: double
+          type: integer
           description: The speaker of the word
       required:
         - word
@@ -2288,8 +2284,7 @@ components:
         channel_index:
           type: array
           items:
-            type: number
-            format: double
+            type: integer
           description: The index of the channel
         duration:
           type: number
@@ -2357,8 +2352,7 @@ components:
           format: double
           description: The duration
         channels:
-          type: number
-          format: double
+          type: integer
           description: The channels
       required:
         - type
@@ -2384,8 +2378,7 @@ components:
         channel:
           type: array
           items:
-            type: number
-            format: double
+            type: integer
           description: The channel
         last_word_end:
           type: number
@@ -2411,8 +2404,7 @@ components:
         channel:
           type: array
           items:
-            type: number
-            format: double
+            type: integer
           description: The channel
         timestamp:
           type: number
@@ -2543,8 +2535,7 @@ components:
           format: uuid
           description: The unique identifier of the request
         sequence_id:
-          type: number
-          format: double
+          type: integer
           description: |
             Starts at `0` and increments for each message the server sends
             to the client.  This includes messages of other types, like
@@ -2604,8 +2595,7 @@ components:
           format: uuid
           description: The unique identifier of the request
         sequence_id:
-          type: number
-          format: double
+          type: integer
           description: >
             Starts at `0` and increments for each message the server sends to the client.  This includes messages of
             other types, like `Connected` messages.
@@ -2627,8 +2617,7 @@ components:
 
             - **EndOfTurn** - The user has finished speaking for the turn
         turn_index:
-          type: number
-          format: double
+          type: integer
           description: The index of the current turn
         audio_window_start:
           type: number
@@ -2711,8 +2700,7 @@ components:
         keyterms:
           description: Any type
         sequence_id:
-          type: number
-          format: double
+          type: integer
           description: |
             Starts at `0` and increments for each message the server sends
             to the client.  This includes messages of other types, like
@@ -2737,8 +2725,7 @@ components:
           format: uuid
           description: The unique identifier of the request
         sequence_id:
-          type: number
-          format: double
+          type: integer
           description: |
             Starts at `0` and increments for each message the server sends
             to the client.  This includes messages of other types, like
@@ -2761,8 +2748,7 @@ components:
           $ref: '#/components/schemas/ChannelsListenV2MessagesListenV2FatalErrorType'
           description: Message type identifier
         sequence_id:
-          type: number
-          format: double
+          type: integer
           description: |
             Starts at `0` and increments for each message the server sends
             to the client.  This includes messages of other types, like
@@ -2986,8 +2972,7 @@ components:
           $ref: '#/components/schemas/ChannelsSpeakV1MessagesSpeakV1FlushedType'
           description: Message type identifier
         sequence_id:
-          type: number
-          format: double
+          type: integer
           description: The sequence ID of the response
       required:
         - type
@@ -3007,8 +2992,7 @@ components:
           $ref: '#/components/schemas/ChannelsSpeakV1MessagesSpeakV1ClearedType'
           description: Message type identifier
         sequence_id:
-          type: number
-          format: double
+          type: integer
           description: The sequence ID of the response
       required:
         - type
