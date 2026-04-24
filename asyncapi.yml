@@ -198,6 +198,8 @@ channels:
               $ref: '#/components/schemas/SpeakV1Model'
             sample_rate:
               $ref: '#/components/schemas/SpeakV1SampleRate'
+            speed:
+              $ref: '#/components/schemas/SpeakV1Speed'
         headers:
           type: object
           properties:
@@ -2921,6 +2923,14 @@ components:
         Sample Rate specifies the sample rate for the output audio. Based on encoding 8000 or 24000 are possible
         defaults. For some encodings sample rate is not configurable.
       title: SpeakV1SampleRate
+    SpeakV1Speed:
+      type: number
+      format: double
+      default: 1
+      description: >-
+        Speaking rate multiplier that adjusts the pace of generated speech while preserving natural prosody and voice
+        quality. Not yet supported in all languages.
+      title: SpeakV1Speed
     SpeakV1_SpeakV1Audio:
       type: string
       format: binary
