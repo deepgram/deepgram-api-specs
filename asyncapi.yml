@@ -1825,6 +1825,22 @@ components:
         - type
         - content
       title: AgentV1_AgentV1InjectUserMessage
+    ChannelsAgentV1MessagesAgentV1InjectAgentMessageBehavior:
+      type: string
+      enum:
+        - default
+        - queue
+      default: default
+      description: >
+        Controls how the injection interacts with any in-progress user or agent turn.
+
+
+        * `default` — The agent speaks only if neither the user nor the agent is mid-turn. If a turn is in progress, the
+        server replies with `InjectionRefused`.
+
+        * `queue` — The message is appended after any already-queued `ConversationText` without interrupting the current
+        agent turn or think response. If nothing is queued, the message plays immediately.
+      title: ChannelsAgentV1MessagesAgentV1InjectAgentMessageBehavior
     AgentV1_AgentV1InjectAgentMessage:
       type: object
       properties:
@@ -1836,6 +1852,17 @@ components:
         message:
           type: string
           description: The statement that the agent should say
+        behavior:
+          $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1InjectAgentMessageBehavior'
+          description: >
+            Controls how the injection interacts with any in-progress user or agent turn.
+
+
+            * `default` — The agent speaks only if neither the user nor the agent is mid-turn. If a turn is in progress,
+            the server replies with `InjectionRefused`.
+
+            * `queue` — The message is appended after any already-queued `ConversationText` without interrupting the
+            current agent turn or think response. If nothing is queued, the message plays immediately.
       required:
         - type
         - message
