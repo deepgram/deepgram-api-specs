@@ -5117,9 +5117,11 @@ components:
           description: Optional method identifier
         tags:
           type:
-            - string
+            - array
             - 'null'
-          description: Optional tags
+          items:
+            type: string
+          description: Optional list of tags, null unless grouped by tags.
         deployment:
           type:
             - string
