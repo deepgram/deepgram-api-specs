@@ -156,6 +156,8 @@ channels:
               $ref: '#/components/schemas/ListenV2EotTimeoutMs'
             keyterm:
               $ref: '#/components/schemas/ListenV2Keyterm'
+            language_hint:
+              $ref: '#/components/schemas/ListenV2LanguageHint'
             mip_opt_out:
               $ref: '#/components/schemas/ListenV2MipOptOut'
             tag:
@@ -2541,6 +2543,18 @@ components:
         Keyterm prompting can improve recognition of specialized terminology.
         Pass multiple keyterm query parameters to boost multiple keyterms.
       title: ListenV2Keyterm
+    ListenV2LanguageHint:
+      oneOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      description: |
+        Language hints constrain and prioritize language detection for the
+        flux-general-multi model. Pass multiple language_hint query parameters
+        to specify multiple language codes. Empty values are rejected.
+        Only valid when model is flux-general-multi.
+      title: ListenV2LanguageHint
     ListenV2MipOptOut:
       description: Any type
       title: ListenV2MipOptOut
