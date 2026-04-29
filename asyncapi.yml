@@ -684,6 +684,20 @@ components:
         content:
           type: string
           description: The actual statement that was spoken
+        languages_hinted:
+          type: array
+          items:
+            type: string
+          description: >-
+            The language hints that were active at the time of the turn. Only present on user-role messages when the
+            listen model is flux-general-multi.
+        languages:
+          type: array
+          items:
+            type: string
+          description: >-
+            Languages detected in the user's speech, sorted by word count (descending). Only present on user-role
+            messages when the listen model is flux-general-multi.
       required:
         - type
         - role
@@ -1125,6 +1139,17 @@ components:
       required:
         - type
       title: ChannelsAgentV1MessagesAgentV1SettingsAgentListenProvider0
+    ChannelsAgentV1MessagesAgentV1SettingsAgentListenProviderOneOf1LanguageHint:
+      oneOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      description: >-
+        One or more BCP-47 language codes to bias the model toward specific languages. Only supported when model is
+        flux-general-multi. Without hints, the model auto-detects the spoken language. See the Language Prompting guide
+        for details.
+      title: ChannelsAgentV1MessagesAgentV1SettingsAgentListenProviderOneOf1LanguageHint
     ChannelsAgentV1MessagesAgentV1SettingsAgentListenProvider1:
       type: object
       properties:
@@ -1141,6 +1166,12 @@ components:
         model:
           type: string
           description: Model to use for speech to text using the V2 API (e.g. flux-general-en)
+        language_hint:
+          $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1SettingsAgentListenProviderOneOf1LanguageHint'
+          description: >-
+            One or more BCP-47 language codes to bias the model toward specific languages. Only supported when model is
+            flux-general-multi. Without hints, the model auto-detects the spoken language. See the Language Prompting
+            guide for details.
         keyterms:
           type: array
           items:
