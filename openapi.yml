@@ -532,6 +532,14 @@ paths:
           schema:
             type: boolean
             default: false
+        - name: diarize_model
+          in: query
+          description: >-
+            Select and enable a specific batch diarization model version. If specifying this parameter, you should not
+            set the deprecated `diarize=true` parameter. Not accepted on streaming requests.
+          required: false
+          schema:
+            $ref: '#/components/schemas/V1ListenPostParametersDiarizeModel'
         - name: dictation
           in: query
           description: Dictation mode for controlling formatting with dictated speech
@@ -3367,6 +3375,13 @@ components:
           items:
             type: string
       title: V1ListenPostParametersDetectLanguage
+    V1ListenPostParametersDiarizeModel:
+      type: string
+      enum:
+        - latest
+        - v1
+        - v2
+      title: V1ListenPostParametersDiarizeModel
     V1ListenPostParametersEncoding:
       type: string
       enum:
