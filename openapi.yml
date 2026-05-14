@@ -2963,8 +2963,8 @@ paths:
             schema:
               $ref: '#/components/schemas/GrantV1Request'
 servers:
-  - url: https://api.deepgram.com
   - url: https://agent.deepgram.com
+  - url: https://api.deepgram.com
 components:
   schemas:
     AgentThinkModelsV1ResponseModelsItemsOneOf0Id:
