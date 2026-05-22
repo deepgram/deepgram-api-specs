@@ -1152,17 +1152,6 @@ components:
       required:
         - type
       title: DeepgramListenProviderV1
-    DeepgramListenProviderV2LanguageHint:
-      oneOf:
-        - type: string
-        - type: array
-          items:
-            type: string
-      description: >-
-        One or more BCP-47 language codes to bias the model toward specific languages. Only supported when model is
-        flux-general-multi. Without hints, the model auto-detects the spoken language. See the Language Prompting guide
-        for details.
-      title: DeepgramListenProviderV2LanguageHint
     DeepgramListenProviderV2:
       type: object
       properties:
@@ -1179,12 +1168,14 @@ components:
         model:
           type: string
           description: Model to use for speech to text using the V2 API (e.g. flux-general-en, flux-general-multi)
-        language_hint:
-          $ref: '#/components/schemas/DeepgramListenProviderV2LanguageHint'
+        language_hints:
+          type: array
+          items:
+            type: string
           description: >-
-            One or more BCP-47 language codes to bias the model toward specific languages. Only supported when model is
-            flux-general-multi. Without hints, the model auto-detects the spoken language. See the Language Prompting
-            guide for details.
+            An array of one or more BCP-47 language codes to bias the model toward specific languages. Only supported
+            when model is flux-general-multi. Without hints, the model auto-detects the spoken language. See the
+            Language Prompting guide for details.
         keyterms:
           type: array
           items:
