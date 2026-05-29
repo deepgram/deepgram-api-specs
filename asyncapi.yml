@@ -159,6 +159,8 @@ channels:
               $ref: '#/components/schemas/ListenV2Keyterm'
             language_hint:
               $ref: '#/components/schemas/ListenV2LanguageHint'
+            profanity_filter:
+              $ref: '#/components/schemas/ListenV2ProfanityFilter'
             mip_opt_out:
               $ref: '#/components/schemas/ListenV2MipOptOut'
             tag:
@@ -2709,6 +2711,16 @@ components:
         to specify multiple language codes. Empty values are rejected.
         Only valid when model is flux-general-multi.
       title: ListenV2LanguageHint
+    ListenV2ProfanityFilter:
+      type: string
+      enum:
+        - 'true'
+        - 'false'
+      default: 'false'
+      description: >-
+        Profanity Filter looks for recognized profanity and converts it to the nearest recognized non-profane word or
+        removes it from the transcript completely.
+      title: ListenV2ProfanityFilter
     ListenV2MipOptOut:
       description: Any type
       title: ListenV2MipOptOut
