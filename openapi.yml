@@ -37,6 +37,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -78,6 +79,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -112,11 +114,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: agent_id
           in: path
+          description: The unique identifier of the agent configuration
           required: true
           schema:
             type: string
@@ -152,11 +156,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: agent_id
           in: path
+          description: The unique identifier of the agent configuration
           required: true
           schema:
             type: string
@@ -198,11 +204,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: agent_id
           in: path
+          description: The unique identifier of the agent configuration
           required: true
           schema:
             type: string
@@ -239,6 +247,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -278,6 +287,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -312,11 +322,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: variable_id
           in: path
+          description: The unique identifier of the agent variable
           required: true
           schema:
             type: string
@@ -350,11 +362,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: variable_id
           in: path
+          description: The unique identifier of the agent variable
           required: true
           schema:
             type: string
@@ -394,11 +408,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: variable_id
           in: path
+          description: The unique identifier of the agent variable
           required: true
           schema:
             type: string
@@ -443,6 +459,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ListenPostParametersCallbackMethod'
+            default: POST
         - name: extra
           in: query
           description: Arbitrary key-value pairs that are attached to the API response for usage in downstream processing
@@ -490,6 +507,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ListenPostParametersCustomTopicMode'
+            default: extended
         - name: intents
           in: query
           description: Recognizes speaker intent throughout a transcript or text
@@ -512,6 +530,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ListenPostParametersCustomIntentMode'
+            default: extended
         - name: detect_entities
           in: query
           description: Identifies and extracts key entities from content in submitted audio
@@ -596,6 +615,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ListenPostParametersModel'
+            default: base-general
         - name: multichannel
           in: query
           description: Transcribe each audio channel independently
@@ -639,6 +659,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ListenPostParametersRedact'
+            default: false
         - name: replace
           in: query
           description: Search for terms or phrases in submitted audio and replaces them
@@ -681,6 +702,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ListenPostParametersVersion'
+            default: latest
         - name: mip_opt_out
           in: query
           description: >-
@@ -737,6 +759,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1SpeakPostParametersCallbackMethod'
+            default: POST
         - name: mip_opt_out
           in: query
           description: >-
@@ -760,6 +783,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1SpeakPostParametersBitRate'
+            default: 48000
         - name: container
           in: query
           description: >-
@@ -768,18 +792,21 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1SpeakPostParametersContainer'
+            default: wav
         - name: encoding
           in: query
           description: Encoding allows you to specify the expected encoding of your audio output
           required: false
           schema:
             $ref: '#/components/schemas/V1SpeakPostParametersEncoding'
+            default: mp3
         - name: model
           in: query
           description: AI model used to process submitted text
           required: false
           schema:
             $ref: '#/components/schemas/V1SpeakPostParametersModel'
+            default: aura-asteria-en
         - name: sample_rate
           in: query
           description: >-
@@ -788,6 +815,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1SpeakPostParametersSampleRate'
+            default: 24000
         - name: speed
           in: query
           description: >-
@@ -845,6 +873,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ReadPostParametersCallbackMethod'
+            default: POST
         - name: sentiment
           in: query
           description: Recognizes the sentiment throughout a transcript or text
@@ -886,6 +915,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ReadPostParametersCustomTopicMode'
+            default: extended
         - name: intents
           in: query
           description: Recognizes speaker intent throughout a transcript or text
@@ -908,6 +938,7 @@ paths:
           required: false
           schema:
             $ref: '#/components/schemas/V1ReadPostParametersCustomIntentMode'
+            default: extended
         - name: language
           in: query
           description: >-
@@ -983,6 +1014,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1031,6 +1063,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1070,6 +1103,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1104,6 +1138,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1138,6 +1173,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1178,11 +1214,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: model_id
           in: path
+          description: The specific UUID of the model
           required: true
           schema:
             type: string
@@ -1252,6 +1290,7 @@ paths:
       parameters:
         - name: model_id
           in: path
+          description: The specific UUID of the model
           required: true
           schema:
             type: string
@@ -1286,6 +1325,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1325,6 +1365,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1365,11 +1406,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: key_id
           in: path
+          description: The unique identifier of the API key
           required: true
           schema:
             type: string
@@ -1403,11 +1446,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: key_id
           in: path
+          description: The unique identifier of the API key
           required: true
           schema:
             type: string
@@ -1442,6 +1487,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1476,11 +1522,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: member_id
           in: path
+          description: The unique identifier of the Member
           required: true
           schema:
             type: string
@@ -1516,11 +1564,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: member_id
           in: path
+          description: The unique identifier of the Member
           required: true
           schema:
             type: string
@@ -1555,11 +1605,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: member_id
           in: path
+          description: The unique identifier of the Member
           required: true
           schema:
             type: string
@@ -1601,6 +1653,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1635,6 +1688,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1676,11 +1730,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: email
           in: path
+          description: The email address of the member
           required: true
           schema:
             type: string
@@ -1715,6 +1771,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -1818,11 +1875,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: request_id
           in: path
+          description: The unique identifier of the request
           required: true
           schema:
             type: string
@@ -1859,6 +1918,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2160,6 +2220,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2213,6 +2274,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2520,6 +2582,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2555,11 +2618,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: balance_id
           in: path
+          description: The unique identifier of the balance
           required: true
           schema:
             type: string
@@ -2595,6 +2660,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2679,6 +2745,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2728,6 +2795,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2770,6 +2838,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2803,6 +2872,7 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
@@ -2814,12 +2884,15 @@ paths:
             type: array
             items:
               $ref: '#/components/schemas/V1ProjectsProjectIdSelfHostedDistributionCredentialsPostParametersScopesSchemaItems'
+            default:
+              - self-hosted:products
         - name: provider
           in: query
           description: The provider of the distribution service
           required: false
           schema:
             $ref: '#/components/schemas/V1ProjectsProjectIdSelfHostedDistributionCredentialsPostParametersProvider'
+            default: quay
         - name: Authorization
           in: header
           description: |
@@ -2857,11 +2930,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: distribution_credentials_id
           in: path
+          description: The UUID of the distribution credentials
           required: true
           schema:
             type: string
@@ -2895,11 +2970,13 @@ paths:
       parameters:
         - name: project_id
           in: path
+          description: The unique identifier of the project
           required: true
           schema:
             type: string
         - name: distribution_credentials_id
           in: path
+          description: The UUID of the distribution credentials
           required: true
           schema:
             type: string
