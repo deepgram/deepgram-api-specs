@@ -3041,7 +3041,9 @@ paths:
               $ref: '#/components/schemas/GrantV1Request'
 servers:
   - url: https://agent.deepgram.com
+    description: Production
   - url: https://api.deepgram.com
+    description: Base
 components:
   schemas:
     AgentThinkModelsV1ResponseModelsItemsOneOf0Id:
