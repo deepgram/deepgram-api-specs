@@ -69,6 +69,8 @@ channels:
             diarize:
               $ref: '#/components/schemas/ListenV1Diarize'
               default: 'false'
+            diarize_model:
+              $ref: '#/components/schemas/ListenV1_diarize_model'
             dictation:
               $ref: '#/components/schemas/ListenV1Dictation'
               default: 'false'
@@ -2183,9 +2185,15 @@ components:
         - 'false'
       default: 'false'
       description: >-
-        Defaults to `false`. Recognize speaker changes. Each word in the transcript will be assigned a speaker number
-        starting at 0
+        Deprecated. Use `diarize_model` instead. Defaults to `false`. Recognize speaker changes. Each word in the
+        transcript will be assigned a speaker number starting at 0
       title: ListenV1Diarize
+    ListenV1_diarize_model:
+      type: string
+      enum:
+        - latest
+        - v1
+      title: ListenV1_diarize_model
     ListenV1Dictation:
       type: string
       enum:
