@@ -2892,6 +2892,14 @@ components:
           type: number
           format: double
           description: Confidence that this word was transcribed correctly
+        start:
+          type: number
+          format: double
+          description: The start time of the word
+        end:
+          type: number
+          format: double
+          description: The end time of the word
       required:
         - word
         - confidence
