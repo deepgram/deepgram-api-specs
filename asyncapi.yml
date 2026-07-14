@@ -798,10 +798,6 @@ components:
           enum:
             - LatencyReport
           description: Message type identifier for the latency report
-        stt_latency:
-          type: number
-          format: double
-          description: 'Speech-to-text: time from audio received to transcript produced, in seconds'
         ttt_token_latency:
           type: number
           format: double
