@@ -1761,7 +1761,10 @@ components:
       type: string
       enum:
         - v1
-      description: The REST API version for the Deepgram text-to-speech API
+      default: v1
+      description: >-
+        The Deepgram text-to-speech model family. Aura models use v1 (default). For Flux TTS, use v2. Defaults to v1
+        when omitted.
       title: DeepgramSpeakProviderVersion
     DeepgramSpeakProviderModel:
       type: string
@@ -1840,7 +1843,10 @@ components:
             - deepgram
         version:
           $ref: '#/components/schemas/DeepgramSpeakProviderVersion'
-          description: The REST API version for the Deepgram text-to-speech API
+          default: v1
+          description: >-
+            The Deepgram text-to-speech model family. Aura models use v1 (default). For Flux TTS, use v2. Defaults to v1
+            when omitted.
         model:
           $ref: '#/components/schemas/DeepgramSpeakProviderModel'
           description: Deepgram TTS model
@@ -1854,7 +1860,52 @@ components:
       required:
         - type
         - model
+      description: Deepgram Aura text-to-speech provider (version v1). For Flux TTS, use version v2 and a flux-* model.
       title: DeepgramSpeakProvider
+    SpeakSettingsV1ProviderOneOf1Model:
+      type: string
+      enum:
+        - flux-haley-en
+        - flux-heather-en
+        - flux-cole-en
+        - flux-alexis-en
+        - flux-priya-en
+        - flux-jack-en
+        - flux-bruce-en
+        - flux-rufus-en
+        - flux-drew-en
+        - flux-renee-en
+        - flux-marcus-en
+        - flux-sharon-en
+      description: >-
+        Flux TTS model to use, in the format flux-{voice}-{language} (e.g. flux-alexis-en). See the Flux TTS voice
+        catalog for the full list.
+      title: SpeakSettingsV1ProviderOneOf1Model
+    SpeakSettingsV1Provider1:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - deepgram
+          description: Provider type for text-to-speech
+        version:
+          type: string
+          enum:
+            - v2
+          description: Selects the Deepgram Flux TTS model family
+        model:
+          $ref: '#/components/schemas/SpeakSettingsV1ProviderOneOf1Model'
+          description: >-
+            Flux TTS model to use, in the format flux-{voice}-{language} (e.g. flux-alexis-en). See the Flux TTS voice
+            catalog for the full list.
+      required:
+        - type
+        - model
+      description: >-
+        Deepgram Flux TTS text-to-speech provider (version v2). Flux TTS is in Early Access — the Flux TTS-specific API
+        surface and voice catalog may change before general availability.
+      title: SpeakSettingsV1Provider1
     ElevenLabsSpeakProviderVersion:
       type: string
       enum:
@@ -2069,6 +2120,7 @@ components:
     SpeakSettingsV1Provider:
       oneOf:
         - $ref: '#/components/schemas/DeepgramSpeakProvider'
+        - $ref: '#/components/schemas/SpeakSettingsV1Provider1'
         - $ref: '#/components/schemas/ElevenLabsSpeakProvider'
         - $ref: '#/components/schemas/CartesiaSpeakProvider'
         - $ref: '#/components/schemas/OpenAiSpeakProvider'
