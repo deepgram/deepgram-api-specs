@@ -13,7 +13,7 @@ channels:
             Authorization:
               type: string
     publish:
-      operationId: agent-v-1-publish
+      operationId: subpackage_agent/v1.agent.v1-publish
       summary: Server messages
       message:
         oneOf:
@@ -37,7 +37,7 @@ channels:
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-17-AgentV1History'
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-18-AgentV1Audio'
     subscribe:
-      operationId: agent-v-1-subscribe
+      operationId: subpackage_agent/v1.agent.v1-subscribe
       summary: Client messages
       message:
         oneOf:
@@ -139,7 +139,7 @@ channels:
             Authorization:
               type: string
     publish:
-      operationId: listen-v-1-publish
+      operationId: subpackage_listen/v1.listen.v1-publish
       summary: Server messages
       message:
         oneOf:
@@ -148,7 +148,7 @@ channels:
           - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-2-ListenV1UtteranceEnd'
           - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-3-ListenV1SpeechStarted'
     subscribe:
-      operationId: listen-v-1-subscribe
+      operationId: subpackage_listen/v1.listen.v1-subscribe
       summary: Client messages
       message:
         oneOf:
@@ -201,7 +201,7 @@ channels:
             Authorization:
               type: string
     publish:
-      operationId: listen-v-2-publish
+      operationId: subpackage_listen/v2.listen.v2-publish
       summary: Server messages
       message:
         oneOf:
@@ -211,7 +211,7 @@ channels:
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-server-3-ListenV2ConfigureFailure'
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-server-4-ListenV2FatalError'
     subscribe:
-      operationId: listen-v-2-subscribe
+      operationId: subpackage_listen/v2.listen.v2-subscribe
       summary: Client messages
       message:
         oneOf:
@@ -246,7 +246,7 @@ channels:
             Authorization:
               type: string
     publish:
-      operationId: speak-v-1-publish
+      operationId: subpackage_speak/v1.speak.v1-publish
       summary: Server messages
       message:
         oneOf:
@@ -256,7 +256,7 @@ channels:
           - $ref: '#/components/messages/subpackage_speak/v1.speak.v1-server-3-SpeakV1Cleared'
           - $ref: '#/components/messages/subpackage_speak/v1.speak.v1-server-4-SpeakV1Warning'
     subscribe:
-      operationId: speak-v-1-subscribe
+      operationId: subpackage_speak/v1.speak.v1-subscribe
       summary: Client messages
       message:
         oneOf:
@@ -292,7 +292,7 @@ channels:
             Authorization:
               type: string
     publish:
-      operationId: speak-v-2-publish
+      operationId: subpackage_speak/v2.speak.v2-publish
       summary: Server messages
       message:
         oneOf:
@@ -305,7 +305,7 @@ channels:
           - $ref: '#/components/messages/subpackage_speak/v2.speak.v2-server-6-SpeakV2Warning'
           - $ref: '#/components/messages/subpackage_speak/v2.speak.v2-server-7-SpeakV2Error'
     subscribe:
-      operationId: speak-v-2-subscribe
+      operationId: subpackage_speak/v2.speak.v2-subscribe
       summary: Client messages
       message:
         oneOf:
@@ -918,32 +918,32 @@ components:
             - LatencyReport
           description: Message type identifier for the latency report
         stt_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: 'Speech-to-text: time from audio received to transcript produced, in seconds'
         ttt_token_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: Time to first token of any type (text, tool call, or thinking), in seconds
         ttt_text_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: Time to first text token from the LLM, in seconds
         ttt_tool_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: Time to first tool-call token from the LLM, in seconds
         ttt_thinking_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: Time to first thinking token from the LLM, in seconds
         tts_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: 'Text-to-speech: time from first text token to first audio byte, in seconds'
         total_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: 'End-to-end: time from user utterance end to first audio byte, in seconds'
       required:
         - type
@@ -998,16 +998,16 @@ components:
             - AgentStartedSpeaking
           description: Message type identifier for agent started speaking
         total_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: Seconds from receiving the user's utterance to producing the agent's reply
         tts_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: The portion of total latency attributable to text-to-speech
         ttt_latency:
-          type: number
-          format: double
+          type: string
+          title: float
           description: The portion of total latency attributable to text-to-text (usually an LLM)
       required:
         - type
@@ -3120,8 +3120,8 @@ components:
           type: string
           description: The individual punctuated, properly-cased word from the transcript
         confidence:
-          type: number
-          format: double
+          type: string
+          title: float
           description: Confidence that this word was transcribed correctly
         start:
           type: number
@@ -3172,12 +3172,12 @@ components:
           type: integer
           description: The index of the current turn
         audio_window_start:
-          type: number
-          format: double
+          type: string
+          title: float
           description: Start time in seconds of the audio range that was transcribed
         audio_window_end:
-          type: number
-          format: double
+          type: string
+          title: float
           description: End time in seconds of the audio range that was transcribed
         transcript:
           type: string
@@ -3188,8 +3188,8 @@ components:
             $ref: '#/components/schemas/ChannelsListenV2MessagesListenV2TurnInfoWordsItems'
           description: The words in the `transcript`
         end_of_turn_confidence:
-          type: number
-          format: double
+          type: string
+          title: float
           description: Confidence that no more speech is coming in this turn
         languages:
           type: array
