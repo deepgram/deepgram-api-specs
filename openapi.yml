@@ -3850,6 +3850,15 @@ components:
         confidence:
           type: number
           format: double
+        speaker:
+          type: integer
+          description: The speaker of the word, present when diarization is enabled
+        speaker_confidence:
+          type: number
+          format: double
+          description: >-
+            Confidence in the speaker assignment. Returned only for pre-recorded diarization; not available for
+            streaming
       title: ListenV1ResponseResultsChannelsItemsAlternativesItemsWordsItems
     ListenV1ResponseResultsChannelsItemsAlternativesItemsParagraphsParagraphsItemsSentencesItems:
       type: object
