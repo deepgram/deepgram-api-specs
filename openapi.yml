@@ -3110,11 +3110,11 @@ paths:
           in: query
           description: >-
             Expressive range of the generated speech, on a calm-to-animated axis. Accepted values: `-2`, `-1`, `0`, `1`,
-            `2`. `0` (the default) is the voice's tuned delivery and the production-validated setting; negative values
-            are calmer and more measured, positive values more animated. Supported on all Flux voices; applies to the
-            whole request. Beta: behavior may change in future model versions, and non-default values increase the risk
-            of hallucinations and pronunciation errors; audition before shipping. An invalid value is rejected with a
-            `400` — `EXPRESSIVITY_OUT_OF_RANGE` for a value outside the range, `EXPRESSIVITY_INCREMENT_INVALID` for a
+            `2`. `0` (the default) is the voice's tuned delivery and the production-validated setting, with `-2` the
+            calm end of the range and `2` the animated end. Supported on all Flux voices; applies to the whole request.
+            Beta: behavior may change in future model versions, and non-default values increase the risk of
+            hallucinations and pronunciation errors; audition before shipping. An invalid value is rejected with a `400`
+            — `EXPRESSIVITY_OUT_OF_RANGE` for a value outside the range, `EXPRESSIVITY_INCREMENT_INVALID` for a
             fractional value. See [Expressivity](/docs/tts-expressivity).
           required: false
           schema:
