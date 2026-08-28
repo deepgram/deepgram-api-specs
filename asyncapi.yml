@@ -50,7 +50,8 @@ channels:
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-6-AgentV1SendFunctionCallResponse'
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-7-AgentV1KeepAlive'
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-8-AgentV1UpdatePrompt'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-9-AgentV1Media'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-9-AgentV1ForceEndTurn'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-10-AgentV1Media'
   /v1/listen:
     description: Transcribe audio and video using Deepgram's speech-to-text WebSocket
     bindings:
@@ -217,7 +218,8 @@ channels:
         oneOf:
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-client-0-ListenV2Media'
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-client-1-ListenV2CloseStream'
-          - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-client-2-ListenV2Configure'
+          - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-client-2-ListenV2ForceEndTurn'
+          - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-client-3-ListenV2Configure'
   /v1/speak:
     description: Convert text into natural-sounding speech using Deepgram's TTS WebSocket
     bindings:
@@ -506,7 +508,13 @@ components:
       description: Send a prompt update to Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdatePrompt'
-    subpackage_agent/v1.agent.v1-client-9-AgentV1Media:
+    subpackage_agent/v1.agent.v1-client-9-AgentV1ForceEndTurn:
+      name: AgentV1ForceEndTurn
+      title: AgentV1ForceEndTurn
+      description: Send a ForceEndTurn message to immediately end the current user turn
+      payload:
+        $ref: '#/components/schemas/AgentV1_AgentV1ForceEndTurn'
+    subpackage_agent/v1.agent.v1-client-10-AgentV1Media:
       name: AgentV1Media
       title: AgentV1Media
       description: Send raw binary audio data to Deepgram's Voice Agent API for processing
@@ -604,7 +612,13 @@ components:
       description: Send a CloseStream message to close the WebSocket stream
       payload:
         $ref: '#/components/schemas/ListenV2_ListenV2CloseStream'
-    subpackage_listen/v2.listen.v2-client-2-ListenV2Configure:
+    subpackage_listen/v2.listen.v2-client-2-ListenV2ForceEndTurn:
+      name: ListenV2ForceEndTurn
+      title: ListenV2ForceEndTurn
+      description: Send a ForceEndTurn message to immediately end the current turn
+      payload:
+        $ref: '#/components/schemas/ListenV2_ListenV2ForceEndTurn'
+    subpackage_listen/v2.listen.v2-client-3-ListenV2Configure:
       name: ListenV2Configure
       title: ListenV2Configure
       description: Send a Configure message to update Flux settings
@@ -1441,7 +1455,9 @@ components:
         eot_threshold:
           type: number
           format: double
-          description: 'End-of-turn confidence required to finish a turn. Valid range: 0.5 - 0.9. Defaults to 0.7.'
+          description: >-
+            End-of-turn confidence required to finish a turn. Valid range: 0.5 - 1.0. Defaults to 0.7. Set to 1.0 to
+            fully suppress natural end-of-turn detection and end turns with the ForceEndTurn message.
         eager_eot_threshold:
           type: number
           format: double
@@ -2528,6 +2544,17 @@ components:
         - type
         - prompt
       title: AgentV1_AgentV1UpdatePrompt
+    AgentV1_AgentV1ForceEndTurn:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ForceEndTurn
+          description: Message type identifier for forcing the end of the current turn
+      required:
+        - type
+      title: AgentV1_AgentV1ForceEndTurn
     AgentV1_AgentV1Media:
       type: string
       format: binary
@@ -3323,6 +3350,23 @@ components:
           type: string
           title: float
           description: Confidence that no more speech is coming in this turn
+        trigger:
+          type: string
+          description: >
+            The cause of the turn ending. Present on every `EndOfTurn` event and only there.
+
+
+            - **model** - the turn ended by Flux's native end-of-turn detection
+
+
+            - **manual** - the turn ended because a `ForceEndTurn` message was sent
+
+
+            - **timeout** - the turn ended because `eot_timeout_ms` elapsed
+
+
+            This is an open enum. New values may be added over time, so clients must tolerate values they do not
+            recognize.
         languages:
           type: array
           items:
@@ -3479,6 +3523,17 @@ components:
       required:
         - type
       title: ListenV2_ListenV2CloseStream
+    ListenV2_ListenV2ForceEndTurn:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ForceEndTurn
+          description: Message type identifier
+      required:
+        - type
+      title: ListenV2_ListenV2ForceEndTurn
     ChannelsListenV2MessagesListenV2ConfigureThresholds:
       type: object
       properties:
