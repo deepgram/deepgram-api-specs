@@ -605,7 +605,9 @@ paths:
               type: string
         - name: keywords
           in: query
-          description: Keywords can boost or suppress specialized terminology and brands
+          description: >-
+            Keywords can boost or suppress specialized terminology and brands. `keywords` is not supported with Nova-3
+            models; use `keyterm` instead.
           required: false
           schema:
             $ref: '#/components/schemas/V1ListenPostParametersKeywords'
