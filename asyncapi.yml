@@ -3531,6 +3531,12 @@ components:
             Starts at `0` and increments for each message the server sends
             to the client.  This includes messages of other types, like
             `TurnInfo` messages.
+        code:
+          type: string
+          description: Failure code identifying the rejected configuration
+        description:
+          type: string
+          description: A human-readable description of the configuration failure
       required:
         - type
         - request_id
