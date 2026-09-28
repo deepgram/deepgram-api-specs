@@ -3812,7 +3812,7 @@ components:
         short:
           type: string
       title: ListenV1ResponseResultsSummary
-    SharedTopicsResultsTopicsSegmentsItemsTopicsItems:
+    SharedTopicsSegmentsItemsTopicsItems:
       type: object
       properties:
         topic:
@@ -3820,8 +3820,8 @@ components:
         confidence_score:
           type: string
           title: float
-      title: SharedTopicsResultsTopicsSegmentsItemsTopicsItems
-    SharedTopicsResultsTopicsSegmentsItems:
+      title: SharedTopicsSegmentsItemsTopicsItems
+    SharedTopicsSegmentsItems:
       type: object
       properties:
         text:
@@ -3835,30 +3835,18 @@ components:
         topics:
           type: array
           items:
-            $ref: '#/components/schemas/SharedTopicsResultsTopicsSegmentsItemsTopicsItems'
-      title: SharedTopicsResultsTopicsSegmentsItems
-    SharedTopicsResultsTopics:
+            $ref: '#/components/schemas/SharedTopicsSegmentsItemsTopicsItems'
+      title: SharedTopicsSegmentsItems
+    SharedTopics:
       type: object
       properties:
         segments:
           type: array
           items:
-            $ref: '#/components/schemas/SharedTopicsResultsTopicsSegmentsItems'
-      title: SharedTopicsResultsTopics
-    SharedTopicsResults:
-      type: object
-      properties:
-        topics:
-          $ref: '#/components/schemas/SharedTopicsResultsTopics'
-      title: SharedTopicsResults
-    SharedTopics:
-      type: object
-      properties:
-        results:
-          $ref: '#/components/schemas/SharedTopicsResults'
+            $ref: '#/components/schemas/SharedTopicsSegmentsItems'
       description: Output whenever `topics=true` is used
       title: SharedTopics
-    SharedIntentsResultsIntentsSegmentsItemsIntentsItems:
+    SharedIntentsSegmentsItemsIntentsItems:
       type: object
       properties:
         intent:
@@ -3866,8 +3854,8 @@ components:
         confidence_score:
           type: string
           title: float
-      title: SharedIntentsResultsIntentsSegmentsItemsIntentsItems
-    SharedIntentsResultsIntentsSegmentsItems:
+      title: SharedIntentsSegmentsItemsIntentsItems
+    SharedIntentsSegmentsItems:
       type: object
       properties:
         text:
@@ -3881,27 +3869,15 @@ components:
         intents:
           type: array
           items:
-            $ref: '#/components/schemas/SharedIntentsResultsIntentsSegmentsItemsIntentsItems'
-      title: SharedIntentsResultsIntentsSegmentsItems
-    SharedIntentsResultsIntents:
+            $ref: '#/components/schemas/SharedIntentsSegmentsItemsIntentsItems'
+      title: SharedIntentsSegmentsItems
+    SharedIntents:
       type: object
       properties:
         segments:
           type: array
           items:
-            $ref: '#/components/schemas/SharedIntentsResultsIntentsSegmentsItems'
-      title: SharedIntentsResultsIntents
-    SharedIntentsResults:
-      type: object
-      properties:
-        intents:
-          $ref: '#/components/schemas/SharedIntentsResultsIntents'
-      title: SharedIntentsResults
-    SharedIntents:
-      type: object
-      properties:
-        results:
-          $ref: '#/components/schemas/SharedIntentsResults'
+            $ref: '#/components/schemas/SharedIntentsSegmentsItems'
       description: Output whenever `intents=true` is used
       title: SharedIntents
     SharedSentimentsSegmentsItems:
