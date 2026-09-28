@@ -211,7 +211,8 @@ channels:
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-server-1-ListenV2TurnInfo'
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-server-2-ListenV2ConfigureSuccess'
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-server-3-ListenV2ConfigureFailure'
-          - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-server-4-ListenV2FatalError'
+          - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-server-4-ListenV2Warning'
+          - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-server-5-ListenV2FatalError'
     subscribe:
       operationId: subpackage_listen/v2.listen.v2-subscribe
       summary: Client messages
@@ -601,7 +602,13 @@ components:
       description: Indicates that a Configure message was rejected
       payload:
         $ref: '#/components/schemas/ListenV2_ListenV2ConfigureFailure'
-    subpackage_listen/v2.listen.v2-server-4-ListenV2FatalError:
+    subpackage_listen/v2.listen.v2-server-4-ListenV2Warning:
+      name: ListenV2Warning
+      title: ListenV2Warning
+      description: Receive a warning; the server keeps the connection open
+      payload:
+        $ref: '#/components/schemas/ListenV2_ListenV2Warning'
+    subpackage_listen/v2.listen.v2-server-5-ListenV2FatalError:
       name: ListenV2FatalError
       title: ListenV2FatalError
       description: Receive a fatal error message
@@ -3529,6 +3536,38 @@ components:
         - request_id
         - sequence_id
       title: ListenV2_ListenV2ConfigureFailure
+    ListenV2_ListenV2Warning:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - Warning
+          description: Message type identifier
+        request_id:
+          type: string
+          format: uuid
+          description: The unique identifier of the request
+        sequence_id:
+          type: integer
+          minimum: 0
+          description: |
+            Starts at `0` and increments for each message the server sends
+            to the client. This includes messages of other types, like
+            `TurnInfo` messages.
+        code:
+          type: string
+          description: Warning code identifying the condition, in `SCREAMING_SNAKE_CASE`
+        description:
+          type: string
+          description: A human-readable description of the warning
+      required:
+        - type
+        - request_id
+        - sequence_id
+        - code
+        - description
+      title: ListenV2_ListenV2Warning
     ChannelsListenV2MessagesListenV2FatalErrorType:
       type: string
       enum:
