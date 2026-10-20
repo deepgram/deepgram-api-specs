@@ -147,11 +147,13 @@ channels:
       summary: Server messages
       message:
         oneOf:
-          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-0-ListenV1Results'
-          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-1-ListenV1Metadata'
-          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-2-ListenV1UtteranceEnd'
-          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-3-ListenV1SpeechStarted'
-          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-4-ListenV1Error'
+          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-0-ListenV1ConfigureSuccess'
+          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-1-ListenV1ConfigureFailure'
+          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-2-ListenV1Results'
+          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-3-ListenV1Metadata'
+          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-4-ListenV1UtteranceEnd'
+          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-5-ListenV1SpeechStarted'
+          - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-server-6-ListenV1Error'
     subscribe:
       operationId: subpackage_listen/v1.listen.v1-subscribe
       summary: Client messages
@@ -548,36 +550,48 @@ components:
       description: Send raw binary audio data to Deepgram's Voice Agent API for processing
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Media'
-    subpackage_listen/v1.listen.v1-server-0-ListenV1Results:
+    subpackage_listen/v1.listen.v1-server-0-ListenV1ConfigureSuccess:
+      name: ListenV1ConfigureSuccess
+      title: ListenV1ConfigureSuccess
+      description: Receive confirmation that a Configure message was applied
+      payload:
+        $ref: '#/components/schemas/ListenV1_ListenV1ConfigureSuccess'
+    subpackage_listen/v1.listen.v1-server-1-ListenV1ConfigureFailure:
+      name: ListenV1ConfigureFailure
+      title: ListenV1ConfigureFailure
+      description: Receive notice that a Configure message was rejected; the stream keeps its previous configuration
+      payload:
+        $ref: '#/components/schemas/ListenV1_ListenV1ConfigureFailure'
+    subpackage_listen/v1.listen.v1-server-2-ListenV1Results:
       name: ListenV1Results
       title: ListenV1Results
       description: Receive transcription results
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Results'
-    subpackage_listen/v1.listen.v1-server-1-ListenV1Metadata:
+    subpackage_listen/v1.listen.v1-server-3-ListenV1Metadata:
       name: ListenV1Metadata
       title: ListenV1Metadata
       description: Receive metadata about the transcription
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Metadata'
-    subpackage_listen/v1.listen.v1-server-2-ListenV1UtteranceEnd:
+    subpackage_listen/v1.listen.v1-server-4-ListenV1UtteranceEnd:
       name: ListenV1UtteranceEnd
       title: ListenV1UtteranceEnd
       description: Receive an utterance end event
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1UtteranceEnd'
-    subpackage_listen/v1.listen.v1-server-3-ListenV1SpeechStarted:
+    subpackage_listen/v1.listen.v1-server-5-ListenV1SpeechStarted:
       name: ListenV1SpeechStarted
       title: ListenV1SpeechStarted
       description: Receive a speech started event
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1SpeechStarted'
-    subpackage_listen/v1.listen.v1-server-4-ListenV1Error:
+    subpackage_listen/v1.listen.v1-server-6-ListenV1Error:
       name: ListenV1Error
       title: ListenV1Error
       description: >-
-        Receive a non-fatal error message, such as a rejected Configure or an unparseable text message. Fatal failures
-        close the socket instead.
+        Receive a non-fatal error message, such as for an unparseable text message. Fatal failures close the socket
+        instead.
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Error'
     subpackage_listen/v1.listen.v1-client-0-ListenV1Media:
@@ -2889,6 +2903,82 @@ components:
     ListenV1Version:
       description: Any type
       title: ListenV1Version
+    ChannelsListenV1MessagesListenV1ConfigureSuccessType:
+      type: string
+      enum:
+        - ConfigureSuccess
+      description: Message type identifier
+      title: ChannelsListenV1MessagesListenV1ConfigureSuccessType
+    ListenV1_ListenV1ConfigureSuccess:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ChannelsListenV1MessagesListenV1ConfigureSuccessType'
+          description: Message type identifier
+        request_id:
+          type: string
+          format: uuid
+          description: The unique identifier of the request
+        keyterms:
+          type: array
+          items:
+            type: string
+          description: The keyterms now in effect. Present only when the `Configure` replaced them.
+      required:
+        - type
+        - request_id
+      title: ListenV1_ListenV1ConfigureSuccess
+    ChannelsListenV1MessagesListenV1ConfigureFailureType:
+      type: string
+      enum:
+        - ConfigureFailure
+      description: Message type identifier
+      title: ChannelsListenV1MessagesListenV1ConfigureFailureType
+    ChannelsListenV1MessagesListenV1ConfigureFailureCode:
+      type: string
+      enum:
+        - CONFIGURE_KEYTERMS_NOT_SUPPORTED
+        - CONFIGURE_KEYTERM_LIMIT_EXCEEDED
+        - CONFIGURE_ALREADY_PENDING
+        - CONFIGURE_INTERNAL_ERROR
+      description: |
+        Identifies why the `Configure` was rejected.
+
+        - `CONFIGURE_KEYTERMS_NOT_SUPPORTED`: the stream's model does not support mid-stream keyterm updates. Only
+          Nova-3 models do.
+        - `CONFIGURE_KEYTERM_LIMIT_EXCEEDED`: the keyterms exceed the 500-token keyterm limit.
+        - `CONFIGURE_ALREADY_PENDING`: another `Configure` is still awaiting its response.
+        - `CONFIGURE_INTERNAL_ERROR`: the server failed to apply the configuration.
+      title: ChannelsListenV1MessagesListenV1ConfigureFailureCode
+    ListenV1_ListenV1ConfigureFailure:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/ChannelsListenV1MessagesListenV1ConfigureFailureType'
+          description: Message type identifier
+        request_id:
+          type: string
+          format: uuid
+          description: The unique identifier of the request
+        code:
+          $ref: '#/components/schemas/ChannelsListenV1MessagesListenV1ConfigureFailureCode'
+          description: |
+            Identifies why the `Configure` was rejected.
+
+            - `CONFIGURE_KEYTERMS_NOT_SUPPORTED`: the stream's model does not support mid-stream keyterm updates. Only
+              Nova-3 models do.
+            - `CONFIGURE_KEYTERM_LIMIT_EXCEEDED`: the keyterms exceed the 500-token keyterm limit.
+            - `CONFIGURE_ALREADY_PENDING`: another `Configure` is still awaiting its response.
+            - `CONFIGURE_INTERNAL_ERROR`: the server failed to apply the configuration.
+        description:
+          type: string
+          description: A human-readable explanation of the rejection
+      required:
+        - type
+        - request_id
+        - code
+        - description
+      title: ListenV1_ListenV1ConfigureFailure
     ChannelsListenV1MessagesListenV1ResultsType:
       type: string
       enum:
@@ -3198,15 +3288,15 @@ components:
           type: string
           description: |
             The error category. `SchemaError` means the server could not parse a client text message.
-            `InvalidConfigureMessage` means the server rejected a `Configure` message.
         description:
           type: string
           description: A human-readable description of what went wrong
         code:
           type: string
           description: |
-            Identifies the reason for an `InvalidConfigureMessage` error, for example `KeytermsNotSupported`
-            when `keyterms` are sent on a model other than Nova-3.
+            Deprecated. Present only on legacy error frames; use `ConfigureFailure.code` for `Configure`
+            rejections.
+          deprecated: true
         message:
           type: string
           description: For `SchemaError`, the original client message that could not be parsed
@@ -3288,14 +3378,13 @@ components:
             type: string
           description: |
             Replaces the stream's keyterms. Compatible with all Nova-3 models, monolingual and multilingual; on other
-            models the server returns an `Error` with code `KeytermsNotSupported`. Each array replaces the entire list,
-            including keyterms set with the `keyterm` query parameter. Send an empty array to clear all keyterms. Omit
-            the field, or set it to `null`, to keep the current keyterms.
+            models the server returns a `ConfigureFailure` with code `CONFIGURE_KEYTERMS_NOT_SUPPORTED`. Each array
+            replaces the entire list, including keyterms set with the `keyterm` query parameter. Send an empty array to
+            clear all keyterms. Omit the field, or set it to `null`, to keep the current keyterms.
 
             Each entry is a plain term or phrase with no weights or intensifiers. The 500-token keyterm limit that
-            applies to the `keyterm` query parameter also applies to each update. An over-limit update currently stops
-            transcription without an `Error`; after about 30 seconds, the server closes the stream with `1011`
-            (`NET-0000`). Keep each list under the limit and check its size before sending.
+            applies to the `keyterm` query parameter also applies to each update. An over-limit update returns a
+            `ConfigureFailure` with code `CONFIGURE_KEYTERM_LIMIT_EXCEEDED`.
         features:
           type: object
           additionalProperties:
