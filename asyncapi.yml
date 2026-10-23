@@ -98,6 +98,8 @@ channels:
             language:
               $ref: '#/components/schemas/ListenV1Language'
               default: en
+            language_hint:
+              $ref: '#/components/schemas/ListenV1LanguageHint'
             mip_opt_out:
               $ref: '#/components/schemas/ListenV1MipOptOut'
               default: 'false'
@@ -2783,6 +2785,19 @@ components:
     ListenV1Language:
       description: Any type
       title: ListenV1Language
+    ListenV1LanguageHint:
+      oneOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      description: >
+        Biases language detection toward one or more languages on Nova-3 multilingual (`model=nova-3&language=multi`);
+        ignored with any other `language`. Repeat the parameter to pass several codes, for example
+        `language_hint=en&language_hint=es`. A code that is not in the [Nova-3 multilingual
+        list](/docs/models-languages-overview#nova-3) rejects the WebSocket connection with HTTP 400. See [Nova-3
+        Language Prompting](/docs/nova-3-language-prompting).
+      title: ListenV1LanguageHint
     ListenV1MipOptOut:
       description: Any type
       title: ListenV1MipOptOut
@@ -3005,7 +3020,9 @@ components:
           description: The confidence of the word
         language:
           type: string
-          description: The language of the word
+          description: >-
+            [BCP-47](https://tools.ietf.org/html/bcp47) language tag of the word's detected language. Only present when
+            `language=multi`. Can be absent on audio that switches languages.
         punctuated_word:
           type: string
           description: The punctuated word of the word
@@ -3032,6 +3049,19 @@ components:
           type: array
           items:
             type: string
+          description: >-
+            [BCP-47](https://tools.ietf.org/html/bcp47) language tags of the languages detected in the transcript,
+            sorted by word count in descending order. Only present when `language=multi`. Can be absent on audio that
+            switches languages.
+        languages_hinted:
+          type: array
+          items:
+            type: string
+          description: >-
+            The `language_hint` values set at connection time, normalized: codes are returned in canonical form (`ES` →
+            `es`, `zh-hk` → `zh-HK`), and a regional code the model has no tag for is returned as its base language
+            (`en-GB` → `en`). Present on interim and final results of every Nova-3 multilingual stream
+            (`model=nova-3&language=multi`); an empty array when no `language_hint` was sent.
         words:
           type: array
           items:
