@@ -560,6 +560,17 @@ paths:
           schema:
             type: string
             default: en
+        - name: language_hint
+          in: query
+          description: >
+            Biases language detection toward one or more languages on Nova-3 multilingual
+            (`model=nova-3&language=multi`); ignored with any other `language`. Repeat the parameter to pass several
+            codes, for example `language_hint=en&language_hint=es`. A code that is not in the [Nova-3 multilingual
+            list](/docs/models-languages-overview#nova-3) fails the request with HTTP 400. See [Nova-3 Language
+            Prompting](/docs/nova-3-language-prompting).
+          required: false
+          schema:
+            $ref: '#/components/schemas/V1ListenPostParametersLanguageHint'
         - name: measurements
           in: query
           description: Spoken measurements will be converted to their corresponding abbreviations
@@ -3378,6 +3389,13 @@ components:
           items:
             type: string
       title: V1ListenPostParametersKeywords
+    V1ListenPostParametersLanguageHint:
+      oneOf:
+        - type: string
+        - type: array
+          items:
+            type: string
+      title: V1ListenPostParametersLanguageHint
     V1ListenPostParametersModel0:
       type: string
       enum:
@@ -3616,6 +3634,11 @@ components:
         confidence:
           type: string
           title: float
+        language:
+          type: string
+          description: >-
+            [BCP-47](https://tools.ietf.org/html/bcp47) language tag of the word's detected language. Only present when
+            `language=multi`. Can be absent on audio that switches languages.
         speaker:
           type: integer
           description: The speaker of the word, present when diarization is enabled
@@ -3722,6 +3745,23 @@ components:
         confidence:
           type: string
           title: float
+        languages:
+          type: array
+          items:
+            type: string
+          description: >-
+            [BCP-47](https://tools.ietf.org/html/bcp47) language tags of the languages detected in the transcript,
+            sorted by word count in descending order. Only present when `language=multi`. Can be absent on audio that
+            switches languages.
+        languages_hinted:
+          type: array
+          items:
+            type: string
+          description: >-
+            The `language_hint` values for the request, normalized: codes are returned in canonical form (`ES` → `es`,
+            `zh-hk` → `zh-HK`), and a regional code the model has no tag for is returned as its base language (`en-GB` →
+            `en`). Returned on every Nova-3 multilingual response (`model=nova-3&language=multi`); an empty array when
+            no `language_hint` was sent.
         words:
           type: array
           items:
@@ -3774,6 +3814,11 @@ components:
         confidence:
           type: string
           title: float
+        language:
+          type: string
+          description: >-
+            [BCP-47](https://tools.ietf.org/html/bcp47) language tag of the word's detected language. Only present when
+            `language=multi`. Can be absent on audio that switches languages.
         speaker:
           type: integer
         speaker_confidence:
@@ -3798,6 +3843,13 @@ components:
           type: integer
         transcript:
           type: string
+        languages:
+          type: array
+          items:
+            type: string
+          description: >-
+            [BCP-47](https://tools.ietf.org/html/bcp47) language tags of the languages detected in the utterance, sorted
+            by word count in descending order. Only present when `language=multi`.
         words:
           type: array
           items:
