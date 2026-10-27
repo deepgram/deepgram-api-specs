@@ -19,25 +19,27 @@ channels:
         oneOf:
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-0-AgentV1ListenUpdated'
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-1-AgentV1ThinkUpdated'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-2-AgentV1ReceiveFunctionCallResponse'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-3-AgentV1PromptUpdated'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-4-AgentV1SpeakUpdated'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-5-AgentV1InjectionRefused'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-6-AgentV1Welcome'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-7-AgentV1SettingsApplied'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-8-AgentV1ConversationText'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-9-AgentV1UserStartedSpeaking'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-10-AgentV1AgentThinking'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-11-AgentV1LatencyReport'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-12-AgentV1FunctionCallRequest'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-13-AgentV1FunctionCallCancelled'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-14-AgentV1AgentStartedSpeaking'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-15-AgentV1AgentAudioDone'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-16-AgentV1CustomFromThinkProvider'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-17-AgentV1Error'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-18-AgentV1Warning'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-19-AgentV1History'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-20-AgentV1Audio'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-2-AgentV1ThinkLiveUpdated'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-3-AgentV1FrustrationDetected'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-4-AgentV1ReceiveFunctionCallResponse'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-5-AgentV1PromptUpdated'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-6-AgentV1SpeakUpdated'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-7-AgentV1InjectionRefused'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-8-AgentV1Welcome'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-9-AgentV1SettingsApplied'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-10-AgentV1ConversationText'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-11-AgentV1UserStartedSpeaking'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-12-AgentV1AgentThinking'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-13-AgentV1LatencyReport'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-14-AgentV1FunctionCallRequest'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-15-AgentV1FunctionCallCancelled'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-16-AgentV1AgentStartedSpeaking'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-17-AgentV1AgentAudioDone'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-18-AgentV1CustomFromThinkProvider'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-19-AgentV1Error'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-20-AgentV1Warning'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-21-AgentV1History'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-server-22-AgentV1Audio'
     subscribe:
       operationId: subpackage_agent/v1.agent.v1-subscribe
       summary: Client messages
@@ -46,15 +48,17 @@ channels:
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-0-AgentV1Settings'
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-1-AgentV1UpdateListen'
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-2-AgentV1UpdateThink'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-3-AgentV1UpdateSpeak'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-4-AgentV1InjectUserMessage'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-5-AgentV1InjectAgentMessage'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-6-AgentV1SendFunctionCallResponse'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-7-AgentV1KeepAlive'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-8-AgentV1UpdatePrompt'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-9-AgentV1ForceEndTurn'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-10-AgentV1CustomToThinkProvider'
-          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-11-AgentV1Media'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-3-AgentV1UpdateThinkLive'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-4-AgentV1UpdateSpeak'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-5-AgentV1InjectUserMessage'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-6-AgentV1InjectAgentMessage'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-7-AgentV1InjectDynamicAgentMessage'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-8-AgentV1SendFunctionCallResponse'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-9-AgentV1KeepAlive'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-10-AgentV1UpdatePrompt'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-11-AgentV1ForceEndTurn'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-12-AgentV1CustomToThinkProvider'
+          - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-13-AgentV1Media'
   /v1/listen:
     description: Transcribe audio and video using Deepgram's speech-to-text WebSocket
     bindings:
@@ -354,7 +358,19 @@ components:
       description: Receive think update from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ThinkUpdated'
-    subpackage_agent/v1.agent.v1-server-2-AgentV1ReceiveFunctionCallResponse:
+    subpackage_agent/v1.agent.v1-server-2-AgentV1ThinkLiveUpdated:
+      name: AgentV1ThinkLiveUpdated
+      title: AgentV1ThinkLiveUpdated
+      description: Receive Think Live model update confirmation from Deepgram's Voice Agent API
+      payload:
+        $ref: '#/components/schemas/AgentV1_AgentV1ThinkLiveUpdated'
+    subpackage_agent/v1.agent.v1-server-3-AgentV1FrustrationDetected:
+      name: AgentV1FrustrationDetected
+      title: AgentV1FrustrationDetected
+      description: Receive a frustration detection event from Deepgram's Voice Agent API
+      payload:
+        $ref: '#/components/schemas/AgentV1_AgentV1FrustrationDetected'
+    subpackage_agent/v1.agent.v1-server-4-AgentV1ReceiveFunctionCallResponse:
       name: AgentV1ReceiveFunctionCallResponse
       title: AgentV1ReceiveFunctionCallResponse
       description: |
@@ -363,85 +379,85 @@ components:
         when functions are marked with `client_side: false`.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ReceiveFunctionCallResponse'
-    subpackage_agent/v1.agent.v1-server-3-AgentV1PromptUpdated:
+    subpackage_agent/v1.agent.v1-server-5-AgentV1PromptUpdated:
       name: AgentV1PromptUpdated
       title: AgentV1PromptUpdated
       description: Receive prompt update from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1PromptUpdated'
-    subpackage_agent/v1.agent.v1-server-4-AgentV1SpeakUpdated:
+    subpackage_agent/v1.agent.v1-server-6-AgentV1SpeakUpdated:
       name: AgentV1SpeakUpdated
       title: AgentV1SpeakUpdated
       description: Receive speak update from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1SpeakUpdated'
-    subpackage_agent/v1.agent.v1-server-5-AgentV1InjectionRefused:
+    subpackage_agent/v1.agent.v1-server-7-AgentV1InjectionRefused:
       name: AgentV1InjectionRefused
       title: AgentV1InjectionRefused
       description: Receive injection refused message from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1InjectionRefused'
-    subpackage_agent/v1.agent.v1-server-6-AgentV1Welcome:
+    subpackage_agent/v1.agent.v1-server-8-AgentV1Welcome:
       name: AgentV1Welcome
       title: AgentV1Welcome
       description: Receive welcome message from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Welcome'
-    subpackage_agent/v1.agent.v1-server-7-AgentV1SettingsApplied:
+    subpackage_agent/v1.agent.v1-server-9-AgentV1SettingsApplied:
       name: AgentV1SettingsApplied
       title: AgentV1SettingsApplied
       description: Receive settings applied message from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1SettingsApplied'
-    subpackage_agent/v1.agent.v1-server-8-AgentV1ConversationText:
+    subpackage_agent/v1.agent.v1-server-10-AgentV1ConversationText:
       name: AgentV1ConversationText
       title: AgentV1ConversationText
       description: Receive conversation text from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ConversationText'
-    subpackage_agent/v1.agent.v1-server-9-AgentV1UserStartedSpeaking:
+    subpackage_agent/v1.agent.v1-server-11-AgentV1UserStartedSpeaking:
       name: AgentV1UserStartedSpeaking
       title: AgentV1UserStartedSpeaking
       description: Receive user started speaking message from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UserStartedSpeaking'
-    subpackage_agent/v1.agent.v1-server-10-AgentV1AgentThinking:
+    subpackage_agent/v1.agent.v1-server-12-AgentV1AgentThinking:
       name: AgentV1AgentThinking
       title: AgentV1AgentThinking
       description: Receive agent thinking message from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1AgentThinking'
-    subpackage_agent/v1.agent.v1-server-11-AgentV1LatencyReport:
+    subpackage_agent/v1.agent.v1-server-13-AgentV1LatencyReport:
       name: AgentV1LatencyReport
       title: AgentV1LatencyReport
       description: Receive a latency report from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1LatencyReport'
-    subpackage_agent/v1.agent.v1-server-12-AgentV1FunctionCallRequest:
+    subpackage_agent/v1.agent.v1-server-14-AgentV1FunctionCallRequest:
       name: AgentV1FunctionCallRequest
       title: AgentV1FunctionCallRequest
       description: Receive function call request from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1FunctionCallRequest'
-    subpackage_agent/v1.agent.v1-server-13-AgentV1FunctionCallCancelled:
+    subpackage_agent/v1.agent.v1-server-15-AgentV1FunctionCallCancelled:
       name: AgentV1FunctionCallCancelled
       title: AgentV1FunctionCallCancelled
       description: Receive notice that a function call you already received was cancelled because the user started speaking again
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1FunctionCallCancelled'
-    subpackage_agent/v1.agent.v1-server-14-AgentV1AgentStartedSpeaking:
+    subpackage_agent/v1.agent.v1-server-16-AgentV1AgentStartedSpeaking:
       name: AgentV1AgentStartedSpeaking
       title: AgentV1AgentStartedSpeaking
       description: Receive agent started speaking message from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1AgentStartedSpeaking'
-    subpackage_agent/v1.agent.v1-server-15-AgentV1AgentAudioDone:
+    subpackage_agent/v1.agent.v1-server-17-AgentV1AgentAudioDone:
       name: AgentV1AgentAudioDone
       title: AgentV1AgentAudioDone
       description: Receive agent audio done message from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1AgentAudioDone'
-    subpackage_agent/v1.agent.v1-server-16-AgentV1CustomFromThinkProvider:
+    subpackage_agent/v1.agent.v1-server-18-AgentV1CustomFromThinkProvider:
       name: AgentV1CustomFromThinkProvider
       title: AgentV1CustomFromThinkProvider
       description: >-
@@ -449,19 +465,19 @@ components:
         `wss://` custom Think endpoint in `agent.think.endpoint.url`.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1CustomFromThinkProvider'
-    subpackage_agent/v1.agent.v1-server-17-AgentV1Error:
+    subpackage_agent/v1.agent.v1-server-19-AgentV1Error:
       name: AgentV1Error
       title: AgentV1Error
       description: Receive error response from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Error'
-    subpackage_agent/v1.agent.v1-server-18-AgentV1Warning:
+    subpackage_agent/v1.agent.v1-server-20-AgentV1Warning:
       name: AgentV1Warning
       title: AgentV1Warning
       description: Receive warning messages from Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Warning'
-    subpackage_agent/v1.agent.v1-server-19-AgentV1History:
+    subpackage_agent/v1.agent.v1-server-21-AgentV1History:
       name: AgentV1History
       title: AgentV1History
       description: >-
@@ -469,7 +485,7 @@ components:
         text (with role and content) or a function call record (with function_calls array).
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1History'
-    subpackage_agent/v1.agent.v1-server-20-AgentV1Audio:
+    subpackage_agent/v1.agent.v1-server-22-AgentV1Audio:
       name: AgentV1Audio
       title: AgentV1Audio
       description: Receive raw binary audio data generated by Deepgram's Voice Agent API
@@ -493,25 +509,39 @@ components:
       description: Send update think to Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdateThink'
-    subpackage_agent/v1.agent.v1-client-3-AgentV1UpdateSpeak:
+    subpackage_agent/v1.agent.v1-client-3-AgentV1UpdateThinkLive:
+      name: AgentV1UpdateThinkLive
+      title: AgentV1UpdateThinkLive
+      description: Send an update to the Think Live model configuration to Deepgram's Voice Agent API
+      payload:
+        $ref: '#/components/schemas/AgentV1_AgentV1UpdateThinkLive'
+    subpackage_agent/v1.agent.v1-client-4-AgentV1UpdateSpeak:
       name: AgentV1UpdateSpeak
       title: AgentV1UpdateSpeak
       description: Send update speak to Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdateSpeak'
-    subpackage_agent/v1.agent.v1-client-4-AgentV1InjectUserMessage:
+    subpackage_agent/v1.agent.v1-client-5-AgentV1InjectUserMessage:
       name: AgentV1InjectUserMessage
       title: AgentV1InjectUserMessage
       description: Send inject user message to Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1InjectUserMessage'
-    subpackage_agent/v1.agent.v1-client-5-AgentV1InjectAgentMessage:
+    subpackage_agent/v1.agent.v1-client-6-AgentV1InjectAgentMessage:
       name: AgentV1InjectAgentMessage
       title: AgentV1InjectAgentMessage
       description: Send inject agent message to Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1InjectAgentMessage'
-    subpackage_agent/v1.agent.v1-client-6-AgentV1SendFunctionCallResponse:
+    subpackage_agent/v1.agent.v1-client-7-AgentV1InjectDynamicAgentMessage:
+      name: AgentV1InjectDynamicAgentMessage
+      title: AgentV1InjectDynamicAgentMessage
+      description: >-
+        Send a dynamic inject agent message to Deepgram's Voice Agent API, letting the Think Live model generate the
+        filler line
+      payload:
+        $ref: '#/components/schemas/AgentV1_AgentV1InjectDynamicAgentMessage'
+    subpackage_agent/v1.agent.v1-client-8-AgentV1SendFunctionCallResponse:
       name: AgentV1SendFunctionCallResponse
       title: AgentV1SendFunctionCallResponse
       description: |
@@ -520,25 +550,25 @@ components:
         requests execution of a function marked with `client_side: true`.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1SendFunctionCallResponse'
-    subpackage_agent/v1.agent.v1-client-7-AgentV1KeepAlive:
+    subpackage_agent/v1.agent.v1-client-9-AgentV1KeepAlive:
       name: AgentV1KeepAlive
       title: AgentV1KeepAlive
       description: Send keep alive to Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1KeepAlive'
-    subpackage_agent/v1.agent.v1-client-8-AgentV1UpdatePrompt:
+    subpackage_agent/v1.agent.v1-client-10-AgentV1UpdatePrompt:
       name: AgentV1UpdatePrompt
       title: AgentV1UpdatePrompt
       description: Send a prompt update to Deepgram's Voice Agent API
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdatePrompt'
-    subpackage_agent/v1.agent.v1-client-9-AgentV1ForceEndTurn:
+    subpackage_agent/v1.agent.v1-client-11-AgentV1ForceEndTurn:
       name: AgentV1ForceEndTurn
       title: AgentV1ForceEndTurn
       description: Send a ForceEndTurn message to immediately end the current user turn
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ForceEndTurn'
-    subpackage_agent/v1.agent.v1-client-10-AgentV1CustomToThinkProvider:
+    subpackage_agent/v1.agent.v1-client-12-AgentV1CustomToThinkProvider:
       name: AgentV1CustomToThinkProvider
       title: AgentV1CustomToThinkProvider
       description: >-
@@ -546,7 +576,7 @@ components:
         endpoint in `agent.think.endpoint.url`.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1CustomToThinkProvider'
-    subpackage_agent/v1.agent.v1-client-11-AgentV1Media:
+    subpackage_agent/v1.agent.v1-client-13-AgentV1Media:
       name: AgentV1Media
       title: AgentV1Media
       description: Send raw binary audio data to Deepgram's Voice Agent API for processing
@@ -861,6 +891,37 @@ components:
       required:
         - type
       title: AgentV1_AgentV1ThinkUpdated
+    AgentV1_AgentV1ThinkLiveUpdated:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - ThinkLiveUpdated
+          description: Message type identifier for Think Live model update confirmation
+      required:
+        - type
+      title: AgentV1_AgentV1ThinkLiveUpdated
+    AgentV1_AgentV1FrustrationDetected:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - FrustrationDetected
+          description: Message type identifier for frustration detection
+        count:
+          type: integer
+          minimum: 1
+          description: Cumulative number of FrustrationDetected events in this session, starting at 1
+        escalated:
+          type: boolean
+          description: True once `count` reaches `agent.think_live.provider.frustration_max_count`
+      required:
+        - type
+        - count
+        - escalated
+      title: AgentV1_AgentV1FrustrationDetected
     AgentV1_AgentV1ReceiveFunctionCallResponse:
       type: object
       properties:
@@ -969,6 +1030,19 @@ components:
         - assistant
       description: Identifies who spoke the statement
       title: ChannelsAgentV1MessagesAgentV1ConversationTextRole
+    ChannelsAgentV1MessagesAgentV1ConversationTextConversationalBehavior:
+      type: string
+      enum:
+        - default
+        - backchannel
+        - presence_check
+        - filler
+      description: >-
+        Annotates what kind of utterance the message represents: `default` (a standard turn), `backchannel` (a short
+        acknowledgement while the user held the floor), `presence_check` (a prompt after extended silence), or `filler`
+        (a line covering a wait on a function call or a dynamic InjectAgentMessage). Always sent; it is `default` for
+        every message while Think Live is off
+      title: ChannelsAgentV1MessagesAgentV1ConversationTextConversationalBehavior
     AgentV1_AgentV1ConversationText:
       type: object
       properties:
@@ -983,6 +1057,13 @@ components:
         content:
           type: string
           description: The actual statement that was spoken
+        conversational_behavior:
+          $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1ConversationTextConversationalBehavior'
+          description: >-
+            Annotates what kind of utterance the message represents: `default` (a standard turn), `backchannel` (a short
+            acknowledgement while the user held the floor), `presence_check` (a prompt after extended silence), or
+            `filler` (a line covering a wait on a function call or a dynamic InjectAgentMessage). Always sent; it is
+            `default` for every message while Think Live is off
         languages_hinted:
           type: array
           items:
@@ -1001,6 +1082,7 @@ components:
         - type
         - role
         - content
+        - conversational_behavior
       title: AgentV1_AgentV1ConversationText
     AgentV1_AgentV1UserStartedSpeaking:
       type: object
@@ -1902,6 +1984,31 @@ components:
             Hold this function call until the user's turn is confirmed instead of dispatching it speculatively. Set it
             to true for actions that cannot be undone. If the turn resumes, a deferred call is discarded before it runs.
             Defaults to false
+        initial_agent_filler:
+          type: boolean
+          default: false
+          description: >-
+            Requires `agent.think_live`. Speak one short filler line after the function is dispatched and the user's
+            turn is confirmed, if the function response has not yet arrived. Skipped when the reasoning LLM already
+            announced the call in the same response
+        agent_filler_max_count:
+          type: integer
+          minimum: 0
+          default: 0
+          description: >-
+            Requires `agent.think_live`. Number of additional filler lines the agent may speak while this function call
+            is outstanding. Set to 0 to disable additional filler
+        agent_filler_interval_ms:
+          type: integer
+          minimum: 1000
+          maximum: 60000
+          default: 5000
+          description: >-
+            Requires `agent.think_live`. Silence in milliseconds, counted from when the agent last stopped speaking,
+            before each additional filler line. Ignored when `agent_filler_max_count` is 0, which is also the only case
+            in which a value outside the 1000 to 60000 range is accepted. Setting any filler field without
+            `agent.think_live`, or an out-of-range interval while `agent_filler_max_count` is greater than 0, returns an
+            `INVALID_SETTINGS` error and closes the session
         endpoint:
           $ref: '#/components/schemas/ThinkSettingsV1FunctionsItemsEndpoint'
           description: The Function endpoint to call. if not passed, function is called client-side
@@ -1954,7 +2061,79 @@ components:
       oneOf:
         - $ref: '#/components/schemas/ThinkSettingsV1'
         - $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1SettingsAgentOneOf0Think1'
+      description: >-
+        Your reasoning LLM. With Think Live on, this is the reasoning half of the pair, running alongside the Think Live
+        model configured in `think_live`
       title: ChannelsAgentV1MessagesAgentV1SettingsAgentOneOf0Think
+    DeepgramThinkLiveProviderV1:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - deepgram
+          description: Provider type for the Think Live model. Must be `deepgram`
+        version:
+          type: string
+          enum:
+            - v1
+          description: Version of the Deepgram Think Live model. Must be `v1`
+        agent_backchannel_sensitivity:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 1
+          default: 0.73
+          description: >-
+            Probability of the agent producing backchannel responses (such as "mhmm") while the user is speaking. Higher
+            values produce more backchanneling. Set to 0 to disable agent backchannels
+        presence_check_max_count:
+          type: integer
+          minimum: 0
+          default: 3
+          description: >-
+            Maximum number of times the agent prompts the user after extended silence. Once reached, the agent stays
+            silent. Set to 0 to disable presence checks
+        presence_check_interval_ms:
+          type: integer
+          minimum: 1
+          maximum: 60000
+          default: 4500
+          description: >-
+            Time in milliseconds the agent waits between presence-check prompts. The first prompt is floored at 3000, so
+            values below that behave as 3000. Ignored when `presence_check_max_count` is 0
+        frustration_max_count:
+          type: integer
+          minimum: 0
+          description: >-
+            Number of `FrustrationDetected` events sent before `escalated` becomes true. Set to 0 to stop
+            `FrustrationDetected` events from being sent. Omit it to use the server default
+        restricted_terms:
+          type: array
+          items:
+            type: string
+          default:
+            - human
+            - transfer
+          description: >-
+            Terms the Think Live model will not say. Pass a multi-word phrase as a single array element. Applies to the
+            Think Live model only, not to your reasoning LLM
+      required:
+        - type
+        - version
+      description: >-
+        Deepgram's Think Live model, which runs alongside your reasoning LLM to handle backchanneling, presence checks,
+        and frustration detection. Only the Deepgram provider is supported.
+      title: DeepgramThinkLiveProviderV1
+    ThinkLiveSettingsV1:
+      type: object
+      properties:
+        provider:
+          $ref: '#/components/schemas/DeepgramThinkLiveProviderV1'
+      required:
+        - provider
+      description: Configures Deepgram's Think Live model. Think Live is off until this object is provided
+      title: ThinkLiveSettingsV1
     DeepgramSpeakProviderModel:
       type: string
       enum:
@@ -2402,6 +2581,11 @@ components:
           $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1SettingsAgentOneOf0Listen'
         think:
           $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1SettingsAgentOneOf0Think'
+          description: >-
+            Your reasoning LLM. With Think Live on, this is the reasoning half of the pair, running alongside the Think
+            Live model configured in `think_live`
+        think_live:
+          $ref: '#/components/schemas/ThinkLiveSettingsV1'
         speak:
           $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1SettingsAgentOneOf0Speak'
         greeting:
@@ -2502,6 +2686,20 @@ components:
         - type
         - think
       title: AgentV1_AgentV1UpdateThink
+    AgentV1_AgentV1UpdateThinkLive:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - UpdateThink_Live
+          description: Message type identifier for updating the Think Live model configuration
+        think_live:
+          $ref: '#/components/schemas/ThinkLiveSettingsV1'
+      required:
+        - type
+        - think_live
+      title: AgentV1_AgentV1UpdateThinkLive
     ChannelsAgentV1MessagesAgentV1UpdateSpeakSpeak1:
       type: array
       items:
@@ -2593,6 +2791,60 @@ components:
         - type
         - message
       title: AgentV1_AgentV1InjectAgentMessage
+    ChannelsAgentV1MessagesAgentV1InjectDynamicAgentMessageBehavior:
+      type: string
+      enum:
+        - default
+        - queue
+        - interrupt
+      default: default
+      description: >
+        Controls how the injection interacts with any in-progress user or agent turn.
+
+
+        * `default` — The agent speaks only if neither the user nor the agent is mid-turn. If a turn is in progress, the
+        server replies with `InjectionRefused`.
+
+        * `queue` — The message is appended after any already-queued `ConversationText` without interrupting the current
+        agent turn or think response. If nothing is queued, the message plays immediately.
+
+        * `interrupt` — The agent immediately speaks. If the agent was already speaking, it interrupts the current
+        speech and replaces it with the new message. If the user is speaking, the agent interrupts with the new message,
+        but the user's continued speech triggers `UserStartedSpeaking`, which quickly interrupts the agent.
+      title: ChannelsAgentV1MessagesAgentV1InjectDynamicAgentMessageBehavior
+    AgentV1_AgentV1InjectDynamicAgentMessage:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - InjectAgentMessage
+          description: Message type identifier for injecting an agent message
+        is_dynamic:
+          type: boolean
+          enum:
+            - true
+          description: Must be `true`. The Think Live model generates the line, so no `message` is sent
+        behavior:
+          $ref: '#/components/schemas/ChannelsAgentV1MessagesAgentV1InjectDynamicAgentMessageBehavior'
+          default: default
+          description: >
+            Controls how the injection interacts with any in-progress user or agent turn.
+
+
+            * `default` — The agent speaks only if neither the user nor the agent is mid-turn. If a turn is in progress,
+            the server replies with `InjectionRefused`.
+
+            * `queue` — The message is appended after any already-queued `ConversationText` without interrupting the
+            current agent turn or think response. If nothing is queued, the message plays immediately.
+
+            * `interrupt` — The agent immediately speaks. If the agent was already speaking, it interrupts the current
+            speech and replaces it with the new message. If the user is speaking, the agent interrupts with the new
+            message, but the user's continued speech triggers `UserStartedSpeaking`, which quickly interrupts the agent.
+      required:
+        - type
+        - is_dynamic
+      title: AgentV1_AgentV1InjectDynamicAgentMessage
     AgentV1_AgentV1SendFunctionCallResponse:
       type: object
       properties:
