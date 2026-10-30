@@ -1923,6 +1923,75 @@ components:
         - type
         - model
       title: GroqThinkProvider
+    DeepgramThinkProviderModel:
+      type: string
+      enum:
+        - think-fast
+        - phonellm-mini-alpha-2-fp8
+      description: >-
+        Deepgram language model to use. Early Access. think-fast requires the Model Improvement Program: a session with
+        mip_opt_out set to true is rejected with INVALID_SETTINGS. Use phonellm-mini-alpha-2-fp8 for sessions that opt
+        out.
+      title: DeepgramThinkProviderModel
+    DeepgramThinkProviderVersion:
+      type: string
+      enum:
+        - v1
+      default: v1
+      description: API version for the Deepgram think provider. Defaults to `v1`.
+      title: DeepgramThinkProviderVersion
+    DeepgramThinkProviderReasoningMode:
+      type: string
+      enum:
+        - none
+        - minimal
+        - low
+        - medium
+        - high
+      description: >-
+        Reasoning effort. For phonellm-mini-alpha-2-fp8, use none or omit it; other values put reasoning text in the
+        reply, which the agent speaks.
+      title: DeepgramThinkProviderReasoningMode
+    DeepgramThinkProvider:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - deepgram
+          description: Provider type for Deepgram-hosted language models. Must be `deepgram`.
+        model:
+          $ref: '#/components/schemas/DeepgramThinkProviderModel'
+          description: >-
+            Deepgram language model to use. Early Access. think-fast requires the Model Improvement Program: a session
+            with mip_opt_out set to true is rejected with INVALID_SETTINGS. Use phonellm-mini-alpha-2-fp8 for sessions
+            that opt out.
+        version:
+          $ref: '#/components/schemas/DeepgramThinkProviderVersion'
+          default: v1
+          description: API version for the Deepgram think provider. Defaults to `v1`.
+        temperature:
+          type: number
+          format: double
+          minimum: 0
+          maximum: 2
+          description: Deepgram temperature (0-2).
+        reasoning_mode:
+          $ref: '#/components/schemas/DeepgramThinkProviderReasoningMode'
+          description: >-
+            Reasoning effort. For phonellm-mini-alpha-2-fp8, use none or omit it; other values put reasoning text in the
+            reply, which the agent speaks.
+        voice_prompt_opt_out:
+          type: boolean
+          default: false
+          description: >-
+            With think-fast, Deepgram places spoken-style instructions ahead of your prompt and sends a
+            VOICE_PROMPT_ADDED warning. Set to true to send your prompt unchanged.
+      required:
+        - type
+        - model
+      description: Deepgram-hosted language models for the Voice Agent think stage.
+      title: DeepgramThinkProvider
     ThinkSettingsV1Provider:
       oneOf:
         - $ref: '#/components/schemas/OpenAiThinkProvider'
@@ -1930,6 +1999,7 @@ components:
         - $ref: '#/components/schemas/AnthropicThinkProvider'
         - $ref: '#/components/schemas/GoogleThinkProvider'
         - $ref: '#/components/schemas/GroqThinkProvider'
+        - $ref: '#/components/schemas/DeepgramThinkProvider'
       title: ThinkSettingsV1Provider
     ThinkSettingsV1Endpoint:
       type: object
