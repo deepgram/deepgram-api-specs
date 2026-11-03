@@ -59,6 +59,8 @@ channels:
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-11-AgentV1ForceEndTurn'
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-12-AgentV1CustomToThinkProvider'
           - $ref: '#/components/messages/subpackage_agent/v1.agent.v1-client-13-AgentV1Media'
+    servers:
+      - Production_agent_deepgram_com
   /v1/listen:
     description: Transcribe audio and video using Deepgram's speech-to-text WebSocket
     bindings:
@@ -170,6 +172,8 @@ channels:
           - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-client-2-ListenV1CloseStream'
           - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-client-3-ListenV1KeepAlive'
           - $ref: '#/components/messages/subpackage_listen/v1.listen.v1-client-4-ListenV1Configure'
+    servers:
+      - Production
   /v2/listen:
     description: |
       Real-time conversational speech recognition with contextual turn detection
@@ -234,6 +238,8 @@ channels:
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-client-1-ListenV2CloseStream'
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-client-2-ListenV2ForceEndTurn'
           - $ref: '#/components/messages/subpackage_listen/v2.listen.v2-client-3-ListenV2Configure'
+    servers:
+      - Production
   /v1/speak:
     description: Convert text into natural-sounding speech using Deepgram's TTS WebSocket
     bindings:
@@ -280,6 +286,8 @@ channels:
           - $ref: '#/components/messages/subpackage_speak/v1.speak.v1-client-1-SpeakV1Flush'
           - $ref: '#/components/messages/subpackage_speak/v1.speak.v1-client-2-SpeakV1Clear'
           - $ref: '#/components/messages/subpackage_speak/v1.speak.v1-client-3-SpeakV1Close'
+    servers:
+      - Production
   /v2/speak:
     description: |
       Streaming, turn-based text-to-speech (Flux TTS) built for voice-agent
@@ -339,11 +347,16 @@ channels:
           - $ref: '#/components/messages/subpackage_speak/v2.speak.v2-client-2-SpeakV2Interrupt'
           - $ref: '#/components/messages/subpackage_speak/v2.speak.v2-client-3-SpeakV2Configure'
           - $ref: '#/components/messages/subpackage_speak/v2.speak.v2-client-4-SpeakV2Close'
+    servers:
+      - Production
 servers:
   Production:
     url: wss://api.deepgram.com/
     protocol: wss
     x-default: true
+  Production_agent_deepgram_com:
+    url: wss://agent.deepgram.com/
+    protocol: wss
 components:
   messages:
     subpackage_agent/v1.agent.v1-server-0-AgentV1ListenUpdated:
