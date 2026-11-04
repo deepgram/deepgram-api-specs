@@ -317,6 +317,9 @@ channels:
             expressivity:
               $ref: '#/components/schemas/SpeakV2Expressivity'
               default: 0
+            normalize_volume:
+              $ref: '#/components/schemas/SpeakV2NormalizeVolume'
+              default: 'true'
             mip_opt_out:
               $ref: '#/components/schemas/SpeakV2MipOptOut'
               default: 'false'
@@ -4693,6 +4696,16 @@ components:
         `400` — `EXPRESSIVITY_OUT_OF_RANGE` for a value outside the range, `EXPRESSIVITY_INCREMENT_INVALID` for a
         fractional value. See [Expressivity](/docs/tts-expressivity).
       title: SpeakV2Expressivity
+    SpeakV2NormalizeVolume:
+      type: string
+      enum:
+        - 'true'
+        - 'false'
+      default: 'true'
+      description: >-
+        Normalizes the loudness of the generated speech to a consistent level across voices and turns. On by default;
+        set to `false` to opt out. Peak  limiting is applied either way.
+      title: SpeakV2NormalizeVolume
     SpeakV2MipOptOut:
       description: Any type
       title: SpeakV2MipOptOut
