@@ -2876,6 +2876,15 @@ paths:
           required: true
           schema:
             type: string
+        - name: normalize_volume
+          in: query
+          description: >-
+            Normalizes the loudness of the generated speech to a consistent level across voices and requests. On by
+            default; set to `false` to opt out. Peak limiting is applied either way.
+          required: false
+          schema:
+            type: boolean
+            default: true
         - name: sample_rate
           in: query
           description: >-
