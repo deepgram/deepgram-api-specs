@@ -371,25 +371,28 @@ components:
     subpackage_agent/v1.agent.v1-server-0-AgentV1ListenUpdated:
       name: AgentV1ListenUpdated
       title: AgentV1ListenUpdated
-      description: Receive listen update from Deepgram's Voice Agent API
+      description: Confirms that an UpdateListen message from the client has been applied
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ListenUpdated'
     subpackage_agent/v1.agent.v1-server-1-AgentV1ThinkUpdated:
       name: AgentV1ThinkUpdated
       title: AgentV1ThinkUpdated
-      description: Receive think update from Deepgram's Voice Agent API
+      description: Confirms that an UpdateThink message from the client has been applied
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ThinkUpdated'
     subpackage_agent/v1.agent.v1-server-2-AgentV1ThinkLiveUpdated:
       name: AgentV1ThinkLiveUpdated
       title: AgentV1ThinkLiveUpdated
-      description: Receive Think Live model update confirmation from Deepgram's Voice Agent API
+      description: Confirms that an UpdateThink_Live message from the client has been applied
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ThinkLiveUpdated'
     subpackage_agent/v1.agent.v1-server-3-AgentV1FrustrationDetected:
       name: AgentV1FrustrationDetected
       title: AgentV1FrustrationDetected
-      description: Receive a frustration detection event from Deepgram's Voice Agent API
+      description: >-
+        Sent when the Think Live model detects frustration in a user turn (negative valence, high arousal, or frustrated
+        intent). Treat `escalated: true` as the trigger for your own escalation workflow; Deepgram does not transfer the
+        call. Not sent when `agent.think_live.provider.frustration_max_count` is 0
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1FrustrationDetected'
     subpackage_agent/v1.agent.v1-server-4-AgentV1ReceiveFunctionCallResponse:
@@ -404,163 +407,180 @@ components:
     subpackage_agent/v1.agent.v1-server-5-AgentV1PromptUpdated:
       name: AgentV1PromptUpdated
       title: AgentV1PromptUpdated
-      description: Receive prompt update from Deepgram's Voice Agent API
+      description: Confirms that an UpdatePrompt message from the client has been applied
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1PromptUpdated'
     subpackage_agent/v1.agent.v1-server-6-AgentV1SpeakUpdated:
       name: AgentV1SpeakUpdated
       title: AgentV1SpeakUpdated
-      description: Receive speak update from Deepgram's Voice Agent API
+      description: Confirms that an UpdateSpeak message from the client has been applied
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1SpeakUpdated'
     subpackage_agent/v1.agent.v1-server-7-AgentV1InjectionRefused:
       name: AgentV1InjectionRefused
       title: AgentV1InjectionRefused
-      description: Receive injection refused message from Deepgram's Voice Agent API
+      description: Receive injection refused message
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1InjectionRefused'
     subpackage_agent/v1.agent.v1-server-8-AgentV1Welcome:
       name: AgentV1Welcome
       title: AgentV1Welcome
-      description: Receive welcome message from Deepgram's Voice Agent API
+      description: Confirms that the WebSocket connection has been successfully opened
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Welcome'
     subpackage_agent/v1.agent.v1-server-9-AgentV1SettingsApplied:
       name: AgentV1SettingsApplied
       title: AgentV1SettingsApplied
-      description: Receive settings applied message from Deepgram's Voice Agent API
+      description: Confirm the server has successfully received and applied the Settings message
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1SettingsApplied'
     subpackage_agent/v1.agent.v1-server-10-AgentV1ConversationText:
       name: AgentV1ConversationText
       title: AgentV1ConversationText
-      description: Receive conversation text from Deepgram's Voice Agent API
+      description: Facilitate real-time communication by relaying spoken statements from both the user and the assistant
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ConversationText'
     subpackage_agent/v1.agent.v1-server-11-AgentV1UserStartedSpeaking:
       name: AgentV1UserStartedSpeaking
       title: AgentV1UserStartedSpeaking
-      description: Receive user started speaking message from Deepgram's Voice Agent API
+      description: Notify the client that the user has begun speaking
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UserStartedSpeaking'
     subpackage_agent/v1.agent.v1-server-12-AgentV1AgentThinking:
       name: AgentV1AgentThinking
       title: AgentV1AgentThinking
-      description: Receive agent thinking message from Deepgram's Voice Agent API
+      description: Inform the client when the agent is processing information
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1AgentThinking'
     subpackage_agent/v1.agent.v1-server-13-AgentV1LatencyReport:
       name: AgentV1LatencyReport
       title: AgentV1LatencyReport
-      description: Receive a latency report from Deepgram's Voice Agent API
+      description: >-
+        Detailed latency breakdown across the STT, LLM, and TTS pipeline, emitted by the server after a turn. All
+        latency fields are floats in seconds and are optional, so they are omitted when not applicable to that turn.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1LatencyReport'
     subpackage_agent/v1.agent.v1-server-14-AgentV1FunctionCallRequest:
       name: AgentV1FunctionCallRequest
       title: AgentV1FunctionCallRequest
-      description: Receive function call request from Deepgram's Voice Agent API
+      description: Client-side or server-side function call request sent by the server
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1FunctionCallRequest'
     subpackage_agent/v1.agent.v1-server-15-AgentV1FunctionCallCancelled:
       name: AgentV1FunctionCallCancelled
       title: AgentV1FunctionCallCancelled
-      description: Receive notice that a function call you already received was cancelled because the user started speaking again
+      description: >-
+        Sent when a client-side function call the server already sent you is cancelled because the user started speaking
+        again, either inside the speculative window (the turn resumed) or after the turn was confirmed (barge-in). Only
+        calls the client already received are announced
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1FunctionCallCancelled'
     subpackage_agent/v1.agent.v1-server-16-AgentV1AgentStartedSpeaking:
       name: AgentV1AgentStartedSpeaking
       title: AgentV1AgentStartedSpeaking
-      description: Receive agent started speaking message from Deepgram's Voice Agent API
+      description: >-
+        Get notified when the server begins streaming an agent's audio response for playback. This message is only sent
+        when the experimental flag is enabled
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1AgentStartedSpeaking'
     subpackage_agent/v1.agent.v1-server-17-AgentV1AgentAudioDone:
       name: AgentV1AgentAudioDone
       title: AgentV1AgentAudioDone
-      description: Receive agent audio done message from Deepgram's Voice Agent API
+      description: Get signals that the server has finished sending the final audio segment to the client
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1AgentAudioDone'
     subpackage_agent/v1.agent.v1-server-18-AgentV1CustomFromThinkProvider:
       name: AgentV1CustomFromThinkProvider
       title: AgentV1CustomFromThinkProvider
       description: >-
-        Experimental. Receive a response body from a custom think provider, passed through unchanged. Requires a
-        `wss://` custom Think endpoint in `agent.think.endpoint.url`.
+        Experimental. Receive the response body from your custom think provider after sending a __customToThinkProvider
+        message. Deepgram passes the response through unchanged. Requires a `wss://` custom Think endpoint in
+        `agent.think.endpoint.url`.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1CustomFromThinkProvider'
     subpackage_agent/v1.agent.v1-server-19-AgentV1Error:
       name: AgentV1Error
       title: AgentV1Error
-      description: Receive error response from Deepgram's Voice Agent API
+      description: Receive an error message from the server when an error occurs
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Error'
     subpackage_agent/v1.agent.v1-server-20-AgentV1Warning:
       name: AgentV1Warning
       title: AgentV1Warning
-      description: Receive warning messages from Deepgram's Voice Agent API
+      description: Notifies the client of non-fatal errors or warnings
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Warning'
     subpackage_agent/v1.agent.v1-server-21-AgentV1History:
       name: AgentV1History
       title: AgentV1History
       description: >-
-        Receive a conversation history message from Deepgram's Voice Agent API. Each message is either a conversation
-        text (with role and content) or a function call record (with function_calls array).
+        Conversation history message emitted by the server during a session. Each message is either a conversation text
+        message or a function call message. These messages can be supplied in settings of a subsequent Voice Agent
+        session (via the agent.context.messages field) to allow the agent to maintain awareness of prior interactions.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1History'
     subpackage_agent/v1.agent.v1-server-22-AgentV1Audio:
       name: AgentV1Audio
       title: AgentV1Audio
-      description: Receive raw binary audio data generated by Deepgram's Voice Agent API
+      description: Raw binary audio data generated by the Voice Agent and sent to the client
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Audio'
     subpackage_agent/v1.agent.v1-client-0-AgentV1Settings:
       name: AgentV1Settings
       title: AgentV1Settings
-      description: Send settings configuration to Deepgram's Voice Agent API
+      description: Configure the voice agent and sets the input and output audio formats
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Settings'
     subpackage_agent/v1.agent.v1-client-1-AgentV1UpdateListen:
       name: AgentV1UpdateListen
       title: AgentV1UpdateListen
-      description: Send update listen to Deepgram's Voice Agent API
+      description: >-
+        Send a message to update the Listen configuration on the fly during a conversation. The payload uses the same
+        shape as agent.listen in the Settings message — model, language, and the other tunable fields live under
+        listen.provider.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdateListen'
     subpackage_agent/v1.agent.v1-client-2-AgentV1UpdateThink:
       name: AgentV1UpdateThink
       title: AgentV1UpdateThink
-      description: Send update think to Deepgram's Voice Agent API
+      description: Send a message to change the Think model in the middle of a conversation
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdateThink'
     subpackage_agent/v1.agent.v1-client-3-AgentV1UpdateThinkLive:
       name: AgentV1UpdateThinkLive
       title: AgentV1UpdateThinkLive
-      description: Send an update to the Think Live model configuration to Deepgram's Voice Agent API
+      description: >-
+        Change the Think Live model configuration in the middle of a conversation. Replaces the entire
+        `think_live.provider` block, so include every parameter you want in effect; omitted parameters revert to their
+        defaults. Does not affect the reasoning LLM (use UpdateThink for that). The server confirms with
+        ThinkLiveUpdated
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdateThinkLive'
     subpackage_agent/v1.agent.v1-client-4-AgentV1UpdateSpeak:
       name: AgentV1UpdateSpeak
       title: AgentV1UpdateSpeak
-      description: Send update speak to Deepgram's Voice Agent API
+      description: Send a message to change the Speak model in the middle of a conversation
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdateSpeak'
     subpackage_agent/v1.agent.v1-client-5-AgentV1InjectUserMessage:
       name: AgentV1InjectUserMessage
       title: AgentV1InjectUserMessage
-      description: Send inject user message to Deepgram's Voice Agent API
+      description: Send a text based message to the agent
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1InjectUserMessage'
     subpackage_agent/v1.agent.v1-client-6-AgentV1InjectAgentMessage:
       name: AgentV1InjectAgentMessage
       title: AgentV1InjectAgentMessage
-      description: Send inject agent message to Deepgram's Voice Agent API
+      description: Immediately trigger an agent response during a conversation
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1InjectAgentMessage'
     subpackage_agent/v1.agent.v1-client-7-AgentV1InjectDynamicAgentMessage:
       name: AgentV1InjectDynamicAgentMessage
       title: AgentV1InjectDynamicAgentMessage
       description: >-
-        Send a dynamic inject agent message to Deepgram's Voice Agent API, letting the Think Live model generate the
-        filler line
+        Requires `agent.think_live`. Ask the Think Live model to generate a short filler line instead of speaking a
+        fixed message. Each request produces one filler; another request during the same wait escalates the wording. If
+        filler cannot be generated, nothing is spoken and the server sends a `DYNAMIC_FILLER_UNAVAILABLE` warning
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1InjectDynamicAgentMessage'
     subpackage_agent/v1.agent.v1-client-8-AgentV1SendFunctionCallResponse:
@@ -575,113 +595,127 @@ components:
     subpackage_agent/v1.agent.v1-client-9-AgentV1KeepAlive:
       name: AgentV1KeepAlive
       title: AgentV1KeepAlive
-      description: Send keep alive to Deepgram's Voice Agent API
+      description: Send a control message to the agent
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1KeepAlive'
     subpackage_agent/v1.agent.v1-client-10-AgentV1UpdatePrompt:
       name: AgentV1UpdatePrompt
       title: AgentV1UpdatePrompt
-      description: Send a prompt update to Deepgram's Voice Agent API
+      description: Send a message to update the system prompt of the agent
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1UpdatePrompt'
     subpackage_agent/v1.agent.v1-client-11-AgentV1ForceEndTurn:
       name: AgentV1ForceEndTurn
       title: AgentV1ForceEndTurn
-      description: Send a ForceEndTurn message to immediately end the current user turn
+      description: >-
+        End the current user turn immediately, without waiting for end-of-turn detection. Requires a Deepgram V2 (Flux)
+        listen provider; with any other listen provider the server sends a FORCE_END_TURN_UNSUPPORTED warning and the
+        turn does not end.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1ForceEndTurn'
     subpackage_agent/v1.agent.v1-client-12-AgentV1CustomToThinkProvider:
       name: AgentV1CustomToThinkProvider
       title: AgentV1CustomToThinkProvider
       description: >-
-        Experimental. Send an arbitrary JSON payload to a custom think provider. Requires a `wss://` custom Think
-        endpoint in `agent.think.endpoint.url`.
+        Experimental. Send an arbitrary JSON payload to your custom think provider. Deepgram does not validate the
+        content and forwards it to the provider unchanged. Requires a `wss://` custom Think endpoint in
+        `agent.think.endpoint.url`. The provider's response arrives as a __customFromThinkProvider message.
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1CustomToThinkProvider'
     subpackage_agent/v1.agent.v1-client-13-AgentV1Media:
       name: AgentV1Media
       title: AgentV1Media
-      description: Send raw binary audio data to Deepgram's Voice Agent API for processing
+      description: Raw binary audio data sent to the Voice Agent for processing
       payload:
         $ref: '#/components/schemas/AgentV1_AgentV1Media'
     subpackage_listen/v1.listen.v1-server-0-ListenV1ConfigureSuccess:
       name: ListenV1ConfigureSuccess
       title: ListenV1ConfigureSuccess
-      description: Receive confirmation that a Configure message was applied
+      description: |
+        Confirms that a `Configure` message was applied. Echoes the fields the `Configure` replaced; fields it did not
+        change are omitted.
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1ConfigureSuccess'
     subpackage_listen/v1.listen.v1-server-1-ListenV1ConfigureFailure:
       name: ListenV1ConfigureFailure
       title: ListenV1ConfigureFailure
-      description: Receive notice that a Configure message was rejected; the stream keeps its previous configuration
+      description: |
+        Indicates that a `Configure` message was rejected in full. The stream keeps its previous configuration and
+        stays open.
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1ConfigureFailure'
     subpackage_listen/v1.listen.v1-server-2-ListenV1Results:
       name: ListenV1Results
       title: ListenV1Results
-      description: Receive transcription results
+      description: Deepgram has responded with a transcription
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Results'
     subpackage_listen/v1.listen.v1-server-3-ListenV1Metadata:
       name: ListenV1Metadata
       title: ListenV1Metadata
-      description: Receive metadata about the transcription
+      description: Metadata event - these are usually information describing the connection
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Metadata'
     subpackage_listen/v1.listen.v1-server-4-ListenV1UtteranceEnd:
       name: ListenV1UtteranceEnd
       title: ListenV1UtteranceEnd
-      description: Receive an utterance end event
+      description: An utterance has ended
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1UtteranceEnd'
     subpackage_listen/v1.listen.v1-server-5-ListenV1SpeechStarted:
       name: ListenV1SpeechStarted
       title: ListenV1SpeechStarted
-      description: Receive a speech started event
+      description: |
+        `vad_events` is true and speech has been detected
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1SpeechStarted'
     subpackage_listen/v1.listen.v1-server-6-ListenV1Error:
       name: ListenV1Error
       title: ListenV1Error
-      description: >-
-        Receive a non-fatal error message, such as for an unparseable text message. Fatal failures close the socket
-        instead.
+      description: |
+        Receive an error message from the server. The stream stays open after a `SchemaError` and
+        continues with its previous settings. Fatal failures close the socket with a close frame and
+        send no `Error` message. Rejected `Configure` messages return `ConfigureFailure` instead.
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Error'
     subpackage_listen/v1.listen.v1-client-0-ListenV1Media:
       name: ListenV1Media
       title: ListenV1Media
-      description: Send audio or video data to be transcribed
+      description: Audio data is transmitted as raw binary WebSocket messages
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Media'
     subpackage_listen/v1.listen.v1-client-1-ListenV1Finalize:
       name: ListenV1Finalize
       title: ListenV1Finalize
-      description: Send a Finalize message to flush the WebSocket stream
+      description: Control messages for managing the Speech to Text WebSocket connection
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Finalize'
     subpackage_listen/v1.listen.v1-client-2-ListenV1CloseStream:
       name: ListenV1CloseStream
       title: ListenV1CloseStream
-      description: Send a CloseStream message to close the WebSocket stream
+      description: Control messages for managing the Speech to Text WebSocket connection
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1CloseStream'
     subpackage_listen/v1.listen.v1-client-3-ListenV1KeepAlive:
       name: ListenV1KeepAlive
       title: ListenV1KeepAlive
-      description: Send a KeepAlive message to keep the WebSocket stream alive
+      description: Control messages for managing the Speech to Text WebSocket connection
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1KeepAlive'
     subpackage_listen/v1.listen.v1-client-4-ListenV1Configure:
       name: ListenV1Configure
       title: ListenV1Configure
-      description: Send a Configure message to update keyterms or formatting features mid-stream
+      description: |
+        Updates the configuration of an open stream without reconnecting. Fields you omit keep their current values.
+        The server answers every `Configure` with exactly one `ConfigureSuccess` or `ConfigureFailure` message. On
+        failure, the stream keeps its previous configuration. Only one `Configure` can be pending at a time; wait for
+        its response before sending another.
       payload:
         $ref: '#/components/schemas/ListenV1_ListenV1Configure'
     subpackage_listen/v2.listen.v2-server-0-ListenV2Connected:
       name: ListenV2Connected
       title: ListenV2Connected
-      description: Receive a connected message
+      description: This message is sent at the start of each connection, indicating the connection is active.
       payload:
         $ref: '#/components/schemas/ListenV2_ListenV2Connected'
     subpackage_listen/v2.listen.v2-server-1-ListenV2TurnInfo:
@@ -707,31 +741,36 @@ components:
     subpackage_listen/v2.listen.v2-server-4-ListenV2Warning:
       name: ListenV2Warning
       title: ListenV2Warning
-      description: Receive a warning; the server keeps the connection open
+      description: >-
+        Informational message; the server ignores the requested action and keeps the connection open. Every warning
+        carries a `code` and a human-readable `description`.
       payload:
         $ref: '#/components/schemas/ListenV2_ListenV2Warning'
     subpackage_listen/v2.listen.v2-server-5-ListenV2FatalError:
       name: ListenV2FatalError
       title: ListenV2FatalError
-      description: Receive a fatal error message
+      description: Receive an error message from the server when a fatal error occurs
       payload:
         $ref: '#/components/schemas/ListenV2_ListenV2FatalError'
     subpackage_listen/v2.listen.v2-client-0-ListenV2Media:
       name: ListenV2Media
       title: ListenV2Media
-      description: Send audio or video data to be transcribed
+      description: Audio data is transmitted as raw binary WebSocket messages
       payload:
         $ref: '#/components/schemas/ListenV2_ListenV2Media'
     subpackage_listen/v2.listen.v2-client-1-ListenV2CloseStream:
       name: ListenV2CloseStream
       title: ListenV2CloseStream
-      description: Send a CloseStream message to close the WebSocket stream
+      description: Control messages for managing the Speech to Text WebSocket connection
       payload:
         $ref: '#/components/schemas/ListenV2_ListenV2CloseStream'
     subpackage_listen/v2.listen.v2-client-2-ListenV2ForceEndTurn:
       name: ListenV2ForceEndTurn
       title: ListenV2ForceEndTurn
-      description: Send a ForceEndTurn message to immediately end the current turn
+      description: >-
+        Force the current turn to end immediately. Flux ends the turn on the audio transcribed so far — the transcript
+        matches the most recent `Update` — and emits a standard `EndOfTurn` message with `trigger` set to `manual`. Sent
+        as a WebSocket text frame, with no additional fields. Supported only on the Flux `/v2/listen` endpoint.
       payload:
         $ref: '#/components/schemas/ListenV2_ListenV2ForceEndTurn'
     subpackage_listen/v2.listen.v2-client-3-ListenV2Configure:
@@ -743,13 +782,13 @@ components:
     subpackage_speak/v1.speak.v1-server-0-SpeakV1Audio:
       name: SpeakV1Audio
       title: SpeakV1Audio
-      description: Receive audio chunks as they are generated
+      description: Audio data in the format specified by the request parameters
       payload:
         $ref: '#/components/schemas/SpeakV1_SpeakV1Audio'
     subpackage_speak/v1.speak.v1-server-1-SpeakV1Metadata:
       name: SpeakV1Metadata
       title: SpeakV1Metadata
-      description: Receive metadata about the audio generation
+      description: Metadata sent after the WebSocket handshake
       payload:
         $ref: '#/components/schemas/SpeakV1_SpeakV1Metadata'
     subpackage_speak/v1.speak.v1-server-2-SpeakV1Flushed:
@@ -773,121 +812,151 @@ components:
     subpackage_speak/v1.speak.v1-client-0-SpeakV1Text:
       name: SpeakV1Text
       title: SpeakV1Text
-      description: Text to convert to audio
+      description: Request to convert text to speech
       payload:
         $ref: '#/components/schemas/SpeakV1_SpeakV1Text'
     subpackage_speak/v1.speak.v1-client-1-SpeakV1Flush:
       name: SpeakV1Flush
       title: SpeakV1Flush
-      description: Flush the buffer and receive the final audio for text sent so far
+      description: Control messages for managing the Text to Speech WebSocket connection
       payload:
         $ref: '#/components/schemas/SpeakV1_SpeakV1Flush'
     subpackage_speak/v1.speak.v1-client-2-SpeakV1Clear:
       name: SpeakV1Clear
       title: SpeakV1Clear
-      description: Clear the buffer and start a new audio generation. Potentially destructive operation for any text in the buffer
+      description: Control messages for managing the Text to Speech WebSocket connection
       payload:
         $ref: '#/components/schemas/SpeakV1_SpeakV1Clear'
     subpackage_speak/v1.speak.v1-client-3-SpeakV1Close:
       name: SpeakV1Close
       title: SpeakV1Close
-      description: Flush the buffer and close the connection gracefully after all audio is generated
+      description: Control messages for managing the Text to Speech WebSocket connection
       payload:
         $ref: '#/components/schemas/SpeakV1_SpeakV1Close'
     subpackage_speak/v2.speak.v2-server-0-SpeakV2Audio:
       name: SpeakV2Audio
       title: SpeakV2Audio
-      description: Receive audio chunks as they are generated
+      description: Audio data in the format specified by the connection parameters
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Audio'
     subpackage_speak/v2.speak.v2-server-1-SpeakV2Connected:
       name: SpeakV2Connected
       title: SpeakV2Connected
-      description: Receive a connected message on a successful connection
+      description: Sent immediately on a successful connection. Successor to the `/v1/speak` `Metadata` message.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Connected'
     subpackage_speak/v2.speak.v2-server-2-SpeakV2SpeechStarted:
       name: SpeakV2SpeechStarted
       title: SpeakV2SpeechStarted
-      description: Receive a message marking the start of a new turn, carrying the turn's unique identifier
+      description: >-
+        Emitted at the start of each new turn, before audio streaming begins. Carries the server-assigned `speech_id`
+        that identifies the turn. Fires once per turn, not on internal auto-flush boundaries.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2SpeechStarted'
     subpackage_speak/v2.speak.v2-server-3-SpeakV2SpeechMetadata:
       name: SpeakV2SpeechMetadata
       title: SpeakV2SpeechMetadata
-      description: Receive per-turn billing and timing after a manual Flush
+      description: >-
+        Emitted at turn boundaries (manual `Flush`), after all audio for the turn has been sent. Reports billing and
+        timing for the completed turn.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2SpeechMetadata'
     subpackage_speak/v2.speak.v2-server-4-SpeakV2SpeechInterrupted:
       name: SpeakV2SpeechInterrupted
       title: SpeakV2SpeechInterrupted
-      description: Receive what the user heard, and the interrupted turn's billing, after an Interrupt
+      description: >-
+        Sent in reply to an `Interrupt`, once synthesis has concluded and audio generation has stopped. Reports what the
+        user heard, what they did not, and the billing and timing of the turn the interrupt landed in.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2SpeechInterrupted'
     subpackage_speak/v2.speak.v2-server-5-SpeakV2Flushed:
       name: SpeakV2Flushed
       title: SpeakV2Flushed
-      description: Receive an echo confirming receipt of a manual Flush
+      description: >-
+        Immediate echo on receipt of a manual `Flush`, confirming the server received it before synthesis completes. Not
+        emitted for internal auto-flush boundaries.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Flushed'
     subpackage_speak/v2.speak.v2-server-6-SpeakV2SessionMetadata:
       name: SpeakV2SessionMetadata
       title: SpeakV2SessionMetadata
-      description: Receive cumulative session totals before the socket closes
+      description: Final server message before the WebSocket closes. Reports cumulative session totals across all turns.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2SessionMetadata'
     subpackage_speak/v2.speak.v2-server-7-SpeakV2ConfigureSuccess:
       name: SpeakV2ConfigureSuccess
       title: SpeakV2ConfigureSuccess
-      description: Receive confirmation that a Configure was accepted and applied, echoing the applied configuration
+      description: >-
+        Sent when a `Configure` was accepted and applied. Echoes the configuration now in effect. A `Configure` that
+        named no field is answered with an empty `applied` object.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2ConfigureSuccess'
     subpackage_speak/v2.speak.v2-server-8-SpeakV2ConfigureFailure:
       name: SpeakV2ConfigureFailure
       title: SpeakV2ConfigureFailure
-      description: Receive notice that a Configure was rejected or failed to apply; the prior configuration is retained
+      description: >-
+        Sent when a `Configure` was rejected. The stream is unaffected and the previous configuration stays in force.
+        When the failure is tied to a specific field, `field` names it and `value` echoes the value that was rejected.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2ConfigureFailure'
     subpackage_speak/v2.speak.v2-server-9-SpeakV2Warning:
       name: SpeakV2Warning
       title: SpeakV2Warning
-      description: Receive a warning; synthesis continues and the connection is unaffected
+      description: >-
+        Informational message; synthesis continues and the connection is unaffected. Every warning carries a `code` and
+        a human-readable `description`.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Warning'
     subpackage_speak/v2.speak.v2-server-10-SpeakV2Error:
       name: SpeakV2Error
       title: SpeakV2Error
-      description: Receive a fatal error message followed by a WebSocket close
+      description: >-
+        A fatal, server-originated error. Always followed by a WebSocket close. Codes use Deepgram's `DOMAIN-NNNN`
+        convention.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Error'
     subpackage_speak/v2.speak.v2-client-0-SpeakV2Speak:
       name: SpeakV2Speak
       title: SpeakV2Speak
-      description: Send text to be synthesized into the active turn
+      description: >-
+        Send text to be synthesized into the active turn. For English, German, Dutch, French, Hindi, Italian, Japanese,
+        Portuguese, Russian and Spanish, the server applies text normalization (numbers, dates, abbreviations) before
+        synthesis; the other languages are in Early Access without it, so write numbers and dates out in words. It
+        tracks the active turn internally and assigns a `speech_id`; clients do not specify one.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Speak'
     subpackage_speak/v2.speak.v2-client-1-SpeakV2Flush:
       name: SpeakV2Flush
       title: SpeakV2Flush
-      description: End the active turn and generate the remaining audio
+      description: >-
+        End the active turn. The server drains the buffer, generates the remaining audio, and reports the turn with a
+        `SpeechMetadata` event.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Flush'
     subpackage_speak/v2.speak.v2-client-2-SpeakV2Interrupt:
       name: SpeakV2Interrupt
       title: SpeakV2Interrupt
-      description: Cancel the active turn because the user barged in
+      description: >-
+        Report that the user barged in. The server stops active audio generation, discards any buffered text pending
+        generation, and replies with `SpeechInterrupted` once the model confirms the cancelled turn has drained.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Interrupt'
     subpackage_speak/v2.speak.v2-client-3-SpeakV2Configure:
       name: SpeakV2Configure
       title: SpeakV2Configure
-      description: Update synthesis configuration mid-session
+      description: >-
+        Update synthesis configuration mid-session without reconnecting. Omitted fields keep their current value, and a
+        `Configure` naming no field at all is accepted as a no-op. An accepted change takes effect at the next segment
+        boundary, not mid-segment, so audio already generated is unaffected. Answered by exactly one of
+        `ConfigureSuccess` or `ConfigureFailure`. A rejected `Configure` leaves the previous configuration in force.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Configure'
     subpackage_speak/v2.speak.v2-client-4-SpeakV2Close:
       name: SpeakV2Close
       title: SpeakV2Close
-      description: Gracefully close the connection, draining all remaining and queued audio
+      description: >-
+        Gracefully close the connection. The server drains all remaining audio (the active turn plus any turns still
+        queued behind it), emits a final `SessionMetadata`, then closes the socket.
       payload:
         $ref: '#/components/schemas/SpeakV2_SpeakV2Close'
   schemas:
