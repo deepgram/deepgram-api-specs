@@ -4785,9 +4785,27 @@ components:
             $ref: '#/components/schemas/ListProjectKeysV1ResponseApiKeysItems'
       title: ListProjectKeysV1Response
     CreateKeyV1Request:
-      oneOf:
-        - description: Any type
-        - description: Any type
+      type: object
+      properties:
+        comment:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+        tags:
+          type: array
+          items:
+            type: string
+        expiration_date:
+          type: string
+          format: date-time
+        time_to_live_in_seconds:
+          type: number
+          format: double
+      required:
+        - comment
+        - scopes
       title: CreateKeyV1Request
     CreateKeyV1Response:
       type: object
